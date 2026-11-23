@@ -12,7 +12,7 @@
 | Sosa, Renzo | 50173 |
 
 **Fecha:** 23 de noviembre de 2026
-**Estado del documento:** borrador para revisión del equipo (no generar PDF hasta completar la sección "Verificación de fuentes")
+**Estado del documento:** versión revisada, con la verificación de fuentes completada por el equipo
 
 ---
 
@@ -20,7 +20,7 @@
 
 **Qué se investigó.** Se relevaron **17 sistemas** que gestionan turnos y agenda en consultorios odontológicos:
 
-- 8 argentinos (en Odonto.ar y OdontoGRAMA el origen se infiere del dominio y los precios);
+- 8 argentinos (en OdontoGRAMA el origen se infiere del dominio; Odonto.ar lo indica en su Instagram oficial);
 - 5 latinoamericanos, 3 de ellos con oferta para Argentina;
 - 4 internacionales, entre ellos Doctoralia Pro, que tiene oferta en pesos.
 
@@ -35,15 +35,15 @@ No se hicieron demos.
 **Principales hallazgos**
 
 1. **Lo básico es estándar.** 14 de 17 sistemas ofrecen reserva online (11 de forma comprobada) y 15 de 17 mencionan odontograma (11 comprobados). Eso no diferencia a un producto nuevo.
-2. **La automatización anunciada no siempre existe.** En Bilog, Dentalink, Oclusar y Clinic Cloud, el centro de ayuda o la documentación muestran que el recordatorio por WhatsApp se envía **a mano**, aunque la web hable de automatización. Solo 4 sistemas comprueban recordatorios automáticos por WhatsApp (DentalSoft en su plan Pro, AgendaPro, Mi Agenda Dental y Odontosist).
+2. **La automatización anunciada no siempre existe.** En Bilog, Dentalink, Oclusar y Clinic Cloud, el centro de ayuda o la documentación muestran que el recordatorio por WhatsApp se envía **a mano**, aunque la web hable de automatización. Solo 3 sistemas comprueban recordatorios automáticos por WhatsApp (DentalSoft en su plan Pro, Mi Agenda Dental y Odontosist). AgendaPro muestra el recordatorio por WhatsApp en pantalla, pero nada indica que el envío sea automático.
 3. **Ningún sistema comprueba a la vez el sillón como recurso y la prevención de solapamientos.**
    - Oclusar y Odontosist documentan que impiden el doble turno, pero en ninguno de los dos está comprobado el sillón como recurso (en Oclusar es una afirmación comercial; en Odontosist, no está evidenciado).
    - AgendaPro, Mi Agenda Dental y Agenda Profesional muestran el sillón o box en pantalla. Sin embargo, su prevención de solapamientos es solo una afirmación comercial, no está evidenciada o, en el caso de AgendaPro, es una alerta que se puede aceptar.
-4. **Pocas listas de espera comprobadas.** Solo Atiendo, Agenda Profesional y Open Dental la comprueban; Doctoralia Pro la afirma (plan VIP) y en los demás no está evidenciada.
+4. **Pocas listas de espera comprobadas.** Solo Atiendo y Open Dental la comprueban; Doctoralia Pro (plan VIP), Oclusar y Agenda Profesional la afirman como texto, y en los demás no está evidenciada.
 5. **El cumplimiento legal argentino solo se declara como texto.** Oclusar (Leyes 26.529 y 25.326) y Agenda Profesional (Ley 25.326, en su política de privacidad) son los únicos que lo mencionan.
-6. **Los precios suelen ser opacos.** Oclusar, Bilog, Atiendo, Agenda Profesional, OdontoGRAMA, Dentalink y Reservo no muestran montos.
+6. **Los precios suelen ser opacos.** Bilog, Atiendo, Agenda Profesional, OdontoGRAMA, Dentalink y Reservo no muestran montos.
 
-**Ranking (sección B, calculado a partir de los niveles de evidencia):** Oclusar 3,42; DentalSoft 3,39; AgendaPro 3,14; Atiendo 3,12.
+**Ranking (sección B, calculado a partir de los niveles de evidencia):** Oclusar 3,70; DentalSoft 3,39; AgendaPro 3,14; Atiendo 3,12.
 
 **MVP recomendado.** Un sistema **solo de turnos y agenda** para consultorios chicos (1 a 5 profesionales, una sede) que:
 
@@ -94,7 +94,7 @@ Los sistemas están ordenados por **relevancia para Argentina**: primero los arg
 | AgendaPro / AgendaPro Inc. | Chile, alcance LATAM · Dentistas y clínicas | Comprobado (pantalla): reserva por chat con IA; sitio de reservas como afirmación comercial | Comprobado (pantalla): "Recordatorio enviado · WhatsApp" | [Software odontológico AR](https://agendapro.com/ar/dental/software-odontologico) · consultada el 2026-11-23 |
 | Atiendo / No evidenciado (contacto en bitpampa.com) | Argentina · Consultorios de salud chicos y medianos | Comprobado (documentación): reserva sin cuenta, por especialidad, día y horario | Comprobado (documentación): email automático; WhatsApp "llega pronto" | [Manual de uso](https://atiendoapp.com/web/ayuda/) · consultada el 2026-11-23 |
 | DentApp / No evidenciado (Codilium) | Argentina · Consultorio y clínica | No evidenciado | Afirmación comercial: email (Profesional) y WhatsApp (Clínica Plus) | [dentapp.ar](https://www.dentapp.ar/) · consultada el 2026-11-23 |
-| Odonto.ar / No evidenciado | No evidenciado (precios en ARS) · Independiente y clínica de hasta 10 personas | Comprobado (pantalla): demo interactiva de reserva | No evidenciado | [Demo](https://odonto.ar/demo) · [odonto.ar](https://odonto.ar/) · consultada el 2026-11-23 |
+| Odonto.ar / No evidenciado | Argentina · Independiente y clínica de hasta 10 personas | Comprobado (pantalla): demo interactiva de reserva | No evidenciado | [Demo](https://odonto.ar/demo) · [odonto.ar](https://odonto.ar/) · [Instagram oficial](https://www.instagram.com/odontoar.ok/) · consultada el 2026-11-23 |
 | Doctoralia Pro / Doctoralia Internet SL | España (oferta para Argentina) · Especialistas de salud | Comprobado (documentación): guía de configuración de la reserva | Afirmación comercial: email, push o SMS según el plan | [Guía de reserva](https://pro.doctoralia.com/ar/guias/configuracion-de-la-reserva-de-cita) · [Precios](https://pro.doctoralia.com/ar/precio) · consultada el 2026-11-23 |
 | Agenda Profesional / No evidenciado | Argentina · Consultorios de salud | Comprobado (pantalla): maqueta de página pública con "Reservar turno" | Afirmación comercial: avisos por email y en el celular | [agenda-profesional.com](https://www.agenda-profesional.com/) · consultada el 2026-11-23 |
 | Reservo / No evidenciado (razón social) | Chile (oferta para Argentina) · Odontólogos y clínicas | Afirmación comercial: módulo de reserva en el sitio web | Afirmación comercial: correo un día antes | [Precios](https://reservo.cl/precios/) · [Centro dental](https://reservo.cl/salud/centro-dental/) · consultada el 2026-11-23 |
@@ -116,7 +116,7 @@ Los sistemas están ordenados por **relevancia para Argentina**: primero los arg
 | 5 | AgendaPro | AgendaPro Inc. / Chile | Dentistas y clínicas (multirrubro) | Nube, con app iOS y Android | [agendapro.com/ar/dental](https://agendapro.com/ar/dental/software-odontologico) | [ayuda.agendapro.com](https://ayuda.agendapro.com/es/); [Academia](https://academia.agendapro.com) (no revisada) | Canal no encontrado (solo testimonios embebidos) | 2026-11-23 |
 | 6 | Atiendo | No evidenciado / Argentina | Consultorios de salud, incluidos los odontológicos | Web en el navegador | [atiendoapp.com](https://atiendoapp.com/) | [Manual de uso](https://atiendoapp.com/web/ayuda/) | No encontrado | 2026-11-23 |
 | 7 | DentApp | No evidenciado (Codilium) / Argentina | Consultorios y clínicas | Aplicación 100 % web | [dentapp.ar](https://www.dentapp.ar/) | No encontrado | No encontrado | 2026-11-23 |
-| 8 | Odonto.ar | No evidenciado / No evidenciado | Independiente y clínicas de hasta 10 personas | Web | [odonto.ar](https://odonto.ar/) | No encontrado ([demo interactiva](https://odonto.ar/demo)) | No encontrado | 2026-11-23 |
+| 8 | Odonto.ar | No evidenciado / Argentina ([Instagram oficial](https://www.instagram.com/odontoar.ok/)) | Independiente y clínicas de hasta 10 personas | Web | [odonto.ar](https://odonto.ar/) | No encontrado ([demo interactiva](https://odonto.ar/demo)) | No encontrado | 2026-11-23 |
 | 9 | Doctoralia Pro | Doctoralia Internet SL / España | Especialistas de salud | Web, app y directorio | [pro.doctoralia.com/ar](https://pro.doctoralia.com/ar) | [Guías](https://pro.doctoralia.com/ar/guias) · [Preguntas frecuentes](https://pro.doctoralia.com/ar/preguntas-frecuentes) | No encontrado | 2026-11-23 |
 | 10 | Agenda Profesional | No evidenciado / Argentina | Consultorios de salud | Web | [agenda-profesional.com](https://www.agenda-profesional.com/) | No encontrado (solo [privacidad](https://www.agenda-profesional.com/privacidad) y [condiciones](https://www.agenda-profesional.com/condiciones)) | No encontrado | 2026-11-23 |
 | 11 | Reservo | No evidenciado / Chile | Odontólogos y clínicas | No evidenciado | [reservo.cl/precios](https://reservo.cl/precios/) · [reservo.com.ar](https://reservo.com.ar/) | No encontrado (solo teléfonos de soporte y capacitación) | No encontrado | 2026-11-23 |
@@ -156,7 +156,7 @@ La reserva online y los recordatorios figuran en la tabla A.0.
 | # | Producto | Confirmación por el paciente | Cancelación / reprogramación por el paciente | Lista de espera | Recuperación de ausentes, controles y campañas | Fuentes (consulta 2026-11-23) |
 |---|---|---|---|---|---|---|
 | 1 | DentalSoft | Comprobado (pantalla): botones Confirmar y Cancelar | Cancelación: Comprobado (pantalla); reprogramación: No evidenciado | No evidenciado | Comprobado (pantalla): recuperación a 6 meses por WhatsApp | [Recordatorios](https://www.dentalsoft.com.ar/funcionalidades/recordatorios-whatsapp) · [Recuperación](https://www.dentalsoft.com.ar/funcionalidades/recuperacion-de-pacientes) |
-| 2 | Oclusar | Afirmación comercial | No evidenciado | No evidenciado | No evidenciado | [Web](https://www.oclusar.com.ar/) |
+| 2 | Oclusar | Afirmación comercial | No evidenciado | Afirmación comercial ("Lista de espera para los huecos que quedan libres") | No evidenciado | [Web](https://www.oclusar.com.ar/) |
 | 3 | Bilog | Comprobado (centro de ayuda): responde "confirmo" o "cancelo" | Cancelación: Comprobado (centro de ayuda); reprogramación: No evidenciado | No evidenciado | No evidenciado | [Recordatorios](https://docs.bilog.com.ar/schedule/reminders) · [Reserva online](https://docs.bilog.com.ar/schedule/online-appointment) |
 | 4 | Dentalink | Comprobado (centro de ayuda): link para confirmar o anular | Cancelación: Comprobado (centro de ayuda); reprogramación: No evidenciado | No evidenciado | Afirmación comercial ("tareas automáticas de control", plan Titanium) | [Notificar por WhatsApp](https://intercom.help/softwaredentalink/es/articles/9493137-como-notificar-cita-por-whatsapp) · [Web AR](https://www.softwaredentalink.com/ar) |
 | 5 | AgendaPro | Afirmación comercial ("el asistente IA insiste") | Afirmación comercial | No evidenciado | Comprobado (pantalla): segmento automático y envío de campaña | [Dental AR](https://agendapro.com/ar/dental/software-odontologico) · [Planes](https://agendapro.com/ar/planes) |
@@ -164,7 +164,7 @@ La reserva online y los recordatorios figuran en la tabla A.0.
 | 7 | DentApp | No evidenciado | No evidenciado | No evidenciado | No evidenciado | [dentapp.ar](https://www.dentapp.ar/) |
 | 8 | Odonto.ar | No evidenciado | Afirmación comercial | No evidenciado | No evidenciado | [Web](https://odonto.ar/) |
 | 9 | Doctoralia Pro | Afirmación comercial | Afirmación comercial | Afirmación comercial (plan VIP) | Afirmación comercial (campañas por SMS y email) | [Precios](https://pro.doctoralia.com/ar/precio) · [Agenda](https://pro.doctoralia.com/ar/agenda-doctoralia-para-especialistas) |
-| 10 | Agenda Profesional | Afirmación comercial | Afirmación comercial | Comprobado (pantalla): en el menú de la maqueta | No evidenciado | [Web](https://www.agenda-profesional.com/) · [Condiciones](https://www.agenda-profesional.com/condiciones) |
+| 10 | Agenda Profesional | Afirmación comercial | Afirmación comercial | Afirmación comercial (ítem del menú de la maqueta; no se ve la función) | No evidenciado | [Web](https://www.agenda-profesional.com/) · [Condiciones](https://www.agenda-profesional.com/condiciones) |
 | 11 | Reservo | No evidenciado | No evidenciado | No evidenciado | Afirmación comercial (mailing) | [Precios](https://reservo.cl/precios/) |
 | 12 | OdontoGRAMA | No evidenciado | No evidenciado | No evidenciado | No evidenciado | [Web](https://odontograma.com.ar/) |
 | 13 | Clinic Cloud | Afirmación comercial | No evidenciado | No evidenciado | Afirmación comercial (campañas de marketing) | [Web](https://clinic-cloud.com/) · [Tarifas](https://clinic-cloud.com/tarifas) |
@@ -268,7 +268,7 @@ Los precios provienen de las páginas oficiales de precios. Las cifras de adopci
 | # | Producto | Modelo comercial publicado | Fortalezas / limitaciones / diferencial | Adopción (afirmación comercial) | Fuentes (consulta 2026-11-23) |
 |---|---|---|---|---|---|
 | 1 | DentalSoft | Gratis 3 meses (hasta 50 turnos por mes); Gestión $30.000 y Pro $60.000 por mes y por profesional; WhatsApp a USD 0,026 por mensaje (Meta) | **+** La mayor cantidad de funciones comprobadas en pantalla para el circuito argentino (señas, obras sociales, recuperación). **−** Agenda (solapamientos, bloqueos) solo como texto; automatización solo en Pro; facturación ARCA y centro de ayuda no evidenciados | 11 reseñas de Google (5,0) | [Planes](https://dentalsoft.com.ar/) |
-| 2 | Oclusar | Empieza gratis, sin tarjeta; "precio en pesos" sin montos | **+** Única con prevención de solapamientos, ARCA y firma documentadas. **−** Recordatorios manuales; lista de espera no evidenciada; sillones solo como texto | No evidenciado | [Web](https://www.oclusar.com.ar/) |
+| 2 | Oclusar | Empieza gratis, sin tarjeta; planes de $20.000, $30.000 y desde $40.000 por mes | **+** Única con prevención de solapamientos, ARCA y firma documentadas. **−** Recordatorios manuales; lista de espera y sillones solo como texto | No evidenciado | [Web](https://www.oclusar.com.ar/) |
 | 3 | Bilog | Sin precios; configuración sin costo; sin permanencia | **+** Centro de ayuda completo (sobreturnos, bloqueos, caja, liquidaciones). **−** Recordatorios manuales pese a lo que dice la web; sin precios | +1.500 clínicas; +150.000 turnos por mes | [Web](https://bilog.com.ar/) |
 | 4 | Dentalink | Cotización a pedido; pago mensual, semestral o anual; adicionales pagos | **+** Centro de ayuda y canal de YouTube extensos. **−** WhatsApp manual; la mayor parte de lo publicado es afirmación comercial o solo un título de artículo | +15.000 clínicas; +20 países | [Planes](https://www.softwaredentalink.com/ar/planes) |
 | 5 | AgendaPro | ARS con IVA: $9.900 a $129.900 por mes; ficha clínica +$10.000; WhatsApp desde $7.900; API USD 200 | **+** La agenda más completa en pantalla (sillón, duración por práctica); campañas. **−** El solapamiento solo genera una alerta aceptable; ficha clínica como adicional; obras sociales no evidenciadas | +135.000 profesionales; +30.000 clínicas | [Planes](https://agendapro.com/ar/planes) |
@@ -276,7 +276,7 @@ Los precios provienen de las páginas oficiales de precios. Las cifras de adopci
 | 7 | DentApp | 30 días gratis; $24.900, $54.900 y $74.900 por mes | **+** Precio de entrada bajo. **−** reserva por el paciente no evidenciada; todo como afirmación comercial | No evidenciado | [Web](https://www.dentapp.ar/) |
 | 8 | Odonto.ar | 30 días gratis; USD 29, 49 y 99 por mes (aprox. ARS 47.995 a 163.845) | **+** Demo interactiva pública. **−** recordatorios e integraciones no evidenciados | No evidenciado | [Precios](https://odonto.ar/) |
 | 9 | Doctoralia Pro | Versión gratuita; ARS 25.000, 35.000 y 55.000 por mes con facturación anual | **+** Captación por el directorio. **−** odontograma y administración no evidenciados | 110.000 profesionales en el directorio | [Precios](https://pro.doctoralia.com/ar/precio) |
-| 10 | Agenda Profesional | No evidenciado ("no hay alta pública") | **+** Box, lista de espera y señas visibles en pantalla. **−** Sin precios; documentación no encontrada; prevención de solapamientos no evidenciada | No evidenciado | [Web](https://www.agenda-profesional.com/) |
+| 10 | Agenda Profesional | No evidenciado ("no hay alta pública") | **+** Box y señas visibles en pantalla. **−** Sin precios; documentación no encontrada; lista de espera solo como afirmación comercial; prevención de solapamientos no evidenciada | No evidenciado | [Web](https://www.agenda-profesional.com/) |
 | 11 | Reservo | Plan único según el tamaño, sin montos | **−** Casi todo es afirmación comercial | No evidenciado | [Precios](https://reservo.cl/precios/) |
 | 12 | OdontoGRAMA | Cuenta gratis para probar; sin precios | **−** turnos digitales no evidenciados; casi sin evidencia | No evidenciado | [Web](https://odontograma.com.ar/) |
 | 13 | Clinic Cloud | EUR más IVA: 29, 49 y 79 por mes (promoción de 50 % por 3 meses) | **+** Centro de ayuda. **−** WhatsApp manual; oferta para Argentina no evidenciada | +12.000 doctores | [Tarifas](https://clinic-cloud.com/tarifas) |
@@ -318,14 +318,14 @@ Los precios provienen de las páginas oficiales de precios. Las cifras de adopci
 
 | Pos. | Producto | Turnos y autom. (25 %) | Clínica (20 %) | Integr. locales y WhatsApp (15 %) | Administración (15 %) | Exp. paciente (10 %) | Seguridad (10 %) | Precio y adopción (5 %) | **Total (0–5)** |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | Oclusar | 2,5 | 4,5 | 3,3 | 5,0 | 1,9 | 3,8 | 1,7 | **3,42** |
+| 1 | Oclusar | 2,7 | 4,5 | 3,3 | 5,0 | 2,5 | 3,8 | 5,0 | **3,70** |
 | 2 | DentalSoft | 3,1 | 4,0 | 2,9 | 3,8 | 3,1 | 2,5 | 5,0 | **3,39** |
 | 3 | AgendaPro | 3,8 | 3,5 | 3,3 | 2,5 | 2,5 | 1,2 | 5,0 | **3,14** |
 | 4 | Atiendo | 3,3 | 3,5 | 2,1 | 2,5 | 4,4 | 3,8 | 1,7 | **3,12** |
 | 5 | Bilog | 3,1 | 3,5 | 1,2 | 3,1 | 3,1 | 1,9 | 0,0 | **2,64** |
 | 6 | Open Dental | 2,3 | 4,5 | 0,4 | 3,1 | 3,8 | 0,0 | 3,3 | **2,55** |
-| 7 | Agenda Profesional | 2,1 | 3,0 | 1,2 | 3,8 | 3,8 | 1,2 | 0,0 | **2,37** |
-| 8 | Mi Agenda Dental | 2,1 | 3,5 | 1,7 | 1,9 | 0,6 | 3,8 | 3,3 | **2,36** |
+| 7 | Mi Agenda Dental | 2,1 | 3,5 | 1,7 | 1,9 | 0,6 | 3,8 | 3,3 | **2,36** |
+| 8 | Agenda Profesional | 1,9 | 3,0 | 1,2 | 3,8 | 3,1 | 1,2 | 0,0 | **2,26** |
 | 9 | Dentalink | 2,1 | 3,5 | 1,2 | 1,2 | 2,5 | 3,1 | 0,0 | **2,16** |
 | 10 | Odontosist | 1,9 | 3,5 | 1,7 | 1,2 | 1,2 | 2,5 | 3,3 | **2,15** |
 | 11 | MedFarmaSoft Dental | 1,7 | 3,5 | 1,2 | 0,6 | 2,5 | 1,9 | 3,3 | **2,00** |
@@ -338,7 +338,7 @@ Los precios provienen de las páginas oficiales de precios. Las cifras de adopci
 
 **Lectura crítica.**
 
-- **Puntajes bajos en general.** Ningún sistema supera 3,5 porque buena parte de lo que se publica es texto comercial sin pantalla ni documentación.
+- **Puntajes bajos en general.** Ningún sistema llega a 4 porque buena parte de lo que se publica es texto comercial sin pantalla ni documentación.
 - **Primeros puestos.** Oclusar lidera porque documenta en guías lo que afirma: ARCA, obras sociales, firma y prevención de solapamientos. DentalSoft queda segundo con muchas pantallas de producto, pero su agenda se apoya en texto.
 - **En el criterio de turnos**, que es el que importa para denta-flow, el mejor es AgendaPro (3,8). Aun así, el centro de ayuda de AgendaPro muestra que un turno superpuesto **solo genera una alerta**.
 - **Dentalink**, que se declara líder regional, queda noveno por falta de evidencia pública, no necesariamente de funciones. Por eso se incluye entre las demos prioritarias.
@@ -362,8 +362,8 @@ Los precios provienen de las páginas oficiales de precios. Las cifras de adopci
   - AgendaPro, según su centro de ayuda, solo muestra una alerta que se puede aceptar.
   - En Agenda Profesional no está evidenciada.
 - **Sillón o box en pantalla:** AgendaPro ("Sillón 1"), Mi Agenda Dental ("multi-unidad") y Agenda Profesional (pestaña "Box"). **Ninguno de los tres comprueba además la prevención de solapamientos.**
-- **Lista de espera:** comprobada solo en Atiendo (documentación), Agenda Profesional (pantalla) y Open Dental (documentación).
-- **Recordatorio automático por WhatsApp:** comprobado solo en DentalSoft (plan Pro), AgendaPro, Mi Agenda Dental y Odontosist.
+- **Lista de espera:** comprobada solo en Atiendo (documentación) y Open Dental (documentación); Doctoralia Pro, Oclusar y Agenda Profesional la afirman como texto.
+- **Recordatorio automático por WhatsApp:** comprobado solo en DentalSoft (plan Pro), Mi Agenda Dental y Odontosist. AgendaPro muestra el recordatorio en pantalla, pero no que el envío sea automático.
 - **Seña con Mercado Pago:** comprobada en DentalSoft, Oclusar, AgendaPro, Atiendo y Agenda Profesional.
 - **Facturación ARCA:** documentada solo en Oclusar; Bilog muestra una factura emitida vía Facturante.
 
@@ -375,7 +375,7 @@ Son funciones que los proveedores no comprueban públicamente. Que no estén evi
 2. **Protección de recursos físicos no comprobada.** Nadie comprueba la combinación profesional + sillón + duración por prestación con prevención de solapamientos.
 3. **Gestión del ausentismo poco comprobada.** La recuperación o el recall solo se comprueba en DentalSoft, Mi Agenda Dental, AgendaPro (campañas) y Open Dental. Ninguno publica métricas de ausentismo.
 4. **Cumplimiento declarado, no demostrado.** Solo Oclusar y Agenda Profesional mencionan la Ley 25.326, y solo como texto.
-5. **Precios opacos.** 5 de los 8 argentinos (Oclusar, Bilog, Atiendo, Agenda Profesional y OdontoGRAMA) no muestran montos legibles; tampoco lo hacen Dentalink ni Reservo.
+5. **Precios opacos.** 4 de los 8 argentinos (Bilog, Atiendo, Agenda Profesional y OdontoGRAMA) no muestran montos legibles; tampoco lo hacen Dentalink ni Reservo.
 6. **Poca documentación pública.** DentalSoft, DentApp, Odonto.ar, Agenda Profesional, Reservo, OdontoGRAMA, Mi Agenda Dental y MedFarmaSoft: no se encontró centro de ayuda ni manual público.
 
 ### C.4 Oportunidades de innovación para denta-flow
@@ -454,15 +454,13 @@ Si alguna demo no se consigue, el reemplazo es **Bilog** (centro de ayuda comple
 
 ## Verificación de fuentes
 
-*Plantilla a completar por el equipo antes de generar el PDF. Una fila por cada fuente comprobada (mínimo 5).*
-
 | Fuente (URL) | Qué afirma el informe | Qué encontramos | Qué corregimos |
 |---|---|---|---|
-| | | | |
-| | | | |
-| | | | |
-| | | | |
-| | | | |
+| https://www.oclusar.com.ar/ | No publica precios ("precio en pesos" sin montos). Lista de espera: No evidenciado | La página muestra planes de $20.000, $30.000 y desde $40.000 por mes, y dice "Lista de espera para los huecos que quedan libres" | Precios cargados en la tabla de precios y sacados de "precios opacos"; lista de espera pasada a Afirmación comercial; puntaje y ranking recalculados |
+| https://www.opendental.com/site/websched.html | Es multiprofesional y se basa en títulos de videos para afirmar eso | En ningún video sale que se puedan agregar más de un profesional a un turno | Se usó un Ajustar y las filas en el apartado A |
+| https://agendapro.com/ar/dental/software-odontologico | Recordatorio automático por WhatsApp comprobado (resumen, hallazgo 2; C.2) | La página muestra el recordatorio por WhatsApp, pero nada indica que el envío sea automático | AgendaPro sale de la lista de recordatorios automáticos comprobados (queda en 3 sistemas). La celda de A.0 se mantiene |
+| https://www.agenda-profesional.com/ | Lista de espera "Comprobado (pantalla)" | "Lista de espera" aparece solo como ítem del menú de la maqueta; no se ve la función | Pasa a afirmación comercial; se actualizan el hallazgo 4, C.2 y la matriz B |
+| https://odonto.ar/ y https://www.instagram.com/odontoar.ok/ | País "No evidenciado"; precios en ARS (A.0) y en USD (A.8) | Su Instagram oficial, enlazado desde el sitio, indica que son argentinos, aunque sus precios estén en USD | País → Argentina, con la fuente agregada. Moneda corregida a USD |
 
 ---
 
@@ -543,71 +541,72 @@ Todas las fuentes fueron consultadas el **2026-11-23**.
 **Odonto.ar**
 57. Página oficial y precios. https://odonto.ar/
 58. Demo interactiva. https://odonto.ar/demo
+59. Instagram oficial (enlazado desde el sitio). https://www.instagram.com/odontoar.ok/
 
 **Doctoralia Pro**
-59. Doctoralia Pro Argentina. https://pro.doctoralia.com/ar
-60. Precios. https://pro.doctoralia.com/ar/precio
-61. Agenda para especialistas. https://pro.doctoralia.com/ar/agenda-doctoralia-para-especialistas
-62. Guías. https://pro.doctoralia.com/ar/guias
-63. Guía de configuración de la reserva. https://pro.doctoralia.com/ar/guias/configuracion-de-la-reserva-de-cita
-64. Preguntas frecuentes. https://pro.doctoralia.com/ar/preguntas-frecuentes
-65. Preguntas frecuentes: seguridad de datos. https://pro.doctoralia.com/ar/preguntas-frecuentes/seguridad-datos
-66. Preguntas frecuentes: sincronización. https://pro.doctoralia.com/ar/preguntas-frecuentes/sincronizacion
+60. Doctoralia Pro Argentina. https://pro.doctoralia.com/ar
+61. Precios. https://pro.doctoralia.com/ar/precio
+62. Agenda para especialistas. https://pro.doctoralia.com/ar/agenda-doctoralia-para-especialistas
+63. Guías. https://pro.doctoralia.com/ar/guias
+64. Guía de configuración de la reserva. https://pro.doctoralia.com/ar/guias/configuracion-de-la-reserva-de-cita
+65. Preguntas frecuentes. https://pro.doctoralia.com/ar/preguntas-frecuentes
+66. Preguntas frecuentes: seguridad de datos. https://pro.doctoralia.com/ar/preguntas-frecuentes/seguridad-datos
+67. Preguntas frecuentes: sincronización. https://pro.doctoralia.com/ar/preguntas-frecuentes/sincronizacion
 
 **Agenda Profesional**
-67. Página oficial. https://www.agenda-profesional.com/
-68. Privacidad. https://www.agenda-profesional.com/privacidad
-69. Condiciones. https://www.agenda-profesional.com/condiciones
+68. Página oficial. https://www.agenda-profesional.com/
+69. Privacidad. https://www.agenda-profesional.com/privacidad
+70. Condiciones. https://www.agenda-profesional.com/condiciones
 
 **Reservo**
-70. Página dental. https://reservo.cl/homepage/dental/
-71. Precios. https://reservo.cl/precios/
-72. Centro dental. https://reservo.cl/salud/centro-dental/
-73. Página para Argentina. https://reservo.com.ar/
+71. Página dental. https://reservo.cl/homepage/dental/
+72. Precios. https://reservo.cl/precios/
+73. Centro dental. https://reservo.cl/salud/centro-dental/
+74. Página para Argentina. https://reservo.com.ar/
 
 **OdontoGRAMA**
-74. Página oficial. https://odontograma.com.ar/
+75. Página oficial. https://odontograma.com.ar/
 
 **Clinic Cloud**
-75. Página oficial. https://clinic-cloud.com/
-76. Tarifas. https://clinic-cloud.com/tarifas
-77. Centro de ayuda. https://clinic-cloud.com/faq
-78. Agenda y comunicaciones. https://clinic-cloud.com/faq/agenda-y-comunicaciones
-79. Recordatorio de citas por WhatsApp. https://clinic-cloud.com/faq/configuracion-centro/recodatorio-de-citas-via-whatsapp
-80. Configuración de usuarios. https://clinic-cloud.com/faq/configuracion-centro/configuracion-de-usuarios
+76. Página oficial. https://clinic-cloud.com/
+77. Tarifas. https://clinic-cloud.com/tarifas
+78. Centro de ayuda. https://clinic-cloud.com/faq
+79. Agenda y comunicaciones. https://clinic-cloud.com/faq/agenda-y-comunicaciones
+80. Recordatorio de citas por WhatsApp. https://clinic-cloud.com/faq/configuracion-centro/recodatorio-de-citas-via-whatsapp
+81. Configuración de usuarios. https://clinic-cloud.com/faq/configuracion-centro/configuracion-de-usuarios
 
 **Mi Agenda Dental**
-81. Página oficial. https://miagendadental.com/
-82. Blog. https://miagendadental.com/blog/
+82. Página oficial. https://miagendadental.com/
+83. Blog. https://miagendadental.com/blog/
 
 **Odontosist**
-83. Página oficial. https://odontosist.com/
-84. Guía de uso. https://odontosist.com/guia-usuario.html
+84. Página oficial. https://odontosist.com/
+85. Guía de uso. https://odontosist.com/guia-usuario.html
 
 **MedFarmaSoft**
-85. Programa para clínica dental. https://medfarmasoft.com/dental/
-86. Odontograma. https://medfarmasoft.es/odontograma/
-87. Recordatorios por WhatsApp. https://medfarmasoft.es/recordatorios-whatsapp/
-88. Ausencias. https://medfarmasoft.es/ausencias/
+86. Programa para clínica dental. https://medfarmasoft.com/dental/
+87. Odontograma. https://medfarmasoft.es/odontograma/
+88. Recordatorios por WhatsApp. https://medfarmasoft.es/recordatorios-whatsapp/
+89. Ausencias. https://medfarmasoft.es/ausencias/
 
 **Open Dental**
-89. Página oficial. https://www.opendental.com/
-90. Order / pricing. https://www.opendental.com/site/order.html
-91. Fees. https://www.opendental.com/site/fees.html
-92. Documentación. https://www.opendental.com/site/documentation.html
-93. Web Sched. https://www.opendental.com/site/websched.html
-94. eReminders. https://www.opendental.com/site/ereminders.html
-95. Lista ASAP. https://www.opendental.com/site/0_asaplist.html
-96. Canal oficial de YouTube. https://www.youtube.com/channel/UC2f1mkxYSud-V72gxpgmRrQ
-97. Videos: Appointments Module. https://www.youtube.com/playlist?list=PLyjZ9PCVynCmlEORfQVD5o1a1lC78tlMz
-98. Videos: Chart Module. https://www.youtube.com/playlist?list=PLyjZ9PCVynCkrtlgrAR0MSazd7Ez9-Z0R
-99. Videos: Treatment Plan Module. https://www.youtube.com/playlist?list=PLyjZ9PCVynClmOo-iRmtFC7cOuq7Je5Io
-100. Videos: Account Module. https://www.youtube.com/playlist?list=PLyjZ9PCVynCnYKR2Y5ngkYf-rLqjw9j5F
-101. Videos: Insurance. https://www.youtube.com/playlist?list=PLyjZ9PCVynCmo7F4AApt-eOkyqV5iuDlO
-102. Video: A Quick Look at Web Sched Recall. https://youtu.be/yZvlozVRdN8
-103. Video: Appointment views. https://www.youtube.com/watch?v=WQUMsj0ihb0
-104. Video: Chart Module Main Window. https://www.youtube.com/watch?v=H1PpDOY8zOg
-105. Video: Perio Chart. https://www.youtube.com/watch?v=ApO1MkPkq48
-106. Video: Treatment Plan Basics. https://www.youtube.com/watch?v=apYXaA3_JVU
-107. Video: Patient Payments. https://www.youtube.com/watch?v=x3CKA_n1qEs
-108. Video: Adding Insurance. https://www.youtube.com/watch?v=7wRVh0A2uP0
+90. Página oficial. https://www.opendental.com/
+91. Order / pricing. https://www.opendental.com/site/order.html
+92. Fees. https://www.opendental.com/site/fees.html
+93. Documentación. https://www.opendental.com/site/documentation.html
+94. Web Sched. https://www.opendental.com/site/websched.html
+95. eReminders. https://www.opendental.com/site/ereminders.html
+96. Lista ASAP. https://www.opendental.com/site/0_asaplist.html
+97. Canal oficial de YouTube. https://www.youtube.com/channel/UC2f1mkxYSud-V72gxpgmRrQ
+98. Videos: Appointments Module. https://www.youtube.com/playlist?list=PLyjZ9PCVynCmlEORfQVD5o1a1lC78tlMz
+99. Videos: Chart Module. https://www.youtube.com/playlist?list=PLyjZ9PCVynCkrtlgrAR0MSazd7Ez9-Z0R
+100. Videos: Treatment Plan Module. https://www.youtube.com/playlist?list=PLyjZ9PCVynClmOo-iRmtFC7cOuq7Je5Io
+101. Videos: Account Module. https://www.youtube.com/playlist?list=PLyjZ9PCVynCnYKR2Y5ngkYf-rLqjw9j5F
+102. Videos: Insurance. https://www.youtube.com/playlist?list=PLyjZ9PCVynCmo7F4AApt-eOkyqV5iuDlO
+103. Video: A Quick Look at Web Sched Recall. https://youtu.be/yZvlozVRdN8
+104. Video: Appointment views. https://www.youtube.com/watch?v=WQUMsj0ihb0
+105. Video: Chart Module Main Window. https://www.youtube.com/watch?v=H1PpDOY8zOg
+106. Video: Perio Chart. https://www.youtube.com/watch?v=ApO1MkPkq48
+107. Video: Treatment Plan Basics. https://www.youtube.com/watch?v=apYXaA3_JVU
+108. Video: Patient Payments. https://www.youtube.com/watch?v=x3CKA_n1qEs
+109. Video: Adding Insurance. https://www.youtube.com/watch?v=7wRVh0A2uP0

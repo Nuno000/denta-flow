@@ -39,7 +39,7 @@ Se relevaron 17 sistemas. El ranking completo está en la sección B del informe
 
 | Competidor | Puntaje (B) | Pricing publicado | Qué lo destaca (evidencia) | Qué validar en la demo |
 |---|---|---|---|---|
-| Oclusar | 3,42 | Gratis al empezar; precio en pesos sin montos | Prevención de doble turno, ARCA y firma documentadas en sus guías | Si la prevención incluye el sillón; flujo de seña |
+| Oclusar | 3,70 | Gratis al empezar; planes de $20.000, $30.000 y desde $40.000 por mes | Prevención de doble turno, ARCA y firma documentadas en sus guías | Si la prevención incluye el sillón; flujo de seña |
 | DentalSoft | 3,39 | $30.000 a $60.000 por mes y por profesional | Muchas pantallas de producto: seña con Mercado Pago, obras sociales, recuperación | Solapamientos y bloqueos (hoy solo como texto); costo real de WhatsApp |
 | AgendaPro | 3,14 | ARS 9.900 a 129.900 por mes | Sillón y duración por práctica en pantalla; el solapamiento solo genera una alerta aceptable | Comportamiento ante solapamientos; costo con adicionales |
 | Atiendo | 3,12 | 30 días gratis; montos no legibles | Lista de espera, roles y sala de espera documentados en su manual | Aviso de turno libre a la lista de espera |

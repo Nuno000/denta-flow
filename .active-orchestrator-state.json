@@ -1,0 +1,259 @@
+{
+  "version": 5,
+  "step": "kb",
+  "owner": "active-orchestrator",
+  "foundation": {
+    "version": 1,
+    "approved_on": "2026-11-23",
+    "order": [
+      "discovery",
+      "kb",
+      "roadmap",
+      "find-skill",
+      "registry",
+      "agents"
+    ],
+    "phases": {
+      "discovery": {
+        "variant": "existing-sources",
+        "status": "done",
+        "requires": [],
+        "outputs": [
+          "docs/discovery/discovery.md",
+          "docs/discovery/informe-discovery.md"
+        ],
+        "completed_on": "2026-11-23"
+      },
+      "kb": {
+        "variant": "import",
+        "status": "pending",
+        "requires": [
+          "discovery"
+        ],
+        "outputs": [
+          "knowledge-base/"
+        ]
+      },
+      "roadmap": {
+        "variant": "local-markdown",
+        "status": "pending",
+        "requires": [
+          "kb"
+        ],
+        "outputs": [
+          "CHANGES.md"
+        ]
+      },
+      "find-skill": {
+        "variant": "install-selected",
+        "status": "pending",
+        "requires": [
+          "kb"
+        ],
+        "outputs": []
+      },
+      "registry": {
+        "variant": "index",
+        "status": "pending",
+        "requires": [
+          "find-skill"
+        ],
+        "outputs": [
+          ".atl/skill-registry.md"
+        ]
+      },
+      "agents": {
+        "variant": "generate",
+        "status": "pending",
+        "requires": [
+          "kb",
+          "roadmap",
+          "registry"
+        ],
+        "outputs": [
+          "CLAUDE.md"
+        ]
+      },
+      "visual-design": {
+        "variant": "deferred",
+        "status": "deferred",
+        "requires": [],
+        "outputs": []
+      },
+      "task-management": {
+        "variant": "local",
+        "status": "skipped",
+        "requires": [],
+        "outputs": []
+      },
+      "team-mode": {
+        "variant": "new",
+        "status": "skipped",
+        "requires": [],
+        "outputs": []
+      },
+      "memory-policy": {
+        "variant": "local",
+        "status": "skipped",
+        "requires": [],
+        "outputs": []
+      }
+    }
+  },
+  "discovery": {
+    "created_by": "discovery-research",
+    "sources": [
+      "https://www.oclusar.com.ar/",
+      "https://dentalsoft.com.ar/",
+      "https://agendapro.com/ar/dental/software-odontologico",
+      "https://atiendoapp.com/",
+      "https://www.softwaredentalink.com/ar",
+      "https://bilog.com.ar/"
+    ],
+    "sources_fetched_at": "2026-11-23",
+    "report_file": "docs/discovery/informe-discovery.md",
+    "competitors": [
+      {
+        "name": "Oclusar",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "DentalSoft",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "AgendaPro",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "Atiendo",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "Dentalink",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "Bilog",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "Open Dental",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "Agenda Profesional",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "Mi Agenda Dental",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "Odontosist",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "MedFarmaSoft Dental",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "Clinic Cloud",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "Odonto.ar",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "DentApp",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "Doctoralia Pro",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "Reservo",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      },
+      {
+        "name": "OdontoGRAMA",
+        "notes_file": "docs/discovery/informe-discovery.md"
+      }
+    ],
+    "problema": "Consultorios odontológicos chicos de Argentina coordinan turnos por teléfono, WhatsApp o papel: superposición de profesional o sillón, ausencias sin aviso, huecos no recuperados y tiempo de recepción en confirmaciones.",
+    "usuarios": [
+      "Paciente: reserva, confirma, cancela y reprograma",
+      "Recepción: gestiona agenda y asistencia",
+      "Profesional: consulta agenda y marca asistencia",
+      "Administrador: configura profesionales, sillones, prestaciones, horarios y bloqueos"
+    ],
+    "casos_de_uso": [
+      "Paciente reserva online según prestación",
+      "Paciente confirma, cancela o reprograma desde el recordatorio",
+      "Recepción carga turno telefónico sin superponer profesional ni sillón",
+      "Profesional ve su día y marca ausentes",
+      "Turno liberado se ofrece a la lista de espera"
+    ],
+    "funcionalidades_necesarias": [
+      "Profesionales, sillones/boxes y prestaciones con duración",
+      "Horarios y bloqueos",
+      "Agenda día/semana con prevención de solapamientos por profesional y sillón",
+      "Reserva online 24/7 sin registro",
+      "Cancelación y reprogramación por el paciente",
+      "Recordatorio automático por email y confirmación de un toque",
+      "Carga manual por recepción con sobreturno explícito",
+      "Estados de asistencia",
+      "Roles y registro de cambios",
+      "Aviso de privacidad Ley 25.326"
+    ],
+    "funcionalidades_opcionales": [
+      "Lista de espera automática",
+      "Panel de ausentismo",
+      "WhatsApp prellenado (wa.me)",
+      "Reintento de confirmación",
+      "Manual público",
+      "Etapas posteriores: ficha clínica, odontograma, imágenes, presupuestos, cobros y Mercado Pago, obras sociales, ARCA, WhatsApp API, multisede, campañas, app nativa"
+    ],
+    "reglas_de_negocio": [
+      "Sin solapamientos por profesional ni por sillón",
+      "Duración definida por la prestación",
+      "Sin reservas en bloqueos ni fuera de horario",
+      "Reserva online solo ofrece huecos donde entra la prestación completa",
+      "Estados: pendiente, confirmado, cancelado, asistió, ausente, ausente con aviso",
+      "Cancelación/reprogramación hasta una anticipación mínima configurable",
+      "Sobreturno solo por recepción, explícito y registrado",
+      "Todo cambio registra quién y cuándo"
+    ],
+    "integraciones": [
+      "MVP: email transaccional",
+      "MVP: enlaces WhatsApp prellenados (wa.me)",
+      "Posterior: WhatsApp Business API",
+      "Posterior: Mercado Pago",
+      "Posterior: ARCA",
+      "Posterior: Google Calendar"
+    ],
+    "restricciones": [
+      "Trabajo final de Desarrollo de Software, equipo de 4",
+      "Consultorio chico, una sede",
+      "Mobile-first para el paciente",
+      "Datos personales: Ley 25.326"
+    ],
+    "riesgos": [
+      "Adopción de la reserva online frente a WhatsApp no validada",
+      "Diferencial de sillón + solapamiento no validado con demos",
+      "Costo por mensaje de WhatsApp API",
+      "Crecimiento de alcance hacia lo clínico",
+      "Bloqueos y horarios desactualizados",
+      "Informe sin demos; verificación de fuentes pendiente del equipo"
+    ],
+    "preguntas_abiertas": [
+      "Plazo de entrega",
+      "Stack libre o fijado por la cátedra",
+      "WhatsApp en el MVP: enlace o API",
+      "Anticipación mínima por defecto",
+      "Elección de profesional en la reserva online"
+    ]
+  }
+}

@@ -435,7 +435,10 @@
       "notebooklm"
     ],
     "engram_saved": true,
-    "notes": "strict-tdd hook targets src/**/*.ts with jest only; not enforced for Java backend. No AGENTS.md/CLAUDE.md created."
+    "notes": "strict-tdd hook targets src/**/*.ts with jest only; not enforced for Java backend. No AGENTS.md/CLAUDE.md created.",
+    "versioned": true,
+    "format": "es, rutas portables (~ y relativas al repo)",
+    "updated_on": "2026-11-23"
   },
   "agents": {
     "created_by": "agent-instruction",

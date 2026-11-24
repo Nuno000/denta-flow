@@ -62,7 +62,7 @@ La fuente de verdad del dominio vive en `knowledge-base/`. **Leé el archivo rel
 
 Cargá la skill correspondiente al contexto ANTES de escribir código. Sin skill dedicada (aplicar las reglas generales y la KB): Flyway, TanStack Query, React Hook Form + Zod, Tailwind, Vitest / Testing Library, GitHub Actions.
 
-> Los compact rules de cada skill los resuelve el orquestador desde `.atl/skill-registry.md` (generado por `skill-registry`; no versionado — no está en el repo). Esta tabla solo mapea skill→rol.
+> Las reglas compactas de cada skill las resuelve el orquestador desde [.atl/skill-registry.md](.atl/skill-registry.md) (generado por `skill-registry` y versionado en el repo para todo el equipo; incluye cómo instalar las skills que falten). Esta tabla solo mapea skill→rol.
 
 ---
 

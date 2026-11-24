@@ -56,54 +56,54 @@ C-24 manual-publico         ← C-19
 
 ### Paralelismo por fase
 
-> Cada "gate" es un punto de sincronización. Los changes dentro de un gate pueden ejecutarse en paralelo (equipo de 4: usar A/B/C + una cuarta persona de apoyo/revisión).
+> Cada "gate" es un punto de sincronización. Los changes dentro de un gate pueden ejecutarse en paralelo. Entre corchetes, el responsable (ver "Reparto del equipo").
 
 ```
 GATE 0: ninguna
-  → C-01 decision-stack-y-plazo          (solo, equipo completo decide)
+  → C-01 decision-stack-y-plazo          [todo el equipo decide]
 
 GATE 1: C-01 ✓
-  → C-02 scaffolding-proyecto            (solo)
+  → C-02 scaffolding-proyecto            [Integrante 2]
 
 GATE 2: C-02 ✓
-  → C-03 modelo-recursos-consultorio     (solo)
+  → C-03 modelo-recursos-consultorio     [Integrante 1]
 
 GATE 3: C-03 ✓
-  → C-04 auth-usuarios-roles             (solo — CRITICO)
+  → C-04 auth-usuarios-roles             [Integrante 2 — CRITICO]
 
 GATE 4: C-04 ✓                           ← FORK (4 paralelos)
-  → C-08 auditoria-cambios               [Agente A]
-  → C-06 horarios-y-bloqueos             [Agente B]
-  → C-05 gestion-recursos-admin          [Agente C]
-  → C-07 parametros-consultorio          [Agente C]
+  → C-08 auditoria-cambios               [Integrante 2]
+  → C-06 horarios-y-bloqueos             [Integrante 3]
+  → C-07 parametros-consultorio          [Integrante 3]
+  → C-05 gestion-recursos-admin          [Integrante 4]
 
 GATE 5: C-08 ✓ (y C-03 ✓)
-  → C-09 modelo-turno-paciente           [Agente A]
+  → C-09 modelo-turno-paciente           [Integrante 1]
 
 GATE 6: C-09 ✓                           ← FORK (4 paralelos)
-  → C-10 motor-disponibilidad            [Agente A — si C-06 ✓]
-  → C-14 email-transaccional-y-enlaces   [Agente B]
-  → C-15 privacidad-ley-25326            [Agente B — si C-07 ✓]
-  → C-11 agenda-interna-vistas           [Agente C]
+  → C-10 motor-disponibilidad            [Integrante 1 — si C-06 ✓]
+  → C-15 privacidad-ley-25326            [Integrante 2 — si C-07 ✓]
+  → C-14 email-transaccional-y-enlaces   [Integrante 3]
+  → C-11 agenda-interna-vistas           [Integrante 4]
 
-GATE 7: C-10 + C-11 + C-14 + C-15 ✓      ← FORK
-  → C-12 carga-manual-sobreturno         [Agente A]
-  → C-16 reserva-online-publica          [Agente B]
-  → C-13 asistencia-y-registro-cambios   [Agente C]
-  → C-18 recordatorios-programados       [Agente C — solo necesita C-14 + C-09]
+GATE 7: C-10 + C-11 + C-14 + C-15 ✓      ← FORK (4 paralelos)
+  → C-12 carga-manual-sobreturno         [Integrante 1]
+  → C-18 recordatorios-programados       [Integrante 2 — solo necesita C-14 + C-09]
+  → C-16 reserva-online-publica          [Integrante 3]
+  → C-13 asistencia-y-registro-cambios   [Integrante 4]
 
 GATE 8: C-16 + C-07 + C-14 ✓
-  → C-17 confirmar-cancelar-reprogramar  [Agente B]
+  → C-17 confirmar-cancelar-reprogramar  [Integrante 3]
 
 GATE 9: C-12 + C-13 + C-17 + C-18 ✓
-  → C-19 cierre-mvp-e2e-y-despliegue     [todo el equipo]
+  → C-19 cierre-mvp-e2e-y-despliegue     [todo el equipo — coordina Integrante 2]
 
 GATE 10 (opcional, post-MVP núcleo): C-19 ✓ (según dependencia de cada uno)
-  → C-20 lista-de-espera                 [Agente A — requiere C-10 + C-17]
-  → C-21 whatsapp-prellenado             [Agente C — requiere C-11]
-  → C-22 reintento-confirmacion          [Agente B — requiere C-18]
-  → C-23 panel-ausentismo                [Agente C — requiere C-13]
-  → C-24 manual-publico                  [Agente C — requiere C-19]
+  → C-20 lista-de-espera                 [Integrante 1 — requiere C-10 + C-17]
+  → C-22 reintento-confirmacion          [Integrante 2 — requiere C-18]
+  → C-21 whatsapp-prellenado             [Integrante 4 — requiere C-11]
+  → C-23 panel-ausentismo                [Integrante 4 — requiere C-13]
+  → C-24 manual-publico                  [Integrante 3 — requiere C-19]
 ```
 
 ### Camino crítico (10 changes — mínimo irreducible)
@@ -114,21 +114,37 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
 
 (C-12 y C-18 también convergen en C-19 pero no alargan el camino.)
 
-### Plan óptimo con 3 agentes
+### Reparto del equipo (4 integrantes)
 
-| Paso | Agente A (Backend Core) | Agente B (Backend Aux / Notif / Privacidad) | Agente C (Frontend / Paneles) |
-|------|-------------------------|---------------------------------------------|-------------------------------|
-| 1 | C-01 (decisión, todos participan) | C-01 | C-01 |
-| 2 | C-02 scaffolding | — | — |
-| 3 | C-03 modelo-recursos | — | — |
-| 4 | C-04 auth-roles | — | — |
-| 5 | C-08 auditoría | C-06 horarios-bloqueos | C-05 recursos-admin + C-07 parámetros |
-| 6 | C-09 modelo-turno-paciente | — (adelantar diseño de plantillas de email) | — (adelantar diseño de pantallas) |
-| 7 | C-10 motor-disponibilidad | C-14 email-enlaces + C-15 privacidad | C-11 agenda-vistas |
-| 8 | C-12 carga-manual-sobreturno | C-16 reserva-online-publica | C-13 asistencia-registro + C-18 recordatorios |
-| 9 | — (apoyo a C-17 / revisión) | C-17 confirmar-cancelar-reprogramar | — (apoyo UI / pruebas) |
-| 10 | C-19 cierre-mvp | C-19 | C-19 |
-| 11+ | C-20 lista-de-espera | C-22 reintento | C-21 wa.me + C-23 ausentismo + C-24 manual |
+> Reemplazar "Integrante N" por los nombres reales. C-01 y C-19 son de todo el equipo. Tamaño estimado por change: S = 1, M = 2, L = 3 puntos (estimación inicial; ajustar al planificar cada change).
+
+| Integrante | Área | Changes propios | Puntos | Revisa |
+|------------|------|-----------------|--------|--------|
+| **Integrante 1** | Núcleo de turnos (backend) | C-03, C-09, C-10, C-12, C-20 | 12 | C-04, C-06, C-08, C-11, C-16, C-23 |
+| **Integrante 2** | Plataforma, seguridad y auditoría | C-02, C-04, C-08, C-15, C-18, C-22 · coordina C-19 | 12 | C-03, C-09, C-13, C-14 |
+| **Integrante 3** | Configuración, notificaciones y paciente | C-06, C-07, C-14, C-16, C-17, C-24 | 11 | C-05, C-10, C-15, C-18, C-20, C-21 |
+| **Integrante 4** | Frontend de paneles internos | C-05, C-11, C-13, C-21, C-23 | 10 | C-02, C-07, C-12, C-17, C-22, C-24 |
+
+Criterios del reparto:
+
+- **Por área**: cada integrante concentra una zona del código, lo que reduce los conflictos entre ramas y da continuidad (por ejemplo, quien hace C-16 sigue con C-17; quien hace C-14 deja listo el canal que usa C-18).
+- **Paralelismo**: en cada fork (gates 4, 6, 7 y 10) los cuatro integrantes tienen trabajo.
+- **Revisión cruzada**: todo change CRITICO o ALTO lo revisa otra persona. Los CRITICOS (C-03, C-04, C-08, C-09, C-10, C-12) se reparten entre Integrante 1 y 2 como autores, con revisores de otra área.
+- **Esperas al inicio**: C-02 → C-03 → C-04 es una cadena secuencial. Mientras tanto, Integrante 3 prepara las plantillas de email y el flujo de reserva, e Integrante 4 diseña las pantallas de los paneles (`frontend-design-ui-ux`).
+
+| Paso | Integrante 1 | Integrante 2 | Integrante 3 | Integrante 4 |
+|------|--------------|--------------|--------------|--------------|
+| 1 | C-01 | C-01 | C-01 | C-01 |
+| 2 | (revisa C-02) | C-02 scaffolding | diseño de plantillas de email | diseño de pantallas (revisa C-02) |
+| 3 | C-03 modelo-recursos | (revisa C-03) | diseño del flujo de reserva | diseño de pantallas |
+| 4 | (revisa C-04) | C-04 auth-roles | — | — |
+| 5 | (revisa C-06 y C-08) | C-08 auditoría | C-06 horarios-bloqueos + C-07 parámetros | C-05 recursos-admin |
+| 6 | C-09 modelo-turno-paciente | (revisa C-09) | apoyo / pruebas | apoyo / pruebas |
+| 7 | C-10 motor-disponibilidad | C-15 privacidad | C-14 email-enlaces | C-11 agenda-vistas |
+| 8 | C-12 carga-manual-sobreturno | C-18 recordatorios | C-16 reserva-online-publica | C-13 asistencia-registro |
+| 9 | (revisa C-16) | (revisa C-13) | C-17 confirmar-cancelar-reprogramar | (revisa C-17) |
+| 10 | C-19 cierre-mvp | C-19 (coordina) | C-19 | C-19 |
+| 11+ | C-20 lista-de-espera | C-22 reintento | C-24 manual | C-21 wa.me + C-23 ausentismo |
 
 ---
 
@@ -145,6 +161,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Entregable: documento de decisión; sin código.
 - **Dependencias**: ninguna
 - **Governance**: MEDIO
+- **Responsable**: Todo el equipo
+- **Revisor**: —
+- **Tamaño estimado**: S
 - **Zona**: `knowledge-base/`, `docs/`
 - **Bloqueado por**: PA-01 (plazo) — este change es el que la resuelve.
 - **Leer antes**:
@@ -164,6 +183,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: arranque de la app, conexión a BD (Testcontainers), test de humo de CI.
 - **Dependencias**: `C-01`
 - **Governance**: BAJO
+- **Responsable**: Integrante 2
+- **Revisor**: Integrante 4
+- **Tamaño estimado**: M
 - **Zona**: `backend/pom.xml`, `backend/src/main/resources/`, `frontend/`, `docker-compose.yml`, `.github/workflows/`
 - **Leer antes**:
   - `knowledge-base/08_arquitectura_propuesta.md` §Patrones, §Estructura de directorios, §Variables de entorno
@@ -184,6 +206,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: invariantes de modelo, duración obligatoria, desactivar sin borrar.
 - **Dependencias**: `C-02`
 - **Governance**: CRITICO (modelos core que todo lo demás referencia)
+- **Responsable**: Integrante 1
+- **Revisor**: Integrante 2
+- **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/recursos/`, `backend/src/main/resources/db/migration/`
 - **Leer antes**:
   - `knowledge-base/04_modelo_de_datos.md` §Profesional, §Sillon, §Prestacion, §Seed data inicial
@@ -201,6 +226,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: acceso denegado por rol, endpoint protegido sin sesión, usuario desactivado no ingresa.
 - **Dependencias**: `C-03`
 - **Governance**: CRITICO
+- **Responsable**: Integrante 2
+- **Revisor**: Integrante 1
+- **Tamaño estimado**: L
 - **Zona**: `backend/src/main/java/ar/dentaflow/infraestructura/seguridad/`, `backend/src/main/java/ar/dentaflow/dominio/usuarios/`, `frontend/src/features/auth/`
 - **Bloqueado por**: PA-09 (un usuario con múltiples roles: asumir un solo rol hasta decidir)
 - **Leer antes**:
@@ -217,6 +245,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: CRUD, permisos por rol, duración obligatoria.
 - **Dependencias**: `C-03, C-04`
 - **Governance**: BAJO
+- **Responsable**: Integrante 4
+- **Revisor**: Integrante 3
+- **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/aplicacion/recursos/`, `backend/src/main/java/ar/dentaflow/presentacion/`, `frontend/src/features/agenda/`
 - **Leer antes**:
   - `knowledge-base/06_funcionalidades.md` §US-001
@@ -233,6 +264,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: horarios superpuestos rechazados, bloqueo por cada ámbito, zona horaria.
 - **Dependencias**: `C-03, C-04`
 - **Governance**: MEDIO
+- **Responsable**: Integrante 3
+- **Revisor**: Integrante 1
+- **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/disponibilidad/`, `backend/src/main/resources/db/migration/`
 - **Bloqueado por**: PA-11 (qué pasa con turnos existentes al bloquear; no codificar la resolución hasta decidir)
 - **Leer antes**:
@@ -249,6 +283,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: lectura/edición de parámetros, permisos, validación de rango.
 - **Dependencias**: `C-04`
 - **Governance**: BAJO
+- **Responsable**: Integrante 3
+- **Revisor**: Integrante 4
+- **Tamaño estimado**: S
 - **Zona**: `backend/src/main/java/ar/dentaflow/aplicacion/configuracion/`, `backend/src/main/resources/db/migration/`
 - **Bloqueado por**: PA-04 (valor por defecto de anticipación mínima; usar un valor provisorio configurable)
 - **Leer antes**:
@@ -264,6 +301,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: el registro se escribe junto al cambio, se revierte si el cambio falla, no es modificable.
 - **Dependencias**: `C-04`
 - **Governance**: CRITICO (audit trail)
+- **Responsable**: Integrante 2
+- **Revisor**: Integrante 1
+- **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/auditoria/`, `backend/src/main/resources/db/migration/`
 - **Leer antes**:
   - `knowledge-base/04_modelo_de_datos.md` §TurnoHistorial
@@ -287,6 +327,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: solapamiento rechazado por profesional y por sillón, concurrencia (dos creaciones simultáneas, solo una gana), transiciones inválidas, sobreturno permitido solo con flag.
 - **Dependencias**: `C-03, C-08`
 - **Governance**: CRITICO
+- **Responsable**: Integrante 1
+- **Revisor**: Integrante 2
+- **Tamaño estimado**: L
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/turnos/`, `backend/src/main/java/ar/dentaflow/dominio/pacientes/`, `backend/src/main/resources/db/migration/`
 - **Bloqueado por**: PA-10 (estado inicial del turno online: parametrizar `pendiente`/`confirmado`), PA-06 (asignación de sillón), PA-13 (email obligatorio del paciente), SU-03 (DNI como clave)
 - **Leer antes**:
@@ -305,6 +348,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: hueco que no entra la duración, bloqueo parcial, borde exacto de horario, sillón ocupado con profesional libre, zona horaria/cambio de día.
 - **Dependencias**: `C-06, C-09`
 - **Governance**: CRITICO
+- **Responsable**: Integrante 1
+- **Revisor**: Integrante 3
+- **Tamaño estimado**: L
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/disponibilidad/`, `backend/src/main/java/ar/dentaflow/aplicacion/agenda/`
 - **Bloqueado por**: PA-05 (elige profesional o primero disponible), PA-06 (quién se asigna primero, sillón por paciente o sistema); implementar la API con el parámetro profesional opcional y no codificar la política hasta decidir
 - **Leer antes**:
@@ -322,6 +368,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: filtros, aislamiento por rol (profesional no ve turnos ajenos), orden y estados.
 - **Dependencias**: `C-04, C-09`
 - **Governance**: MEDIO
+- **Responsable**: Integrante 4
+- **Revisor**: Integrante 1
+- **Tamaño estimado**: L
 - **Zona**: `frontend/src/features/agenda/`, `backend/src/main/java/ar/dentaflow/aplicacion/agenda/`
 - **Leer antes**:
   - `knowledge-base/06_funcionalidades.md` §US-020, §US-023
@@ -337,6 +386,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: conflicto rechazado, sobreturno permitido solo con permiso y auditado, profesional no puede cargar sobreturno.
 - **Dependencias**: `C-10, C-11`
 - **Governance**: CRITICO
+- **Responsable**: Integrante 1
+- **Revisor**: Integrante 4
+- **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/aplicacion/turnos/`, `frontend/src/features/agenda/`
 - **Leer antes**:
   - `knowledge-base/07_flujos_principales.md` §Flujo 4
@@ -352,6 +404,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: transiciones de asistencia válidas/inválidas, permisos por rol, registro visible y no editable.
 - **Dependencias**: `C-08, C-11`
 - **Governance**: MEDIO
+- **Responsable**: Integrante 4
+- **Revisor**: Integrante 2
+- **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/aplicacion/turnos/`, `frontend/src/features/agenda/`
 - **Leer antes**:
   - `knowledge-base/06_funcionalidades.md` §US-024, §US-025
@@ -375,6 +430,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: envío con proveedor simulado, token inválido/vencido, fallo de envío registrado.
 - **Dependencias**: `C-02, C-09`
 - **Governance**: ALTO (datos personales en canal de notificación)
+- **Responsable**: Integrante 3
+- **Revisor**: Integrante 2
+- **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/infraestructura/email/`, `backend/src/main/java/ar/dentaflow/dominio/notificaciones/`, `backend/src/main/resources/db/migration/`
 - **Bloqueado por**: PA-13 (email obligatorio)
 - **Leer antes**:
@@ -393,6 +451,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: reserva sin aceptación rechazada, fecha de consentimiento guardada, recurso protegido por rol.
 - **Dependencias**: `C-09, C-07`
 - **Governance**: ALTO (datos personales, Ley 25.326)
+- **Responsable**: Integrante 2
+- **Revisor**: Integrante 3
+- **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/pacientes/`, `frontend/src/features/reserva/`, `backend/src/main/java/ar/dentaflow/infraestructura/seguridad/`
 - **Bloqueado por**: PA-12 (retención y baja de datos), revisión legal del texto del aviso
 - **Leer antes**:
@@ -411,6 +472,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: reserva exitosa, dos reservas simultáneas del mismo hueco (una falla), aviso no aceptado, datos inválidos, sin huecos.
 - **Dependencias**: `C-10, C-14, C-15`
 - **Governance**: ALTO
+- **Responsable**: Integrante 3
+- **Revisor**: Integrante 1
+- **Tamaño estimado**: L
 - **Zona**: `frontend/src/features/reserva/`, `backend/src/main/java/ar/dentaflow/aplicacion/turnos/`, `backend/src/main/java/ar/dentaflow/presentacion/` (rutas públicas)
 - **Bloqueado por**: PA-05, PA-06, PA-10, PA-13
 - **Leer antes**:
@@ -430,6 +494,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: dentro/fuera de ventana, hueco nuevo tomado, token ajeno rechazado, doble confirmación idempotente.
 - **Dependencias**: `C-16, C-07, C-14`
 - **Governance**: ALTO
+- **Responsable**: Integrante 3
+- **Revisor**: Integrante 4
+- **Tamaño estimado**: M
 - **Zona**: `frontend/src/features/reserva/`, `backend/src/main/java/ar/dentaflow/aplicacion/turnos/`
 - **Bloqueado por**: PA-04 (anticipación mínima por defecto, se usa el parámetro de C-07)
 - **Leer antes**:
@@ -447,6 +514,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: selección por ventana, no duplicados, turno cancelado/confirmado no se recuerda, falla de envío registrada, endpoint protegido rechaza llamadas sin credencial.
 - **Dependencias**: `C-14, C-09`
 - **Governance**: ALTO
+- **Responsable**: Integrante 2
+- **Revisor**: Integrante 3
+- **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/infraestructura/scheduler/`, `backend/src/main/java/ar/dentaflow/dominio/notificaciones/`
 - **Bloqueado por**: PA-07 (cuánto antes y cuántos recordatorios; dejar parametrizable)
 - **Leer antes**:
@@ -469,6 +539,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Validación con al menos un consultorio o demo real para contrastar SU-01 y SU-02.
 - **Dependencias**: `C-12, C-13, C-17, C-18`
 - **Governance**: MEDIO
+- **Responsable**: Todo el equipo (coordina Integrante 2)
+- **Revisor**: —
+- **Tamaño estimado**: M
 - **Zona**: `frontend/` (Playwright), `.github/workflows/`, configuración de despliegue, documentación
 - **Bloqueado por**: PA-01 (plazo: define el corte real del MVP)
 - **Leer antes**:
@@ -492,6 +565,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: oferta a compatibles, dos aceptan a la vez (solo uno gana), vencimiento.
 - **Dependencias**: `C-10, C-17`
 - **Governance**: MEDIO
+- **Responsable**: Integrante 1
+- **Revisor**: Integrante 3
+- **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/listaespera/`, `backend/src/main/java/ar/dentaflow/infraestructura/email/`
 - **Bloqueado por**: plazo de oferta no definido (sin PA asignada: dejar parametrizable)
 - **Leer antes**:
@@ -508,6 +584,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: construcción del enlace (codificación, teléfono normalizado), caso sin teléfono.
 - **Dependencias**: `C-11`
 - **Governance**: BAJO
+- **Responsable**: Integrante 4
+- **Revisor**: Integrante 3
+- **Tamaño estimado**: S
 - **Zona**: `frontend/src/features/agenda/`
 - **Bloqueado por**: PA-03 (si se automatiza con la API oficial, sería otro change; este asume enlace prellenado, IN-01)
 - **Leer antes**:
@@ -523,6 +602,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: reintento solo para `pendiente`, alerta visible, no se repite.
 - **Dependencias**: `C-18`
 - **Governance**: MEDIO
+- **Responsable**: Integrante 2
+- **Revisor**: Integrante 4
+- **Tamaño estimado**: S
 - **Zona**: `backend/src/main/java/ar/dentaflow/infraestructura/scheduler/`, `frontend/src/features/agenda/`
 - **Bloqueado por**: PA-08 (valor de X; dejar parametrizable)
 - **Leer antes**:
@@ -538,6 +620,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Tests: cálculo de tasas con datos de ejemplo, permisos por rol.
 - **Dependencias**: `C-13`
 - **Governance**: BAJO
+- **Responsable**: Integrante 4
+- **Revisor**: Integrante 1
+- **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/aplicacion/reportes/`, `frontend/src/features/agenda/`
 - **Leer antes**:
   - `knowledge-base/06_funcionalidades.md` §US-031
@@ -550,6 +635,9 @@ C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 →
   - Accesible sin autenticación; contenido en español.
 - **Dependencias**: `C-19`
 - **Governance**: BAJO
+- **Responsable**: Integrante 3
+- **Revisor**: Integrante 4
+- **Tamaño estimado**: S
 - **Zona**: `frontend/src/features/reserva/`, documentación
 - **Leer antes**:
   - `knowledge-base/06_funcionalidades.md` §US-034

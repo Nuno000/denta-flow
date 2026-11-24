@@ -1,6 +1,6 @@
 # Arquitectura Propuesta
 
-> Stack decidido el 2026-11-23 (ver `09_decisiones_y_supuestos.md`, DD-08; resuelve PA-02): **Java 21 + Spring Boot 3 + Maven**, **PostgreSQL 16 + Flyway**, API REST con OpenAPI (springdoc-openapi), frontend **React + Vite + TypeScript** (SPA única para reserva pública y panel interno), email por SMTP (Spring Mail), hosting gratuito en Render (API), Vercel (frontend) y Neon (Postgres), monorepo con CI en GitHub Actions. El esquema de autenticación (sesión por cookie o JWT) se decide en C-04.
+> Stack decidido el 2026-11-23 y actualizado el 2026-11-24 (ver `09_decisiones_y_supuestos.md`, DD-08 y DD-09): **Java 21 + Spring Boot 3 + Maven**, **MySQL 8 + Flyway** (tests sobre H2 `MODE=MySQL` y MySQL real en el perfil `it-mysql`; sin Docker), API REST con OpenAPI (springdoc-openapi), frontend **React + Vite + TypeScript** (SPA única para reserva pública y panel interno), email por SMTP (Spring Mail), hosting gratuito en Render (API) y Vercel (frontend); el proveedor de MySQL se elige en C-19 (PA-14). Monorepo con CI en GitHub Actions. El esquema de autenticación (sesión por cookie o JWT) se decide en C-04.
 
 ## Patrones aplicados
 
@@ -9,7 +9,8 @@
 | Separación en capas (presentación / aplicación / dominio / infraestructura) | Todo el sistema | Aislar reglas de negocio (solapamientos, estados) del framework elegido |
 | Motor de disponibilidad único | Reserva online, carga manual, reprogramación, lista de espera | Evita reglas duplicadas; un solo lugar garantiza RN-TU-01/02 |
 | Control de concurrencia / transacción en reserva | Creación y reprogramación de turnos | Impedir solapamientos con reservas simultáneas |
-| Restricción de exclusión en PostgreSQL (`btree_gist`, `EXCLUDE USING gist` sobre `tstzrange`) | Tabla de turnos, una por profesional y otra por sillón, solo turnos no cancelados (y no sobreturno) | La garantía de RN-TU-01/02 no depende solo del código de aplicación; se suma a la validación en la aplicación |
+| Bloqueo pesimista por recurso (DD-09) | Servicio transaccional de creación y cambio de turnos (C-09): `SELECT ... FOR UPDATE` sobre la fila del profesional y después la del sillón (orden fijo; varios del mismo tipo por id ascendente), verificación de solapamiento leyendo el último estado confirmado (`READ COMMITTED` o `FOR SHARE`), y recién entonces la escritura | Garantiza RN-TU-01/02 ante reservas simultáneas en MySQL 8; el orden fijo evita interbloqueos. Los sobreturnos toman los bloqueos pero no se verifican (RN-TU-07) |
+| Intentos sucesivos por candidato | Reserva con "cualquier profesional" (PA-05) y sillón asignado por el sistema (PA-06) | El motor ordena los candidatos (profesional, sillón) y la creación prueba uno por transacción; ninguna transacción retiene bloqueos de recursos que no usa |
 | Auditoría por evento | Cambios de turno | RN-AU-01 |
 | Tareas programadas (operación idempotente) | Recordatorios, reintentos, ofertas de lista de espera | Automatización sin intervención de recepción; en hosting gratuito el proceso puede estar suspendido, por lo que se propone un endpoint protegido disparado por un cron externo (decisión en C-18) y `@Scheduled` solo en local |
 | Máquina de estados | Turno | Transiciones válidas explícitas entre estados |
@@ -44,8 +45,8 @@ denta-flow/
 │       │   │   └── presentacion/         controladores REST, DTOs, manejo de errores
 │       │   └── resources/
 │       │       ├── application.yml
-│       │       └── db/migration/         migraciones Flyway (V001__...)
-│       └── test/java/ar/dentaflow/       JUnit 5, Mockito, Testcontainers
+│       │       └── db/migration/         migraciones Flyway (V0NN_<n>__descripcion.sql, NN = número del change)
+│       └── test/java/ar/dentaflow/       JUnit 5, Mockito, H2 (perfil test) / MySQL (perfil it-mysql)
 ├── frontend/                             SPA React + Vite + TypeScript
 │   ├── package.json
 │   ├── vite.config.ts
@@ -58,8 +59,7 @@ denta-flow/
 │       ├── components/
 │       ├── lib/                          cliente API, TanStack Query, esquemas Zod
 │       └── routes/
-├── docker-compose.yml                    desarrollo local: Postgres (+ Mailpit opcional)
-├── .github/workflows/                    CI con GitHub Actions (backend, frontend, E2E)
+├── .github/workflows/                    CI con GitHub Actions (backend, it-mysql con el MySQL del runner, frontend, E2E)
 ├── knowledge-base/                       documentación del proyecto
 ├── docs/                                 documentos fuente (discovery)
 └── openspec/                             changes y specs (OpenSpec)
@@ -81,7 +81,7 @@ Nombres según convenciones de Spring Boot (binding relajado) y Vite:
 
 | Variable | Descripción | Ejemplo | Sensible |
 |---|---|---|---|
-| `SPRING_DATASOURCE_URL` | Conexión JDBC a PostgreSQL | `jdbc:postgresql://localhost:5432/dentaflow` | Sí |
+| `SPRING_DATASOURCE_URL` | Conexión JDBC a MySQL 8 | `jdbc:mysql://localhost:3306/dentaflow` | Sí |
 | `SPRING_DATASOURCE_USERNAME` | Usuario de la base | `dentaflow` | Sí |
 | `SPRING_DATASOURCE_PASSWORD` | Contraseña de la base | (generada) | Sí |
 | `SPRING_MAIL_HOST` | Servidor SMTP | `smtp-relay.brevo.com` | No |
@@ -94,4 +94,11 @@ Nombres según convenciones de Spring Boot (binding relajado) y Vite:
 | `TZ` | Zona horaria del consultorio | `America/Argentina/Buenos_Aires` | No |
 | `VITE_API_BASE_URL` | URL base de la API que consume el frontend (pública, se incluye en el bundle) | `https://api.turnos.example` | No |
 
-La zona horaria es crítica: todos los horarios de agenda se interpretan en la zona del consultorio (supuesto SU-09).
+La zona horaria es crítica: todos los horarios de agenda se interpretan en la zona del consultorio (supuesto SU-09). En la base, los tiempos se guardan en UTC (`DATETIME(6)`, `hibernate.jdbc.time_zone=UTC`) y se mapean a `Instant`.
+
+## Migraciones y pruebas (DD-09)
+
+- **Migraciones**: una sola ubicación, `backend/src/main/resources/db/migration/`, con SQL válido en MySQL 8 y en H2 `MODE=MySQL` (PK `BIGINT AUTO_INCREMENT`, `DATETIME(6)`, estados `VARCHAR` + `CHECK`, sin `ENUM`). Versión por change: `V0NN_<n>__descripcion.sql` (C-09 → `V009_1__...`), para que changes paralelos no choquen. En el perfil de desarrollo, `spring.flyway.out-of-order=true`. Nunca se edita una migración ya mergeada.
+- **Perfil `test`**: H2 en memoria (`MODE=MySQL;DATABASE_TO_LOWER=TRUE`) para unitarios, slices e integración.
+- **Perfil `it-mysql`**: tests `@Tag("mysql")` de concurrencia y bloqueo contra MySQL 8 real (local o el preinstalado en los runners de GitHub Actions). Un test de concurrencia solo cuenta como verificado en este perfil.
+- Sin Docker, `docker-compose` ni Testcontainers.

@@ -1,6 +1,6 @@
 # Modelo de Datos
 
-> Modelo **conceptual propuesto** derivado de las reglas de negocio de discovery. No hay modelo previo en las fuentes ni stack definido; tipos y nombres son orientativos (supuesto SU-04).
+> Modelo **conceptual propuesto** derivado de las reglas de negocio de discovery. No hay modelo previo en las fuentes; nombres orientativos (supuesto SU-04). Motor y tipos según DD-09 (MySQL 8, compatible con H2 `MODE=MySQL`).
 
 ## Dominios
 
@@ -58,8 +58,11 @@ Usuario     N---1 Rol ; Usuario 0..1---1 Profesional
 - Constraints:
   - Sin solapamiento de rangos [inicio, fin) por `profesional_id` entre turnos activos (no cancelados), salvo `es_sobreturno = true`.
   - Idem por `sillon_id`.
-  - La garantía debe ser **a nivel de datos/transacción**, no solo en la UI (control de concurrencia).
-- Índices relevantes: (profesional_id, inicio), (sillon_id, inicio), (paciente_id), (estado, inicio).
+  - La garantía es **a nivel de transacción**, no solo en la UI (DD-09): la creación o el cambio de un turno bloquea con `SELECT ... FOR UPDATE` la fila del profesional y después la del sillón (siempre en ese orden), verifica el solapamiento leyendo el último estado confirmado y recién entonces escribe. Toda escritura de turnos pasa por ese servicio (C-09).
+- Estado inicial: el turno online nace `pendiente` y pasa a `confirmado` con el enlace del email (PA-10); el de recepción, según el flujo de carga manual.
+- Asignación en la reserva online: el paciente elige un profesional o "cualquiera / primero disponible" (PA-05); el sistema asigna después el primer sillón libre en ese rango (PA-06). El paciente nunca elige sillón.
+- Índices relevantes: (profesional_id, estado, inicio, fin), (sillon_id, estado, inicio, fin), (paciente_id), (estado, inicio).
+- Tipos (DD-09): PK `BIGINT AUTO_INCREMENT`; inicio y fin `DATETIME(6)` en UTC; estado `VARCHAR` + `CHECK`.
 
 ### TurnoHistorial (auditoría)
 - id, turno_id, usuario_id o actor (paciente/sistema), fecha-hora, acción, valores anterior/nuevo.

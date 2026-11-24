@@ -4,9 +4,9 @@
 > Cada change es atómico: un agente puede implementarlo en una sesión (~4-6 horas).
 > **Leer este archivo antes de empezar un item.**
 >
-> **Stack decidido el 2026-11-23 (DD-08, PA-02 resuelta):** Java 21 + Spring Boot 3 (Maven), PostgreSQL 16 + Flyway, React + Vite + TypeScript, monorepo `backend/` + `frontend/`, hosting gratuito Render/Vercel/Neon. C-01 sigue siendo la compuerta: queda pendiente el plazo (PA-01) y agendar PA-03/05/06/10; ningún otro change debe empezar antes.
+> **Stack (DD-08 + DD-09, 2026-11-24):** Java 21 + Spring Boot 3 (Maven), **MySQL 8 nativo + Flyway**, tests sobre **H2 `MODE=MySQL`** y concurrencia contra MySQL real (perfil `it-mysql`), **sin Docker ni Testcontainers**; React + Vite + TypeScript; monorepo `backend/` + `frontend/`; hosting gratuito Render (API) y Vercel (frontend), proveedor de MySQL a elegir en C-19 (PA-14). Anti-solapamiento: bloqueo pesimista del profesional y después del sillón dentro de la transacción (DD-09).
 >
-> **⚠️ Cambio de stack en curso (2026-11-24):** el equipo trabaja con **MySQL 8 nativo + Flyway** y tests sobre **H2 `MODE=MySQL`**, **sin Docker ni Testcontainers** (ver `openspec/config.yaml`). Las notas de stack de las fichas que todavía mencionan PostgreSQL, `EXCLUDE USING gist`, Testcontainers, docker-compose, Mailpit en contenedor o Neon se actualizan en **C-01** (registrar la decisión como DD nueva y regenerar `CLAUDE.md`). Hasta entonces, manda `openspec/config.yaml`.
+> **Plazo (DD-10, PA-01 resuelta):** entrega el **jueves 2026-11-26 a las 12:00**. Los changes marcados "sí" en la columna `Corte 26/11` forman la entrega; el resto sigue en el roadmap. Si el corte no llega completo, la prioridad es C-09 + C-10.
 
 ---
 
@@ -62,32 +62,32 @@ C-24 manual-publico         ← C-19
 > **Regla de arranque**: un change empieza cuando **todos** sus "Depende de" están mergeados en `main`; la oleada es la ventana prevista, no una espera a que termine toda la oleada anterior. Máximo **1 change activo por persona**.
 > **Revisor**: Florencia aprueba todos los PR; los PR de Florencia los aprueba Bruno (GitHub no permite aprobar el PR propio).
 
-| ID | Change | Depende de | Oleada | Responsable | Revisor | Gov. | Tam. | Estado |
-|----|--------|------------|--------|-------------|---------|------|------|--------|
-| C-01 | decision-stack-y-plazo | — | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | MEDIO | S | `[ ]` |
-| C-02 | scaffolding-proyecto | C-01 | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | BAJO | M | `[ ]` |
-| C-03 | modelo-recursos-consultorio | C-02 | 1 | Renzo | Florencia | CRITICO | M | `[ ]` |
-| C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | `[ ]` |
-| C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | `[ ]` |
-| C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | `[ ]` |
-| C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | `[ ]` |
-| C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | `[ ]` |
-| C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | `[ ]` |
-| C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | `[ ]` |
-| C-11 | agenda-interna-vistas | C-04, C-09 | 5 | Florencia | Bruno | MEDIO | L | `[ ]` |
-| C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | `[ ]` |
-| C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | `[ ]` |
-| C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | `[ ]` |
-| C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | `[ ]` |
-| C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | `[ ]` |
-| C-18 | recordatorios-programados | C-09, C-14 | 6 | Bruno | Florencia | ALTO | M | `[ ]` |
-| C-17 | confirmar-cancelar-reprogramar | C-07, C-14, C-16 | 7 | Jessica | Florencia | ALTO | M | `[ ]` |
-| C-22 | reintento-confirmacion [DIF] | C-18 | 7 | Bruno | Florencia | MEDIO | S | `[ ]` |
-| C-23 | panel-ausentismo [DIF] | C-13 | 7 | Florencia | Bruno | BAJO | M | `[ ]` |
-| C-19 | cierre-mvp-e2e-y-despliegue | C-12, C-13, C-17, C-18 | 8 | Bruno (E2E de cada flujo: su autor) | Florencia | MEDIO | M | `[ ]` |
-| C-20 | lista-de-espera [DIF] | C-10, C-17 | 8 | Renzo | Florencia | MEDIO | M | `[ ]` |
-| C-21 | whatsapp-prellenado [DIF] | C-11 | 8 | Jessica | Florencia | BAJO | S | `[ ]` |
-| C-24 | manual-publico [DIF] | C-19 | 9 | Jessica | Florencia | BAJO | S | `[ ]` |
+| ID | Change | Depende de | Oleada | Responsable | Revisor | Gov. | Tam. | Corte 26/11 | Estado |
+|----|--------|------------|--------|-------------|---------|------|------|-------------|--------|
+| C-01 | decision-stack-y-plazo | — | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | MEDIO | S | sí | `[x]` |
+| C-02 | scaffolding-proyecto | C-01 | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | BAJO | M | sí | `[ ]` |
+| C-03 | modelo-recursos-consultorio | C-02 | 1 | Renzo | Florencia | CRITICO | M | sí | `[ ]` |
+| C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | sí | `[ ]` |
+| C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[ ]` |
+| C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | sí | `[ ]` |
+| C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | sí | `[ ]` |
+| C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | sí | `[ ]` |
+| C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
+| C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
+| C-11 | agenda-interna-vistas | C-04, C-09 | 5 | Florencia | Bruno | MEDIO | L | no | `[ ]` |
+| C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
+| C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[ ]` |
+| C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | no | `[ ]` |
+| C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[ ]` |
+| C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | sí | `[ ]` |
+| C-18 | recordatorios-programados | C-09, C-14 | 6 | Bruno | Florencia | ALTO | M | no | `[ ]` |
+| C-17 | confirmar-cancelar-reprogramar | C-07, C-14, C-16 | 7 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
+| C-22 | reintento-confirmacion [DIF] | C-18 | 7 | Bruno | Florencia | MEDIO | S | no | `[ ]` |
+| C-23 | panel-ausentismo [DIF] | C-13 | 7 | Florencia | Bruno | BAJO | M | no | `[ ]` |
+| C-19 | cierre-mvp-e2e-y-despliegue | C-12, C-13, C-17, C-18 (en el corte 26/11: solo C-17 y los demás changes del corte) | 8 | Bruno (E2E de cada flujo: su autor) | Florencia | MEDIO | M | sí | `[ ]` |
+| C-20 | lista-de-espera [DIF] | C-10, C-17 | 8 | Renzo | Florencia | MEDIO | M | no | `[ ]` |
+| C-21 | whatsapp-prellenado [DIF] | C-11 | 8 | Jessica | Florencia | BAJO | S | no | `[ ]` |
+| C-24 | manual-publico [DIF] | C-19 | 9 | Jessica | Florencia | BAJO | S | no | `[ ]` |
 
 ### Paralelismo por oleada (1 change activo por persona)
 
@@ -142,12 +142,12 @@ Criterios del reparto:
 > Secuencial y corto. C-01 no es código: es la decisión que destraba todo el roadmap.
 
 ### [C-01] `decision-stack-y-plazo`
-- **Estado**: `[ ]` pendiente (parte del stack **hecha** el 2026-11-23; falta el plazo y el agendado de PAs)
+- **Estado**: `[x]` completado el 2026-11-24 (DD-09, DD-10; PA-01, PA-03, PA-05, PA-06 y PA-10 resueltas)
 - **Scope**:
-  - ~~Decidir y registrar el stack~~ **Hecho**: DD-08 en `knowledge-base/09_decisiones_y_supuestos.md` (Java 21 + Spring Boot 3, PostgreSQL 16, React + Vite + TypeScript, Render/Vercel/Neon); estructura de directorios y variables de entorno completadas en `knowledge-base/08_arquitectura_propuesta.md`. PA-02 resuelta.
-  - **Pendiente**: confirmar el plazo de entrega (PA-01) y recortar el alcance del MVP/diferenciadores según el plazo.
-  - **Pendiente**: resolver o agendar PA-03, PA-05, PA-06, PA-10 con fecha límite (bloquean C-10, C-16, C-09).
-  - **Pendiente (2026-11-24)**: registrar como DD nueva el cambio a MySQL 8 nativo + H2 `MODE=MySQL` sin Docker/Testcontainers (anti-solapamiento con bloqueo pesimista por profesional **y** por sillón en lugar de `EXCLUDE USING gist`; hosting de MySQL gratuito en lugar de Neon); actualizar `08_arquitectura_propuesta.md`, `09_decisiones_y_supuestos.md`, las notas de stack de estas fichas y regenerar `CLAUDE.md` (sus reglas duras todavía prohíben H2 y exigen `EXCLUDE USING gist`).
+  - ~~Decidir y registrar el stack~~ **Hecho**: DD-08 (2026-11-23) y DD-09 (2026-11-24, base de datos y entorno sin Docker) en `knowledge-base/09_decisiones_y_supuestos.md`; arquitectura, migraciones y pruebas en `knowledge-base/08_arquitectura_propuesta.md`. PA-02 resuelta.
+  - **Hecho**: plazo y corte de entrega (PA-01, DD-10).
+  - **Hecho**: PA-03, PA-05, PA-06 y PA-10 resueltas el 2026-11-24 (ver `knowledge-base/10_preguntas_abiertas.md`).
+  - **Hecho**: `CLAUDE.md` y `.atl/skill-registry.md` regenerados con el stack DD-09.
   - Entregable: documento de decisión; sin código.
 - **Dependencias**: ninguna
 - **Governance**: MEDIO
@@ -156,7 +156,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Bruno
 - **Tamaño estimado**: S
 - **Zona**: `knowledge-base/`, `docs/`
-- **Bloqueado por**: PA-01 (plazo) — este change es el que la resuelve.
+- **Bloqueado por**: — (PA-01 resuelta en este change, DD-10)
 - **Leer antes**:
   - `knowledge-base/10_preguntas_abiertas.md` §Preguntas abiertas
   - `knowledge-base/08_arquitectura_propuesta.md`
@@ -168,17 +168,17 @@ Criterios del reparto:
 - **Scope**:
   - Estructura del monorepo (DD-08): `backend/` (Maven, Spring Boot 3, paquetes `ar.dentaflow.{dominio,aplicacion,infraestructura,presentacion}`) y `frontend/` (Vite + React + TypeScript), según `08_arquitectura_propuesta.md`.
   - Configuración por variables de entorno: `SPRING_DATASOURCE_URL`/`_USERNAME`/`_PASSWORD`, `SPRING_MAIL_HOST`/`_PORT`/`_USERNAME`/`_PASSWORD`, `APP_MAIL_FROM`, `APP_BASE_URL`, `AUTH_SECRET`, `TZ=America/Argentina/Buenos_Aires` (SU-09), `VITE_API_BASE_URL`; `.env.example`, sin secretos en el repo.
-  - Nota de stack: Maven + Vite; Flyway para migraciones; Testcontainers (Postgres real) para tests de integración; `docker-compose.yml` (Postgres + Mailpit opcional) para desarrollo local; CI con GitHub Actions (backend, frontend); Vitest + Testing Library en frontend; OpenAPI con springdoc-openapi.
+  - Nota de stack (DD-09): Maven + Vite; MySQL 8 nativo + Flyway (`flyway-mysql`, `mysql-connector-j`); perfil `test` con H2 `MODE=MySQL;DATABASE_TO_LOWER=TRUE`; perfil `it-mysql` para tests `@Tag("mysql")` contra MySQL real; sin Docker ni Testcontainers; CI con GitHub Actions (backend, job `it-mysql` con el MySQL preinstalado del runner, frontend); Vitest + Testing Library en frontend; OpenAPI con springdoc-openapi.
   - Runner de tests, lint, CI mínimo.
   - Utilidad de zona horaria del consultorio (todos los horarios se interpretan en esa zona).
-  - Tests: arranque de la app, conexión a BD (Testcontainers), test de humo de CI.
+  - Tests: arranque de la app (perfil `test`, H2), conexión a MySQL (perfil `it-mysql`), test de humo de CI.
 - **Dependencias**: `C-01`
 - **Governance**: BAJO
 - **Responsable**: Florencia (apoyo de Bruno en GitHub y CI)
 - **Oleada**: 0
 - **Revisor (aprueba el PR)**: Bruno
 - **Tamaño estimado**: M
-- **Zona**: `backend/pom.xml`, `backend/src/main/resources/`, `frontend/`, `docker-compose.yml`, `.github/workflows/`
+- **Zona**: `backend/pom.xml`, `backend/src/main/resources/`, `frontend/`, `.github/workflows/`
 - **Leer antes**:
   - `knowledge-base/08_arquitectura_propuesta.md` §Patrones, §Estructura de directorios, §Variables de entorno
   - `knowledge-base/09_decisiones_y_supuestos.md` §SU-09
@@ -318,9 +318,11 @@ Criterios del reparto:
 - **Estado**: `[ ]` pendiente
 - **Scope**:
   - Modelos: Paciente (nombre, apellido, DNI, teléfono, email, fecha de consentimiento), Turno (paciente, profesional, sillón, prestación, inicio, fin = inicio + duración, estado, origen online|recepción, `es_sobreturno`, creado_por, token de acceso del paciente).
-  - Migración 004 (Flyway) con restricción de integridad a nivel de base de datos: restricción de exclusión PostgreSQL (`btree_gist`, `EXCLUDE USING gist` sobre `tstzrange`) sin solapamiento de [inicio, fin) por profesional y por sillón entre turnos activos (no cancelados), salvo `es_sobreturno` (RN-TU-01/02/07); índices (profesional_id, inicio), (sillon_id, inicio), (paciente_id), (estado, inicio).
+  - Migración `V009_1__...` (Flyway, MySQL 8 + H2 `MODE=MySQL`); índices (profesional_id, estado, inicio, fin), (sillon_id, estado, inicio, fin), (paciente_id), (estado, inicio).
+  - Anti-solapamiento (DD-09): sin solapamiento de [inicio, fin) por profesional y por sillón entre turnos activos (no cancelados), salvo `es_sobreturno` (RN-TU-01/02/07), garantizado con `SELECT ... FOR UPDATE` sobre la fila del profesional y después la del sillón, y verificación leyendo el último estado confirmado (`READ COMMITTED` o `FOR SHARE`).
+  - Estado inicial del turno online: `pendiente` (PA-10).
   - Máquina de estados: `pendiente`, `confirmado`, `cancelado`, `asistio`, `ausente`, `ausente_con_aviso`, con transiciones válidas explícitas; cancelar libera profesional y sillón (RN-TU-06).
-  - Servicio de creación/cambio de turno transaccional (`@Transactional`) con control de concurrencia que captura la violación de la restricción de exclusión y la traduce a conflicto, e invoca la auditoría (C-08). Tests de concurrencia con Testcontainers.
+  - Servicio de creación/cambio de turno transaccional (`@Transactional`), única vía de escritura de turnos, que toma los bloqueos en orden, devuelve conflicto si hay solapamiento e invoca la auditoría (C-08). Tests de concurrencia `@Tag("mysql")` en el perfil `it-mysql`.
   - Deduplicación de paciente por DNI (SU-03) y token no adivinable por turno.
   - Tests: solapamiento rechazado por profesional y por sillón, concurrencia (dos creaciones simultáneas, solo una gana), transiciones inválidas, sobreturno permitido solo con flag.
 - **Dependencias**: `C-03, C-08`
@@ -330,7 +332,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: L
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/turnos/`, `backend/src/main/java/ar/dentaflow/dominio/pacientes/`, `backend/src/main/resources/db/migration/`
-- **Bloqueado por**: PA-10 (estado inicial del turno online: parametrizar `pendiente`/`confirmado`), PA-06 (asignación de sillón), PA-13 (email obligatorio del paciente), SU-03 (DNI como clave)
+- **Bloqueado por**: PA-13 (email obligatorio del paciente), SU-03 (DNI como clave). PA-10 y PA-06 resueltas: nace `pendiente`; sillón asignado por el sistema después del profesional
 - **Leer antes**:
   - `knowledge-base/04_modelo_de_datos.md` §Turno, §Paciente
   - `knowledge-base/05_reglas_de_negocio.md` §RN-TU-01..07, §RN-GL-02
@@ -343,7 +345,7 @@ Criterios del reparto:
   - Motor único de disponibilidad: dado prestación (y profesional si aplica) y rango de fechas, calcula huecos = horario de atención − bloqueos − turnos activos de profesional y sillón, solo huecos donde entra la duración completa (RN-DI-01).
   - Asignación de profesional y sillón al hueco elegido; verificación final dentro de la transacción de creación (reusa C-09) para que el hueco tomado en el medio se rechace.
   - Reutilizado por reserva online, carga manual, reprogramación y lista de espera (sin reglas duplicadas).
-  - Nota de stack: la verificación final transaccional se apoya en la restricción de exclusión de C-09 (Postgres) como red de seguridad; el motor no la reemplaza.
+  - Nota de stack: la verificación final se apoya en el servicio transaccional con bloqueo de C-09 (DD-09); el motor no la reemplaza. Para "cualquier profesional" entrega candidatos ordenados y la creación prueba uno por transacción.
   - Tests: hueco que no entra la duración, bloqueo parcial, borde exacto de horario, sillón ocupado con profesional libre, zona horaria/cambio de día.
 - **Dependencias**: `C-06, C-09`
 - **Governance**: CRITICO
@@ -352,7 +354,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: L
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/disponibilidad/`, `backend/src/main/java/ar/dentaflow/aplicacion/agenda/`
-- **Bloqueado por**: PA-05 (elige profesional o primero disponible), PA-06 (quién se asigna primero, sillón por paciente o sistema); implementar la API con el parámetro profesional opcional y no codificar la política hasta decidir
+- **Bloqueado por**: — (PA-05 y PA-06 resueltas: profesional opcional o "cualquiera"; primero el profesional y después el primer sillón libre, asignado por el sistema)
 - **Leer antes**:
   - `knowledge-base/05_reglas_de_negocio.md` §RN-DI-01, §RN-DI-02, §RN-DI-04, §RN-TU-07
   - `knowledge-base/07_flujos_principales.md` §Flujo 1 (pasos 2 y 4)
@@ -427,7 +429,7 @@ Criterios del reparto:
 - **Scope**:
   - Modelo Notificacion (turno_id, tipo recordatorio|confirmación|reintento, canal email, enviada_en, estado de envío); Migración 005.
   - Adaptador de email transaccional detrás de una interfaz (sin acoplar el dominio al proveedor); plantillas de confirmación de reserva.
-  - Nota de stack: Spring Mail con SMTP genérico (`SPRING_MAIL_*`, `APP_MAIL_FROM`); elegir en este change el proveedor gratuito (Brevo o Resend); Mailpit en docker-compose para desarrollo.
+  - Nota de stack: Spring Mail con SMTP genérico (`SPRING_MAIL_*`, `APP_MAIL_FROM`); elegir en este change el proveedor gratuito (Brevo o Resend); en desarrollo, adaptador simulado o la cuenta de prueba del proveedor (sin contenedores).
   - Generación y validación de enlaces con token no adivinable para confirmar, cancelar y reprogramar (SU-03), armados con `APP_BASE_URL`; manejo de enlace vencido o turno ya cancelado.
   - Reintento y registro del estado ante fallo de envío.
   - Tests: envío con proveedor simulado, token inválido/vencido, fallo de envío registrado.
@@ -482,7 +484,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: L
 - **Zona**: `frontend/src/features/reserva/`, `backend/src/main/java/ar/dentaflow/aplicacion/turnos/`, `backend/src/main/java/ar/dentaflow/presentacion/` (rutas públicas)
-- **Bloqueado por**: PA-05, PA-06, PA-10, PA-13
+- **Bloqueado por**: PA-13 (email obligatorio). PA-05, PA-06 y PA-10 resueltas (ver C-09 y C-10)
 - **Leer antes**:
   - `knowledge-base/07_flujos_principales.md` §Flujo 1
   - `knowledge-base/06_funcionalidades.md` §US-010
@@ -540,7 +542,8 @@ Criterios del reparto:
 - **Estado**: `[ ]` pendiente
 - **Scope**:
   - Tests end-to-end con Playwright de los flujos principales (reserva, recordatorio/confirmación, cancelación/reprogramación, carga manual con sobreturno, asistencia, configuración).
-  - Despliegue (planes gratuitos): API en Render, frontend en Vercel, Postgres en Neon; configurar CORS/cookies entre dominios según lo decidido en C-04 y el cron externo de C-18.
+  - Despliegue (planes gratuitos): API en Render, frontend en Vercel, MySQL 8 en el proveedor que se elija en este change (PA-14); configurar CORS/cookies entre dominios según lo decidido en C-04 y el cron externo de C-18 (si C-18 entra).
+  - Corte 26/11 (DD-10): E2E y despliegue solo de los flujos incluidos en el corte (reserva, confirmación, cancelación y reprogramación).
   - Prueba de concurrencia explícita contra la garantía de no solapamiento (reserva online + carga manual simultáneas).
   - Revisión de seguridad: RBAC en backend, rutas públicas, rate limiting, secretos en variables de entorno, HTTPS, sin datos personales en logs.
   - Seed de demo, despliegue a un entorno accesible, guía de puesta en marcha en el README.
@@ -552,7 +555,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `frontend/` (Playwright), `.github/workflows/`, configuración de despliegue, documentación
-- **Bloqueado por**: PA-01 (plazo: define el corte real del MVP)
+- **Bloqueado por**: PA-14 (hosting de MySQL, se decide en este change). PA-01 resuelta (DD-10)
 - **Leer antes**:
   - `knowledge-base/07_flujos_principales.md`
   - `knowledge-base/01_vision_y_objetivos.md`
@@ -599,7 +602,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: S
 - **Zona**: `frontend/src/features/agenda/`
-- **Bloqueado por**: PA-03 (si se automatiza con la API oficial, sería otro change; este asume enlace prellenado, IN-01)
+- **Bloqueado por**: — (PA-03 resuelta: solo enlace `wa.me` prellenado)
 - **Leer antes**:
   - `knowledge-base/06_funcionalidades.md` §US-032
   - `knowledge-base/05_reglas_de_negocio.md` §RN-NO-04
@@ -676,4 +679,4 @@ Por DD-01 y el alcance de la KB quedan fuera y no deben colarse en los changes a
 | 4 — Cierre MVP | C-19 | MEDIO |
 | 5 — Diferenciadores | C-20 a C-24 | MEDIO |
 
-**Primer item elegible**: `C-01` (decision-stack-y-plazo).
+**Primer item elegible**: `C-02` (scaffolding-proyecto). C-01 completado el 2026-11-24.

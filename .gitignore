@@ -1,0 +1,6 @@
+# Registro de skills local (no versionado)
+.atl/
+
+# Backups locales
+*.bak
+*.tmp

@@ -1,6 +1,6 @@
 {
   "version": 5,
-  "step": "kb",
+  "step": "done",
   "owner": "active-orchestrator",
   "foundation": {
     "version": 1,
@@ -26,45 +26,49 @@
       },
       "kb": {
         "variant": "import",
-        "status": "pending",
+        "status": "done",
         "requires": [
           "discovery"
         ],
         "outputs": [
           "knowledge-base/"
-        ]
+        ],
+        "completed_on": "2026-11-23"
       },
       "roadmap": {
         "variant": "local-markdown",
-        "status": "pending",
+        "status": "done",
         "requires": [
           "kb"
         ],
         "outputs": [
           "CHANGES.md"
-        ]
+        ],
+        "completed_on": "2026-11-23"
       },
       "find-skill": {
         "variant": "install-selected",
-        "status": "pending",
+        "status": "done",
         "requires": [
           "kb"
         ],
-        "outputs": []
+        "outputs": [],
+        "completed_on": "2026-11-23"
       },
       "registry": {
         "variant": "index",
-        "status": "pending",
+        "status": "done",
         "requires": [
           "find-skill"
         ],
         "outputs": [
           ".atl/skill-registry.md"
-        ]
+        ],
+        "completed_on": "2026-11-23"
       },
       "agents": {
         "variant": "generate",
-        "status": "pending",
+        "status": "done",
         "requires": [
           "kb",
           "roadmap",
@@ -72,7 +76,8 @@
         ],
         "outputs": [
           "CLAUDE.md"
-        ]
+        ],
+        "completed_on": "2026-11-23"
       },
       "visual-design": {
         "variant": "deferred",
@@ -254,6 +259,206 @@
       "WhatsApp en el MVP: enlace o API",
       "Anticipación mínima por defecto",
       "Elección de profesional en la reserva online"
+    ]
+  },
+  "kb": {
+    "created_by": "kb-creator",
+    "source": "ingest",
+    "discovery": {
+      "problem": "Los consultorios odontológicos chicos de Argentina coordinan turnos por teléfono, WhatsApp o papel, con superposiciones de profesional o sillón, ausencias sin aviso y huecos no recuperados.",
+      "system_type": "web_app (REST API + SPA)",
+      "domain": "healthcare_dental_appointment_scheduling",
+      "scale": "team",
+      "stack": "Java 21 + Spring Boot 3 (Maven), PostgreSQL 16 + Flyway, React + Vite + TypeScript; hosting: Render (API) + Vercel (front) + Neon (Postgres), docker-compose local",
+      "needs_infra": true,
+      "stack_decided_on": "2026-11-23"
+    },
+    "files": [
+      "knowledge-base/01_vision_y_objetivos.md",
+      "knowledge-base/02_descripcion_general.md",
+      "knowledge-base/03_actores_y_roles.md",
+      "knowledge-base/04_modelo_de_datos.md",
+      "knowledge-base/05_reglas_de_negocio.md",
+      "knowledge-base/06_funcionalidades.md",
+      "knowledge-base/07_flujos_principales.md",
+      "knowledge-base/08_arquitectura_propuesta.md",
+      "knowledge-base/09_decisiones_y_supuestos.md",
+      "knowledge-base/10_preguntas_abiertas.md"
+    ]
+  },
+  "roadmap": {
+    "created_by": "roadmap-generator",
+    "source": "CHANGES.md",
+    "changes_file": "CHANGES.md",
+    "changes": [
+      "C-01",
+      "C-02",
+      "C-03",
+      "C-04",
+      "C-05",
+      "C-06",
+      "C-07",
+      "C-08",
+      "C-09",
+      "C-10",
+      "C-11",
+      "C-12",
+      "C-13",
+      "C-14",
+      "C-15",
+      "C-16",
+      "C-17",
+      "C-18",
+      "C-19",
+      "C-20",
+      "C-21",
+      "C-22",
+      "C-23",
+      "C-24"
+    ]
+  },
+  "skills": {
+    "recommended": [
+      {
+        "id": "proffesor-for-testing/agentic-qe@strict-tdd",
+        "when": "now",
+        "stack_dependent": false
+      },
+      {
+        "id": "addyosmani/agent-skills@git-workflow-and-versioning",
+        "when": "now",
+        "stack_dependent": false
+      },
+      {
+        "id": "better-auth/skills@better-auth-security-best-practices",
+        "when": "skip (stack is Spring Boot)",
+        "stack_dependent": true
+      },
+      {
+        "id": "softaworks/agent-toolkit@database-schema-designer",
+        "when": "now",
+        "stack_dependent": false
+      },
+      {
+        "id": "aj-geddes/useful-ai-prompts@rest-api-design",
+        "when": "now",
+        "stack_dependent": false
+      },
+      {
+        "id": "akillness/jeo-skills@web-accessibility",
+        "when": "now",
+        "stack_dependent": false
+      },
+      {
+        "id": "ulpi-io/skills@frontend-design-ui-ux",
+        "when": "now",
+        "stack_dependent": true
+      },
+      {
+        "id": "affaan-m/ecc@git-workflow",
+        "when": "alternative",
+        "stack_dependent": false
+      },
+      {
+        "id": "bobmatnyc/claude-mpm-skills@playwright-e2e-testing",
+        "when": "after-stack",
+        "stack_dependent": true
+      },
+      {
+        "id": "phuryn/product-engineering@transactional-email",
+        "when": "after-stack",
+        "stack_dependent": true
+      },
+      {
+        "id": "louisblythe/sales-skills@appointment-booking",
+        "when": "skip",
+        "stack_dependent": false
+      }
+    ],
+    "installed": [
+      {
+        "id": "proffesor-for-testing/agentic-qe@strict-tdd",
+        "name": "strict-tdd",
+        "scope": "global",
+        "path": "~/.agents/skills/strict-tdd",
+        "installed_on": "2026-11-23"
+      },
+      {
+        "id": "addyosmani/agent-skills@git-workflow-and-versioning",
+        "name": "git-workflow-and-versioning",
+        "scope": "global",
+        "path": "~/.agents/skills/git-workflow-and-versioning",
+        "installed_on": "2026-11-23"
+      },
+      {
+        "id": "softaworks/agent-toolkit@database-schema-designer",
+        "name": "database-schema-designer",
+        "scope": "global",
+        "path": "~/.agents/skills/database-schema-designer",
+        "installed_on": "2026-11-23"
+      },
+      {
+        "id": "aj-geddes/useful-ai-prompts@rest-api-design",
+        "name": "rest-api-design",
+        "scope": "global",
+        "path": "~/.agents/skills/rest-api-design",
+        "installed_on": "2026-11-23"
+      },
+      {
+        "id": "akillness/jeo-skills@web-accessibility",
+        "name": "web-accessibility",
+        "scope": "global",
+        "path": "~/.agents/skills/web-accessibility",
+        "installed_on": "2026-11-23"
+      },
+      {
+        "id": "ulpi-io/skills@frontend-design-ui-ux",
+        "name": "frontend-design-ui-ux",
+        "scope": "global",
+        "path": "~/.agents/skills/frontend-design-ui-ux",
+        "installed_on": "2026-11-23"
+      }
+    ],
+    "recommended_on": "2026-11-23"
+  },
+  "registry": {
+    "path": ".atl/skill-registry.md",
+    "variant": "index",
+    "generated_on": "2026-11-23",
+    "user_skills_indexed": 38,
+    "project_skills_indexed": 6,
+    "stack_relevant_count": 27,
+    "not_relevant": [
+      "supabase-postgres-best-practices",
+      "upstash-redis-js",
+      "idempotent-financial-workflows",
+      "notebooklm"
+    ],
+    "engram_saved": true,
+    "notes": "strict-tdd hook targets src/**/*.ts with jest only; not enforced for Java backend. No AGENTS.md/CLAUDE.md created."
+  },
+  "agents": {
+    "created_by": "agent-instruction",
+    "files": [
+      "CLAUDE.md"
+    ],
+    "reglas_applied": [
+      "git: no commitear/pushear sin pedido",
+      "git: conventional commits en castellano",
+      "git: rama por change + PR a main",
+      "git: sin Co-Authored-By de IA",
+      "datos: solo migraciones Flyway nuevas",
+      "datos: anti-solapamiento con EXCLUDE + test",
+      "datos: Postgres real con Testcontainers",
+      "datos: fechas con zona America/Argentina/Buenos_Aires",
+      "seguridad: roles verificados en backend",
+      "seguridad: DTOs + Bean Validation",
+      "dominio: turnos via maquina de estados auditada",
+      "privacidad: sin datos reales ni secretos en repo (Ley 25.326)",
+      "capas: dominio sin Spring/JPA",
+      "front: TS strict sin any",
+      "front: API via cliente + TanStack Query, RHF + Zod",
+      "front: mobile-first + WCAG 2.1 AA"
     ]
   }
 }

@@ -31,7 +31,7 @@ Provienen de `docs/discovery/discovery.md` e `informe-discovery.md`.
 ### DD-05 — Canal de recordatorios en el MVP: email + wa.me
 **Decisión**: email automático y enlaces de WhatsApp prellenados; la API oficial de WhatsApp queda para después.
 **Contexto**: la API tiene costo por mensaje y varios competidores "automatizan" de forma manual.
-**Trade-offs aceptados**: el WhatsApp del MVP no es automático. **Ver PA-03**: la decisión de si entra la API en el MVP sigue abierta.
+**Trade-offs aceptados**: el WhatsApp del MVP no es automático. PA-03 resuelta el 2026-11-24: en el MVP, WhatsApp es solo por enlace `wa.me` prellenado; la API oficial queda fuera.
 
 ### DD-06 — Mobile-first web, sin app nativa
 **Decisión**: web adaptable al celular para el paciente.
@@ -41,6 +41,8 @@ Provienen de `docs/discovery/discovery.md` e `informe-discovery.md`.
 **Decisión**: aviso de privacidad y tratamiento acorde desde el inicio; Ley 26.529 recién con ficha clínica.
 
 ### DD-08 — Stack tecnológico (aprobado 2026-11-23)
+> **Reemplazada parcialmente por DD-09 (2026-11-24)** en base de datos, tests de backend, hosting de la base y desarrollo local. Siguen vigentes backend, frontend, email, hosting de API y frontend, repositorio y CI. El texto se conserva como registro histórico.
+
 **Decisión**: la cátedra permite elegir el stack libremente (resuelve PA-02). Se adopta:
 - **Backend**: Java 21 LTS + Spring Boot 3 (Spring Web, Spring Security, Spring Data JPA, Bean Validation, Spring Mail), build con Maven. API REST documentada con OpenAPI (springdoc-openapi).
 - **Base de datos**: PostgreSQL 16, migraciones con Flyway. El anti-solapamiento (RN-TU-01/02) se garantiza también a nivel de base con una restricción de exclusión (`btree_gist`, `EXCLUDE USING gist` sobre un rango `tstzrange`) por profesional y por sillón, para turnos no cancelados, además de la validación en la aplicación.
@@ -63,7 +65,37 @@ Provienen de `docs/discovery/discovery.md` e `informe-discovery.md`.
 - **Front y API en dominios distintos** (Vercel y Render): complica las cookies de sesión (SameSite/CORS). El esquema de autenticación (cookie de sesión o JWT) se decide en C-04 (zona CRITICA), no ahora.
 - Dependencia de PostgreSQL y de Docker en desarrollo y en CI (Testcontainers).
 - Dependencia de los límites de los planes gratuitos (almacenamiento, horas de cómputo, cuota de email).
-**Relacionado**: resuelve PA-02; PA-01 (plazo) sigue abierta.
+**Relacionado**: resuelve PA-02. PA-01 resuelta en DD-10.
+
+### DD-09 — Base de datos MySQL 8 y desarrollo sin Docker (aprobado 2026-11-24)
+**Decisión**: reemplaza la parte de datos, tests y entorno local de DD-08:
+- **Base de datos**: MySQL 8 (InnoDB) + Flyway (`flyway-mysql`, `mysql-connector-j`), instalado de forma nativa en desarrollo y usado también en despliegue.
+- **Tests de backend**: JUnit 5, Mockito, MockMvc, `@DataJpaTest` y `@SpringBootTest` con el perfil `test` sobre H2 en memoria (`MODE=MySQL;DATABASE_TO_LOWER=TRUE`). Los tests de concurrencia y bloqueo se marcan `@Tag("mysql")` y corren además con el perfil `it-mysql` contra un MySQL 8 real (local, o el MySQL preinstalado en los runners `ubuntu-latest` de GitHub Actions).
+- **Sin Docker**: no se usan Docker, `docker-compose` ni Testcontainers; tampoco un captor de mails en contenedor.
+- **Anti-solapamiento (RN-TU-01/02/07, DD-02)**: la transacción que crea o mueve un turno bloquea con `SELECT ... FOR UPDATE` la fila del **profesional** y después la del **sillón** (siempre en ese orden; si hay varios del mismo tipo, por id ascendente). Con ambos bloqueos tomados verifica el solapamiento leyendo el último estado confirmado (aislamiento `READ COMMITTED` o lectura `FOR SHARE`) y recién entonces escribe. Índices `(profesional_id, estado, inicio, fin)` y `(sillon_id, estado, inicio, fin)` sobre `turno`. "Cualquier profesional" (PA-05) se resuelve probando un candidato por transacción.
+- **Tipos**: PK `BIGINT AUTO_INCREMENT`, tiempos `DATETIME(6)` en UTC mapeados a `Instant`, estados como `VARCHAR` + `CHECK`; SQL de migraciones válido en MySQL 8 y en H2 `MODE=MySQL`.
+- **Hosting de la base**: deja de aplicar el proveedor de DD-08; el proveedor gratuito de MySQL 8 se elige en C-19 (PA-14).
+
+**Contexto**: las máquinas del equipo no tienen RAM suficiente para correr Docker (base en contenedor + Testcontainers) junto con el IDE y el navegador.
+**Alternativas consideradas**:
+- Mantener el motor de DD-08 instalado de forma nativa: se descartó por preferencia y experiencia del equipo con MySQL.
+- Motor de DD-08 + H2 en su modo de compatibilidad: H2 no soporta la restricción de exclusión de DD-08, así que la garantía quedaba sin probar localmente.
+- Tabla de franjas con `UNIQUE` por recurso: obliga a una granularidad fija que choca con duraciones variables por prestación (RN-TU-03).
+- Bloqueo optimista con versión en el recurso: más reintentos y no más simple de probar.
+**Justificación**: MySQL 8 nativo es liviano y conocido por el equipo; el bloqueo por PK del recurso serializa solo a quienes compiten por el mismo profesional o sillón y es predecible en InnoDB.
+**Trade-offs aceptados / consecuencias**:
+- La base no tiene una garantía declarativa: el anti-solapamiento depende de que **toda** escritura de turnos pase por el servicio transaccional de C-09. Se compensa con una única vía de escritura, revisión en PR y un test de concurrencia en `it-mysql` en cada change que cree o mueva turnos (C-09, C-12, C-16, C-17, C-20).
+- H2 no reproduce el bloqueo de filas de InnoDB: un test de concurrencia en verde sobre H2 no cuenta como verificado.
+- Reservas del mismo profesional se serializan; aceptable para 1 a 5 profesionales.
+**Relacionado**: DD-02, DD-08, PA-14, C-02, C-09, C-10.
+
+### DD-10 — Plazo y corte de entrega (aprobado 2026-11-24)
+**Decisión**: la entrega del trabajo final es el **jueves 2026-11-26 a las 12:00** (resuelve PA-01). El corte de entrega incluye C-01, C-02, C-03, C-04, C-06, C-07, C-08, C-09, C-10, C-14, C-15, C-16, C-17 y C-19 (camino crítico más sus dependencias reales; C-06, C-07, C-14 y C-15 en versión mínima). Quedan fuera del corte, sin borrarse del roadmap, C-05 (alcanza el seed), C-11, C-12, C-13, C-18 y los diferenciadores C-20 a C-24.
+**Contexto**: quedan menos de 48 h y el corte tiene una cadena serial de 10 changes.
+**Alternativas consideradas**: entregar solo la planificación; MVP completo sin diferenciadores (no entra en el plazo).
+**Trade-offs aceptados**: sin agenda interna (C-11), carga manual con sobreturno (C-12), asistencia (C-13) ni recordatorios programados (C-18) en la entrega.
+**Riesgo y plan de degradación**: si el corte no llega completo, la prioridad es C-09 + C-10 (el diferencial DD-02: no solapamiento por profesional y sillón con concurrencia), mostrado con una demo local si no hay despliegue.
+**Relacionado**: PA-01, `01_vision_y_objetivos.md` §Plazo y corte de entrega, `CHANGES.md`.
 
 ## Supuestos inferidos
 

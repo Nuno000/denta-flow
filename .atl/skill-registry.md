@@ -4,15 +4,15 @@ Este registro está versionado en el repositorio para que todo el equipo compart
 
 Las rutas de las skills globales son relativas al home de cada persona (`~`). Para regenerarlo, ejecutar la skill `skill-registry` y luego volver a aplicar este formato (en español, sin rutas absolutas).
 
-Proyecto: denta-flow (DentaFlow). Actualizado el 2026-11-24 (adaptado a entorno local liviano sin Docker).
+Proyecto: denta-flow (DentaFlow). Actualizado el 2026-11-24 (stack DD-09: MySQL 8 nativo, sin Docker).
 
-## Stack del proyecto (DD-08 adaptado sin Docker)
+## Stack del proyecto (DD-08 + DD-09)
 
-Java 21 + Spring Boot 3 (Maven), Spring Data JPA / Hibernate, PostgreSQL 16 + Flyway (Neon en despliegue; H2 en modo PostgreSQL o PostgreSQL nativo en desarrollo y tests locales sin Docker), JUnit 5 / Mockito / MockMvc; React + Vite + TypeScript, TanStack Query, RHF + Zod, Tailwind, Vitest / Testing Library, Playwright; GitHub Actions. Desarrollo guiado por specs con OpenSpec; TDD estricto.
+Java 21 + Spring Boot 3 (Maven), Spring Data JPA / Hibernate, MySQL 8 (InnoDB) nativo + Flyway (`flyway-mysql`, `mysql-connector-j`) en desarrollo y despliegue (proveedor a elegir en C-19, PA-14); tests con H2 en memoria `MODE=MySQL;DATABASE_TO_LOWER=TRUE` (perfil `test`) y concurrencia contra MySQL real (perfil `it-mysql`), JUnit 5 / Mockito / MockMvc; React + Vite + TypeScript, TanStack Query, RHF + Zod, Tailwind, Vitest / Testing Library, Playwright; GitHub Actions. Desarrollo guiado por specs con OpenSpec; TDD estricto.
 
 Restricción de entorno local: **NO usar Docker, `docker-compose` ni `Testcontainers`** por limitación de memoria RAM en desarrollo local.
 
-Brechas de cobertura del stack (no hay skill dedicada instalada): migraciones Flyway multi-motor (H2/PostgreSQL), TanStack Query, RHF + Zod, Tailwind, Vitest / Testing Library, GitHub Actions. Aplicar las reglas generales de abajo y los archivos de convenciones del proyecto; no asumir que una skill los cubre.
+Brechas de cobertura del stack (no hay skill dedicada instalada): MySQL 8 y migraciones Flyway compatibles con H2 `MODE=MySQL`, bloqueo pesimista en InnoDB, TanStack Query, RHF + Zod, Tailwind, Vitest / Testing Library, GitHub Actions. Aplicar las reglas generales de abajo y los archivos de convenciones del proyecto; no asumir que una skill los cubre.
 
 ## Relevancia por stack
 
@@ -23,7 +23,7 @@ Mapeo de relevancia para los delegadores. Las skills marcadas NO RELEVANTE se in
 | java-spring-boot, java-springboot, springboot-patterns, springboot-tdd, springboot-security, spring-boot-test-patterns, spring-boot-rest-api-standards, spring-boot-security-jwt, spring-boot-openapi-documentation, spring-boot-cache | RELEVANTE (backend) | Backend Spring Boot 3 + JPA/Hibernate (ejecución nativa sin contenedores) |
 | spring-boot-resilience4j | CONDICIONAL | Solo cuando una llamada externa (ej. SMTP) necesite retry / circuit breaker |
 | spring-boot-event-driven-patterns | CONDICIONAL | Solo para eventos de dominio locales (`ApplicationEventPublisher`); Kafka no está en DD-08 |
-| postgresql-table-design, postgres-patterns, database-schema-designer | RELEVANTE (datos) | Esquema PostgreSQL 16 + Flyway (Neon / Postgres nativo) y compatibilidad con perfil local H2 |
+| database-schema-designer | RELEVANTE (datos) | Diseño de esquema genérico; aplicar con tipos MySQL 8 compatibles con H2 `MODE=MySQL` (DD-09) |
 | rest-api-design | RELEVANTE (API) | Diseño de endpoints REST |
 | typescript-best-practices | RELEVANTE (frontend) | Código TypeScript (.ts / .tsx) |
 | playwright-best-practices, webapp-testing | RELEVANTE (e2e) | Tests E2E con Playwright contra servidor local nativo |
@@ -33,7 +33,7 @@ Mapeo de relevancia para los delegadores. Las skills marcadas NO RELEVANTE se in
 | strict-tdd, springboot-tdd | RELEVANTE (proceso) | Modo TDD estricto sin contenedores. NOTA: el hook de strict-tdd apunta a `src/**/*.ts` solo con jest, por lo que NO fuerza TDD en el backend Java. La disciplina TDD en Java debe aplicarse manualmente con springboot-tdd y las Tres Leyes |
 | openspec-explore, openspec-propose, openspec-apply-change, openspec-update-change, openspec-sync-specs, openspec-archive-change | RELEVANTE (proceso) | Flujo de trabajo OpenSpec |
 | docker-patterns, docker-compose-orchestration | NO RELEVANTE | Descartadas por restricción de memoria local (no se usa Docker ni docker-compose) |
-| supabase-postgres-best-practices | NO RELEVANTE | Específica de Supabase; el proyecto usa PostgreSQL 16 / Neon + H2 local |
+| postgresql-table-design, postgres-patterns, supabase-postgres-best-practices | NO RELEVANTE | Específicas de otro motor; el proyecto usa MySQL 8 + H2 `MODE=MySQL` (DD-09) |
 | upstash-redis-js | NO RELEVANTE | No hay Redis en el stack |
 | idempotent-financial-workflows | NO RELEVANTE | Fuera del alcance MVP (DD-01) |
 | notebooklm | NO RELEVANTE | API de Google NotebookLM |
@@ -67,10 +67,10 @@ Reglas pre-digeridas por skill. Los delegadores copian los bloques que correspon
 ### java-springboot
 - `pom.xml` de Maven; usar starters; organizar paquetes por feature/dominio, no por capa
 - Inyección por constructor con `private final`; `@ConfigurationProperties` para configuración tipada
-- Perfiles vía `application-{env}.yml` (`dev` con H2 en modo PostgreSQL o Neon; `prod` con PostgreSQL 16); secretos nunca en el código fuente
+- Perfiles vía `application-{env}.yml` (`dev` y `prod` con MySQL 8; `test` con H2 `MODE=MySQL`; `it-mysql` con MySQL real para concurrencia); secretos nunca en el código fuente
 - No exponer entidades JPA; usar DTOs con Bean Validation
 - SLF4J con logging parametrizado (`logger.info("x {}", id)`), nunca concatenación de strings
-- Tests: unitarios con JUnit 5 + Mockito, slices `@WebMvcTest` / `@DataJpaTest` con H2 (`MODE=PostgreSQL`), sin Docker ni Testcontainers
+- Tests: unitarios con JUnit 5 + Mockito, slices `@WebMvcTest` / `@DataJpaTest` con H2 (`MODE=MySQL`), sin Docker ni Testcontainers
 
 ### springboot-patterns
 - Capas: controller -> service -> repository; los controllers se mantienen delgados
@@ -85,7 +85,7 @@ Reglas pre-digeridas por skill. Los delegadores copian los bloques que correspon
 - Unitarios: `@ExtendWith(MockitoExtension.class)`, `@Mock` + `@InjectMocks`, estructura AAA
 - Evitar mocks parciales; usar stubbing explícito; `@ParameterizedTest` para variantes
 - Capa web: `@WebMvcTest` con `@MockitoBean` y aserciones `jsonPath` de MockMvc
-- Persistencia e integración: `@DataJpaTest` y `@SpringBootTest` + `@AutoConfigureMockMvc` + `@ActiveProfiles("test")` usando H2 en memoria (`MODE=PostgreSQL`), sin Testcontainers
+- Persistencia e integración: `@DataJpaTest` y `@SpringBootTest` + `@AutoConfigureMockMvc` + `@ActiveProfiles("test")` usando H2 en memoria (`MODE=MySQL`), sin Testcontainers; tests de concurrencia `@Tag("mysql")` en el perfil `it-mysql`
 - Exigir cobertura con JaCoCo (objetivo 80%+)
 - Java NO tiene enforcement por hook de strict-tdd; aplicar las Tres Leyes manualmente
 
@@ -98,7 +98,8 @@ Reglas pre-digeridas por skill. Los delegadores copian los bloques que correspon
 - Configurar headers de seguridad y una política CORS explícita
 
 ### spring-boot-test-patterns
-- Pirámide liviana sin Docker: unitarios (`@ExtendWith(MockitoExtension.class)`, <50ms), slices (`@DataJpaTest` con H2 `MODE=PostgreSQL`, `@WebMvcTest`), integración (`@SpringBootTest` con perfil `test`)
+- Pirámide liviana sin Docker: unitarios (`@ExtendWith(MockitoExtension.class)`, <50ms), slices (`@DataJpaTest` con H2 `MODE=MySQL`, `@WebMvcTest`), integración (`@SpringBootTest` con perfil `test`)
+- Concurrencia y bloqueos: `@Tag("mysql")`, perfil `it-mysql` contra MySQL 8 real (excluidos del build por defecto); un verde en H2 no cuenta para concurrencia
 - No usar `@Testcontainers` ni `@ServiceConnection` con contenedores
 - Preferir slices antes que el contexto completo; reservar `@SpringBootTest` para el cableado end-to-end
 - Aserciones con AssertJ (`assertThat`)
@@ -130,22 +131,15 @@ Reglas pre-digeridas por skill. Los delegadores copian los bloques que correspon
 - `@EnableCaching` más un bean `CacheManager`
 - `@Cacheable` para lecturas, `@CachePut` para escrituras, `@CacheEvict` para borrados
 
-### postgresql-table-design
-- Tablas con PK: `BIGINT GENERATED ALWAYS AS IDENTITY` o `UUID` estándar ANSI para compatibilidad H2/PostgreSQL
-- Normalizar a 3FN; desnormalizar solo para lecturas medidas
-- Tiempo: `TIMESTAMPTZ` (`TIMESTAMP WITH TIME ZONE`); texto: `TEXT` / `VARCHAR`; evitar tipos propietarios innecesarios en migraciones compartidas
-- Indexar manualmente las columnas FK
-- Aislar extensiones y restricciones exclusivas de PostgreSQL (`btree_gist`, `EXCLUDE USING gist` sobre `tstzrange`) en `db/migration/postgresql` para que las migraciones base (`db/migration/common`) corran también en H2 local
-
-### postgres-patterns
-- Tipos de índice: B-tree por defecto; GiST para rangos horarios `tstzrange` en PostgreSQL 16
-- Orden de índice compuesto: primero columnas de igualdad, después columnas de rango
-- Mantener las transacciones cortas; usar solo consultas parametrizadas
+### postgresql-table-design, postgres-patterns (NO RELEVANTE)
+- Específicas de otro motor; no aplicar sus tipos ni restricciones en este proyecto (DD-09).
 
 ### database-schema-designer
 - Normalizar a 3FN para OLTP; desnormalizar solo con evidencia
 - Toda tabla tiene clave primaria; FKs indexadas; NOT NULL y defaults razonables
-- Usar `TIMESTAMP WITH TIME ZONE` para tiempo
+- Tiempo en `DATETIME(6)` guardado en UTC y mapeado a `Instant`; PK `BIGINT AUTO_INCREMENT`; estados `VARCHAR` + `CHECK` (sin `ENUM`); SQL válido en MySQL 8 y en H2 `MODE=MySQL`
+- Migraciones `V0NN_<n>__descripcion.sql` por change; índices compuestos con primero columnas de igualdad y después de rango
+- Anti-solapamiento de turnos: `SELECT ... FOR UPDATE` sobre el profesional y después sobre el sillón (orden fijo), verificación leyendo el último estado confirmado (`READ COMMITTED` o `FOR SHARE`)
 - Validar el diseño contra el checklist de verificación antes de implementar
 
 ### rest-api-design
@@ -225,7 +219,7 @@ Reglas pre-digeridas por skill. Los delegadores copian los bloques que correspon
 | Instrucciones de agentes | CLAUDE.md / AGENTS.md | Reglas del proyecto, arquitectura, restricciones y comandos locales |
 | Config de OpenSpec | openspec/config.yaml | Contexto del stack sin Docker y reglas por artefacto |
 | Índice de la base de conocimiento | knowledge-base/README.md | Índice de los 10 archivos de la KB (01 a 10) |
-| Decisiones (stack DD-08) | knowledge-base/09_decisiones_y_supuestos.md | Fuente de decisiones arquitectónicas |
+| Decisiones (stack DD-08 + DD-09, plazo DD-10) | knowledge-base/09_decisiones_y_supuestos.md | Fuente de decisiones arquitectónicas |
 | Arquitectura | knowledge-base/08_arquitectura_propuesta.md | Capas, patrones, seguridad y variables de entorno |
 | Reglas de negocio | knowledge-base/05_reglas_de_negocio.md | Reglas `RN-XX` por dominio |
 | Roadmap de changes | CHANGES.md | Ítems de trabajo `C-01` a `C-22` |

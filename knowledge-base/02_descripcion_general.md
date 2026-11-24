@@ -2,16 +2,16 @@
 
 ## Stack tecnológico
 
-**DECIDIDO el 2026-11-23** (ver `09_decisiones_y_supuestos.md`, DD-08). La cátedra permite elegir libremente el stack (PA-02 resuelta).
+**DECIDIDO el 2026-11-23 y actualizado el 2026-11-24** (ver `09_decisiones_y_supuestos.md`, DD-08 y DD-09). La cátedra permite elegir libremente el stack (PA-02 resuelta).
 
 | Capa | Tecnología | Estado |
 |---|---|---|
 | Frontend (web, mobile-first) | React + Vite + TypeScript (SPA única para reserva pública y panel interno), React Router, TanStack Query, React Hook Form + Zod, Tailwind CSS; tests con Vitest + Testing Library y E2E con Playwright | Decidido |
 | Backend / API | Java 21 + Spring Boot 3 (Web, Security, Data JPA, Validation, Mail), Maven; REST + OpenAPI (springdoc-openapi) | Decidido |
-| Base de datos | PostgreSQL 16 + Flyway; restricción de exclusión (`btree_gist`) para el anti-solapamiento (ver `04_modelo_de_datos.md`) | Decidido |
+| Base de datos | MySQL 8 (InnoDB) + Flyway; anti-solapamiento con bloqueo pesimista del profesional y luego del sillón dentro de la transacción (ver `04_modelo_de_datos.md` y DD-09); tests sobre H2 `MODE=MySQL` y concurrencia contra MySQL real (perfil `it-mysql`) | Decidido |
 | Envío de email transaccional | SMTP genérico vía Spring Mail; proveedor gratuito (Brevo o Resend) a elegir en C-14 | Decidido (proveedor pendiente) |
 | Tareas programadas (recordatorios, reintentos) | Operación idempotente disparada por cron externo contra endpoint protegido; `@Scheduled` en local (a decidir en C-18) | Propuesto |
-| Despliegue / hosting | Render (API), Vercel (frontend), Neon (Postgres), planes gratuitos; docker-compose en local; CI con GitHub Actions | Decidido |
+| Despliegue / hosting | Render (API) y Vercel (frontend), planes gratuitos; proveedor de MySQL a elegir en C-19 (PA-14); desarrollo local con MySQL nativo, sin contenedores; CI con GitHub Actions | API y frontend decididos; base pendiente |
 
 El esquema de autenticación (cookie de sesión o JWT) se decide en C-04 por el despliegue en dominios distintos.
 
@@ -29,7 +29,7 @@ Aplicación web (SPA React) con backend propio (API REST Spring Boot), de un sol
 
 ## Arquitectura general
 
-Descripción lógica (implementada con el stack de DD-08):
+Descripción lógica (implementada con el stack de DD-08 y DD-09):
 
 ```
 Paciente (celular/PC)          Recepción / Profesional / Admin

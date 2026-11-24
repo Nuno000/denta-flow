@@ -67,7 +67,15 @@ Orientativas (no definidas en las fuentes; confirmar con el equipo):
 
 ## Restricciones del proyecto
 
-- Trabajo final universitario, equipo de 4 personas; el plazo de entrega es una **pregunta abierta** (ver `10_preguntas_abiertas.md`).
+- Trabajo final universitario, equipo de 4 personas; entrega el **jueves 2026-11-26 a las 12:00** (PA-01 resuelta, DD-10).
 - Consultorio de una sola sede.
 - Mobile-first para el paciente.
 - Datos personales de pacientes: Ley 25.326 desde el MVP.
+
+## Plazo y corte de entrega
+
+Decidido el 2026-11-24 (DD-10). Entrega: **jueves 2026-11-26, 12:00**.
+
+- **Dentro del corte** (14 changes): C-01, C-02, C-03, C-04, C-06, C-07, C-08, C-09, C-10, C-14, C-15, C-16, C-17 y C-19. Es el camino crítico más sus dependencias reales; C-06, C-07, C-14 y C-15 van en versión mínima.
+- **Fuera del corte** (siguen en el roadmap): C-05 (alcanza el seed), C-11, C-12, C-13, C-18 y los diferenciadores C-20 a C-24.
+- **Criterio de prioridad**: si el corte no llega completo, primero C-09 + C-10 (no solapamiento por profesional y sillón, el diferencial de DD-02), mostrado con una demo local si no hay despliegue.

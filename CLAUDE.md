@@ -10,20 +10,20 @@ DentaFlow es un sistema de turnos online para consultorios odontológicos chicos
 
 ## Stack Tecnológico
 
-Decidido el 2026-11-23 (DD-08).
+Decidido el 2026-11-23 (DD-08) y actualizado el 2026-11-24 (DD-09: MySQL 8 sin Docker).
 
 | Capa | Tecnología | Estado |
 |------|------------|--------|
 | Frontend (web, mobile-first) | React + Vite + TypeScript (SPA única para reserva pública y panel interno), React Router, TanStack Query, React Hook Form + Zod, Tailwind CSS; Vitest + Testing Library; E2E con Playwright | Decidido |
-| Backend / API | Java 21 + Spring Boot 3 (Web, Security, Data JPA, Validation, Mail), Maven; REST + OpenAPI (springdoc-openapi); JUnit 5, Mockito, Testcontainers | Decidido |
-| Base de datos | PostgreSQL 16 + Flyway; restricción de exclusión (`btree_gist`) para el anti-solapamiento | Decidido |
+| Backend / API | Java 21 + Spring Boot 3 (Web, Security, Data JPA, Validation, Mail), Maven; REST + OpenAPI (springdoc-openapi); JUnit 5, Mockito, MockMvc; perfil `test` con H2 `MODE=MySQL` y perfil `it-mysql` contra MySQL real | Decidido |
+| Base de datos | MySQL 8 (InnoDB) nativo + Flyway; anti-solapamiento con bloqueo pesimista del profesional y después del sillón (DD-09) | Decidido |
 | Email transaccional | SMTP genérico vía Spring Mail; proveedor gratuito (Brevo o Resend) a elegir en C-14 | Proveedor pendiente |
 | Tareas programadas | Operación idempotente disparada por cron externo; `@Scheduled` en local (se decide en C-18) | Propuesto |
-| Hosting | Render (API), Vercel (frontend), Neon (Postgres), planes gratuitos; docker-compose en local; CI con GitHub Actions | Decidido |
+| Hosting | Render (API), Vercel (frontend), planes gratuitos; proveedor de MySQL a elegir en C-19 (PA-14); desarrollo local nativo, sin contenedores; CI con GitHub Actions | API y frontend decididos; base pendiente |
 
 El esquema de autenticación (cookie de sesión o JWT) se decide en C-04, porque el frontend y la API quedan en dominios distintos.
 
-Detalle completo: [knowledge-base/02_descripcion_general.md](knowledge-base/02_descripcion_general.md) y [knowledge-base/08_arquitectura_propuesta.md](knowledge-base/08_arquitectura_propuesta.md).
+Detalle completo: [knowledge-base/02_descripcion_general.md](knowledge-base/02_descripcion_general.md), [knowledge-base/08_arquitectura_propuesta.md](knowledge-base/08_arquitectura_propuesta.md) y [knowledge-base/09_decisiones_y_supuestos.md](knowledge-base/09_decisiones_y_supuestos.md) (DD-09, DD-10).
 
 ---
 
@@ -43,7 +43,7 @@ La fuente de verdad del dominio vive en `knowledge-base/`. **Leé el archivo rel
 | [09_decisiones_y_supuestos.md](knowledge-base/09_decisiones_y_supuestos.md) | Decisiones DD-XX y supuestos SU-XX |
 | [10_preguntas_abiertas.md](knowledge-base/10_preguntas_abiertas.md) | ⚠️ Preguntas abiertas a resolver ANTES de codear |
 
-> ⚠️ Resolver las preguntas de prioridad **Alta** de `10_preguntas_abiertas.md` antes de arrancar el change que bloquean (hoy: PA-01 plazo, PA-05 elección de profesional en la reserva online).
+> ⚠️ Resolver las preguntas abiertas de `10_preguntas_abiertas.md` antes de arrancar el change que bloquean (hoy no queda ninguna de prioridad Alta; PA-14, hosting de MySQL, se decide en C-19).
 
 ---
 
@@ -52,15 +52,14 @@ La fuente de verdad del dominio vive en `knowledge-base/`. **Leé el archivo rel
 | Agente | Rol | Skills que carga |
 |--------|-----|------------------|
 | **Backend** | Spring Boot: dominio, casos de uso, REST, seguridad | `springboot-patterns`, `java-springboot`, `spring-boot-rest-api-standards`, `spring-boot-openapi-documentation`, `springboot-security`, `spring-boot-security-jwt`, `rest-api-design` |
-| **Backend — tests** | TDD en JUnit 5 / Mockito / Testcontainers | `springboot-tdd`, `spring-boot-test-patterns` |
-| **Datos** | Esquema PostgreSQL, constraints, migraciones | `database-schema-designer`, `postgresql-table-design`, `postgres-patterns` |
+| **Backend — tests** | TDD en JUnit 5 / Mockito / MockMvc; H2 `MODE=MySQL` y perfil `it-mysql` | `springboot-tdd`, `spring-boot-test-patterns` |
+| **Datos** | Esquema MySQL 8 compatible con H2 `MODE=MySQL`, índices, migraciones Flyway, bloqueo pesimista | `database-schema-designer` |
 | **Frontend** | React + Vite + TS, Tailwind, UI/UX, accesibilidad | `typescript-best-practices`, `modern-web-development`, `frontend-design-ui-ux`, `web-accessibility` |
 | **E2E / QA** | Playwright sobre el flujo de reserva | `playwright-best-practices`, `webapp-testing`, `strict-tdd` (su hook solo cubre `src/**/*.ts` con jest) |
-| **Infra** | docker-compose local, contenedores | `docker-compose-orchestration`, `docker-patterns` |
 | **Git** | Ramas, commits, PR | `git-workflow-and-versioning` |
 | **Spec / orquestación** | OpenSpec y fundación | `openspec-explore`, `openspec-propose`, `openspec-apply-change`, `openspec-archive-change`, `kb-creator`, `roadmap-generator`, `agent-instruction`, `skill-registry` |
 
-Cargá la skill correspondiente al contexto ANTES de escribir código. Sin skill dedicada (aplicar las reglas generales y la KB): Flyway, TanStack Query, React Hook Form + Zod, Tailwind, Vitest / Testing Library, GitHub Actions.
+Cargá la skill correspondiente al contexto ANTES de escribir código. Sin skill dedicada (aplicar las reglas generales y la KB): MySQL 8 / Flyway, TanStack Query, React Hook Form + Zod, Tailwind, Vitest / Testing Library, GitHub Actions.
 
 > Las reglas compactas de cada skill las resuelve el orquestador desde [.atl/skill-registry.md](.atl/skill-registry.md) (generado por `skill-registry` y versionado en el repo para todo el equipo; incluye cómo instalar las skills que falten). Esta tabla solo mapea skill→rol.
 
@@ -71,8 +70,10 @@ Cargá la skill correspondiente al contexto ANTES de escribir código. Sin skill
 El plan de implementación completo está en [CHANGES.md](CHANGES.md). Resumen:
 
 - **Total**: 24 changes en 6 fases. MVP = C-01 a C-19; diferenciales opcionales = C-20 a C-24 (fase 5).
+- **Entrega**: jueves 2026-11-26, 12:00 (DD-10). Corte de entrega: C-01 a C-04, C-06 a C-10, C-14 a C-17 y C-19 (columna `Corte 26/11` de `CHANGES.md`). Si no llega completo, prioridad C-09 + C-10.
+- **Reparto y protocolo del equipo**: [docs/plan-trabajo-equipo.md](docs/plan-trabajo-equipo.md).
 - **Camino crítico** (10): `C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 → C-19`.
-- **Primer change**: `C-01` (`decision-stack-y-plazo`). El stack ya está decidido (DD-08); falta el plazo (PA-01) y agendar PA-03, PA-05, PA-06 y PA-10.
+- **Primer change elegible**: `C-02` (`scaffolding-proyecto`). C-01 cerró el stack (DD-09), el plazo (DD-10) y PA-03, PA-05, PA-06 y PA-10.
 - **Governance CRÍTICO**: C-03, C-04, C-08, C-09, C-10, C-12. **ALTO**: C-14 a C-18 (incluye privacidad Ley 25.326 en C-15).
 
 **Antes de iniciar un change**: leé [CHANGES.md](CHANGES.md), identificá sus dependencias, el campo "Bloqueado por" y los archivos de "Leer antes".
@@ -89,15 +90,16 @@ Son contrato; romperlas es un defecto.
 
 - NUNCA commitear ni pushear sin pedido explícito → proponer el commit (mensaje y archivos) y esperar.
 - NUNCA mensajes de commit libres → Conventional Commits en castellano (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`).
-- NUNCA trabajar directo sobre `main` → una rama por change de `CHANGES.md` (p. ej. `c-04-auth-usuarios-roles`) y PR a `main`.
+- NUNCA trabajar directo sobre `main` → una rama por change de `CHANGES.md` con el formato `feat/C-XX-nombre-corto` (p. ej. `feat/C-04-auth-usuarios-roles`) y PR a `main` aprobado según `docs/plan-trabajo-equipo.md`.
 - NUNCA agregar la línea `Co-Authored-By` de un asistente de IA en los commits ni en las PR.
 
 ### Backend — datos y tests
 
-- NUNCA cambiar el esquema fuera de Flyway ni editar una migración ya mergeada → crear una migración nueva `V###__descripcion.sql` en `backend/src/main/resources/db/migration/`.
-- NUNCA confiar solo en el código para evitar solapamientos → restricción `EXCLUDE USING gist` por profesional y por sillón (turnos no cancelados) + test de integración que la pruebe.
-- NUNCA usar H2 ni mocks de la base en tests de persistencia → Testcontainers con PostgreSQL 16.
-- NUNCA usar `LocalDateTime` ni la hora del servidor para turnos → `timestamptz` / `OffsetDateTime` (o `Instant`), interpretados en `America/Argentina/Buenos_Aires`.
+- NUNCA cambiar el esquema fuera de Flyway ni editar una migración ya mergeada → crear una migración nueva `V0NN_<n>__descripcion.sql` en `backend/src/main/resources/db/migration/`.
+- NUNCA escribir turnos por fuera del servicio transaccional de C-09 ni confiar solo en la UI para evitar solapamientos → `SELECT ... FOR UPDATE` sobre el profesional y después sobre el sillón (siempre en ese orden), verificación leyendo el último estado confirmado, y test de concurrencia `@Tag("mysql")` en el perfil `it-mysql` (DD-09).
+- NUNCA usar Docker, `docker-compose` ni Testcontainers, ni mocks de la base en tests de persistencia → H2 en memoria `MODE=MySQL;DATABASE_TO_LOWER=TRUE` (perfil `test`); la concurrencia solo cuenta como verificada contra MySQL 8 real (perfil `it-mysql`).
+- NUNCA usar sintaxis exclusiva de un motor en las migraciones → SQL válido en MySQL 8 y en H2 `MODE=MySQL` (`BIGINT AUTO_INCREMENT`, `DATETIME(6)`, `VARCHAR` + `CHECK`), con versión `V0NN_<n>__descripcion.sql` por change.
+- NUNCA usar `LocalDateTime` ni la hora del servidor para turnos → `DATETIME(6)` guardado en UTC y mapeado a `Instant` (u `OffsetDateTime`), interpretado en `America/Argentina/Buenos_Aires`.
 
 ### Backend — seguridad y dominio
 

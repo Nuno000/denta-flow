@@ -1,17 +1,18 @@
 # Plan de trabajo del equipo — DentaFlow
 
 > Acordado el 2026-11-24. Líder y administradora del repositorio: **Florencia**. Integrantes: **Florencia, Bruno, Jessica y Renzo**.
+> **Entrega: jueves 2026-11-26 a las 12:00** (PA-01, DD-10). Solo los changes del corte entran en la entrega; los marcados ✂ en la matriz quedan para después.
 > Fuente de verdad del orden y las dependencias: [CHANGES.md](../CHANGES.md) (sección "Tabla de changes"). Si este documento y `CHANGES.md` difieren, manda `CHANGES.md`.
 
 ## 1. Stack con el que se trabaja
 
 Java 21 + Spring Boot 3 (Maven) · **MySQL 8 nativo** + Flyway · tests de backend sobre **H2 en memoria `MODE=MySQL;DATABASE_TO_LOWER=TRUE`** · React + Vite + TypeScript · **sin Docker, docker-compose ni Testcontainers**. El detalle vigente está en [openspec/config.yaml](../openspec/config.yaml).
 
-> ⚠️ La KB (DD-08), las notas de stack de algunas fichas de `CHANGES.md` y las reglas duras de `CLAUDE.md` todavía describen PostgreSQL + Testcontainers. **C-01** registra la decisión nueva y regenera `CLAUDE.md`. Hasta que C-01 esté mergeado, ningún agente debe aplicar las reglas de PostgreSQL/Testcontainers/H2 de `CLAUDE.md`.
+Decisión registrada en `knowledge-base/09_decisiones_y_supuestos.md` (DD-09) y aplicada en la KB, `CHANGES.md`, `CLAUDE.md` y `.atl/skill-registry.md` por C-01.
 
 Consecuencias técnicas que todos deben respetar:
 
-- **Anti-solapamiento sin `EXCLUDE USING gist`**: la verificación vive en la transacción de creación/cambio de turno con bloqueo pesimista (`SELECT ... FOR UPDATE` / `@Lock(PESSIMISTIC_WRITE)`) sobre **el profesional y el sillón** (RN-TU-01/02 exigen ambos), siempre en el mismo orden (primero profesional, después sillón) para evitar deadlocks. Lo diseña Renzo en C-09 y lo reusan C-10, C-12, C-16, C-17 y C-20.
+- **Anti-solapamiento con bloqueo pesimista (DD-09)**: la verificación vive en la transacción de creación/cambio de turno con bloqueo pesimista (`SELECT ... FOR UPDATE` / `@Lock(PESSIMISTIC_WRITE)`) sobre **el profesional y el sillón** (RN-TU-01/02 exigen ambos), siempre en el mismo orden (primero profesional, después sillón) para evitar deadlocks, y leyendo el último estado confirmado (`READ COMMITTED` o `FOR SHARE`). Lo diseña Renzo en C-09 y lo reusan C-10, C-12, C-16, C-17 y C-20.
 - **H2 no es MySQL**: H2 `MODE=MySQL` no reproduce fielmente el bloqueo de filas de InnoDB. Los tests de concurrencia de C-09/C-16/C-19 se corren además contra un MySQL 8 local (perfil `it-mysql`, opcional en CI) antes de aprobar el PR.
 - **Horas**: columnas `DATETIME(6)` guardadas en UTC y mapeadas a `Instant`/`OffsetDateTime`; se interpretan en `America/Argentina/Buenos_Aires` (SU-09). Nunca `LocalDateTime` ni la hora del servidor.
 
@@ -37,13 +38,15 @@ Un change arranca cuando **todos** sus "Depende de" están mergeados en `main`. 
 | 0 | — | **C-01** → **C-02** | apoyo GitHub/CI (protección de `main`, Actions) | preparación | preparación |
 | 1 | C-02 ✓ | revisa C-03 | preparación | preparación | **C-03** |
 | 2 | C-03 ✓ | revisa C-04 | **C-04** | preparación | preparación |
-| 3 | C-04 ✓ (fork ×4) | **C-05** | **C-08** | **C-06** | **C-07** |
+| 3 | C-04 ✓ (fork ×4) | **C-05** ✂ | **C-08** | **C-06** | **C-07** |
 | 4 | C-08 ✓ | revisa C-09 | preparación | preparación | **C-09** |
-| 5 | C-09 ✓ (fork ×4) | **C-11** | **C-15** | **C-14** | **C-10** |
-| 6 | C-10, C-11, C-14, C-15 ✓ (fork ×4) | **C-13** | **C-18** | **C-16** | **C-12** |
-| 7 | C-13, C-16, C-18 ✓ (fork ×3) | **C-23** [DIF] | **C-22** [DIF] | **C-17** | revisa C-17 / prepara E2E |
-| 8 | C-17 ✓ (+ C-12, C-13, C-18) | revisión final | **C-19** | **C-21** [DIF] | **C-20** [DIF] |
-| 9 | C-19 ✓ | — | — | **C-24** [DIF] | — |
+| 5 | C-09 ✓ (fork ×4) | **C-11** ✂ | **C-15** | **C-14** | **C-10** |
+| 6 | C-10, C-11, C-14, C-15 ✓ (fork ×4) | **C-13** ✂ | **C-18** ✂ | **C-16** | **C-12** ✂ |
+| 7 | C-13, C-16, C-18 ✓ (fork ×3) | **C-23** ✂ [DIF] | **C-22** ✂ [DIF] | **C-17** | revisa C-17 / prepara E2E |
+| 8 | C-17 ✓ (+ C-12, C-13, C-18) | revisión final | **C-19** | **C-21** ✂ [DIF] | **C-20** ✂ [DIF] |
+| 9 | C-19 ✓ | — | — | **C-24** ✂ [DIF] | — |
+
+✂ = fuera del corte de entrega del 2026-11-26 (DD-10): no se empieza hasta terminar los changes del corte. Quien tenga un ✂ en una oleada apoya el change del corte más atrasado (revisión, tests o E2E). Durante el corte, C-19 depende solo de C-17 y de los demás changes incluidos.
 
 Las oleadas 0, 1, 2 y 4 tienen un solo change porque el bloqueo es real: C-01 → C-02 → C-03 → C-04 es una cadena, y C-09 necesita C-08. No se fuerza paralelismo ahí.
 

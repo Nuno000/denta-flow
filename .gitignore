@@ -1,3 +1,26 @@
-# Backups locales
+# Compilados y dependencias
+target/
+node_modules/
+dist/
+build/
+
+# Bases de datos locales (H2)
+*.mv.db
+*.trace.db
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+
+# IDEs y sistema operativo
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Archivos temporales y logs
 *.bak
 *.tmp
+*.log

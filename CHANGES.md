@@ -5,6 +5,8 @@
 > **Leer este archivo antes de empezar un item.**
 >
 > **Stack decidido el 2026-11-23 (DD-08, PA-02 resuelta):** Java 21 + Spring Boot 3 (Maven), PostgreSQL 16 + Flyway, React + Vite + TypeScript, monorepo `backend/` + `frontend/`, hosting gratuito Render/Vercel/Neon. C-01 sigue siendo la compuerta: queda pendiente el plazo (PA-01) y agendar PA-03/05/06/10; ningún otro change debe empezar antes.
+>
+> **⚠️ Cambio de stack en curso (2026-11-24):** el equipo trabaja con **MySQL 8 nativo + Flyway** y tests sobre **H2 `MODE=MySQL`**, **sin Docker ni Testcontainers** (ver `openspec/config.yaml`). Las notas de stack de las fichas que todavía mencionan PostgreSQL, `EXCLUDE USING gist`, Testcontainers, docker-compose, Mailpit en contenedor o Neon se actualizan en **C-01** (registrar la decisión como DD nueva y regenerar `CLAUDE.md`). Hasta entonces, manda `openspec/config.yaml`.
 
 ---
 
@@ -54,97 +56,84 @@ C-23 panel-ausentismo       ← C-13
 C-24 manual-publico         ← C-19
 ```
 
-### Paralelismo por fase
+### Tabla de changes (responsable, oleada y dependencias)
 
-> Cada "gate" es un punto de sincronización. Los changes dentro de un gate pueden ejecutarse en paralelo. Entre corchetes, el responsable (ver "Reparto del equipo").
+> Plan de trabajo del equipo acordado el 2026-11-24. Detalle, protocolo Git + OpenSpec y comandos de arranque: [docs/plan-trabajo-equipo.md](docs/plan-trabajo-equipo.md).
+> **Regla de arranque**: un change empieza cuando **todos** sus "Depende de" están mergeados en `main`; la oleada es la ventana prevista, no una espera a que termine toda la oleada anterior. Máximo **1 change activo por persona**.
+> **Revisor**: Florencia aprueba todos los PR; los PR de Florencia los aprueba Bruno (GitHub no permite aprobar el PR propio).
+
+| ID | Change | Depende de | Oleada | Responsable | Revisor | Gov. | Tam. | Estado |
+|----|--------|------------|--------|-------------|---------|------|------|--------|
+| C-01 | decision-stack-y-plazo | — | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | MEDIO | S | `[ ]` |
+| C-02 | scaffolding-proyecto | C-01 | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | BAJO | M | `[ ]` |
+| C-03 | modelo-recursos-consultorio | C-02 | 1 | Renzo | Florencia | CRITICO | M | `[ ]` |
+| C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | `[ ]` |
+| C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | `[ ]` |
+| C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | `[ ]` |
+| C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | `[ ]` |
+| C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | `[ ]` |
+| C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | `[ ]` |
+| C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | `[ ]` |
+| C-11 | agenda-interna-vistas | C-04, C-09 | 5 | Florencia | Bruno | MEDIO | L | `[ ]` |
+| C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | `[ ]` |
+| C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | `[ ]` |
+| C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | `[ ]` |
+| C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | `[ ]` |
+| C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | `[ ]` |
+| C-18 | recordatorios-programados | C-09, C-14 | 6 | Bruno | Florencia | ALTO | M | `[ ]` |
+| C-17 | confirmar-cancelar-reprogramar | C-07, C-14, C-16 | 7 | Jessica | Florencia | ALTO | M | `[ ]` |
+| C-22 | reintento-confirmacion [DIF] | C-18 | 7 | Bruno | Florencia | MEDIO | S | `[ ]` |
+| C-23 | panel-ausentismo [DIF] | C-13 | 7 | Florencia | Bruno | BAJO | M | `[ ]` |
+| C-19 | cierre-mvp-e2e-y-despliegue | C-12, C-13, C-17, C-18 | 8 | Bruno (E2E de cada flujo: su autor) | Florencia | MEDIO | M | `[ ]` |
+| C-20 | lista-de-espera [DIF] | C-10, C-17 | 8 | Renzo | Florencia | MEDIO | M | `[ ]` |
+| C-21 | whatsapp-prellenado [DIF] | C-11 | 8 | Jessica | Florencia | BAJO | S | `[ ]` |
+| C-24 | manual-publico [DIF] | C-19 | 9 | Jessica | Florencia | BAJO | S | `[ ]` |
+
+### Paralelismo por oleada (1 change activo por persona)
 
 ```
-GATE 0: ninguna
-  → C-01 decision-stack-y-plazo          [todo el equipo decide]
-
-GATE 1: C-01 ✓
-  → C-02 scaffolding-proyecto            [Integrante 2]
-
-GATE 2: C-02 ✓
-  → C-03 modelo-recursos-consultorio     [Integrante 1]
-
-GATE 3: C-03 ✓
-  → C-04 auth-usuarios-roles             [Integrante 2 — CRITICO]
-
-GATE 4: C-04 ✓                           ← FORK (4 paralelos)
-  → C-08 auditoria-cambios               [Integrante 2]
-  → C-06 horarios-y-bloqueos             [Integrante 3]
-  → C-07 parametros-consultorio          [Integrante 3]
-  → C-05 gestion-recursos-admin          [Integrante 4]
-
-GATE 5: C-08 ✓ (y C-03 ✓)
-  → C-09 modelo-turno-paciente           [Integrante 1]
-
-GATE 6: C-09 ✓                           ← FORK (4 paralelos)
-  → C-10 motor-disponibilidad            [Integrante 1 — si C-06 ✓]
-  → C-15 privacidad-ley-25326            [Integrante 2 — si C-07 ✓]
-  → C-14 email-transaccional-y-enlaces   [Integrante 3]
-  → C-11 agenda-interna-vistas           [Integrante 4]
-
-GATE 7: C-10 + C-11 + C-14 + C-15 ✓      ← FORK (4 paralelos)
-  → C-12 carga-manual-sobreturno         [Integrante 1]
-  → C-18 recordatorios-programados       [Integrante 2 — solo necesita C-14 + C-09]
-  → C-16 reserva-online-publica          [Integrante 3]
-  → C-13 asistencia-y-registro-cambios   [Integrante 4]
-
-GATE 8: C-16 + C-07 + C-14 ✓
-  → C-17 confirmar-cancelar-reprogramar  [Integrante 3]
-
-GATE 9: C-12 + C-13 + C-17 + C-18 ✓
-  → C-19 cierre-mvp-e2e-y-despliegue     [todo el equipo — coordina Integrante 2]
-
-GATE 10 (opcional, post-MVP núcleo): C-19 ✓ (según dependencia de cada uno)
-  → C-20 lista-de-espera                 [Integrante 1 — requiere C-10 + C-17]
-  → C-22 reintento-confirmacion          [Integrante 2 — requiere C-18]
-  → C-21 whatsapp-prellenado             [Integrante 4 — requiere C-11]
-  → C-23 panel-ausentismo                [Integrante 4 — requiere C-13]
-  → C-24 manual-publico                  [Integrante 3 — requiere C-19]
+Oleada | Arranca cuando            | Florencia        | Bruno            | Jessica          | Renzo
+-------+---------------------------+------------------+------------------+------------------+------------------
+  0    | —                         | C-01 → C-02      | apoyo GitHub/CI  | (preparación)    | (preparación)
+  1    | C-02 ✓                    | revisa C-03      | (preparación)    | (preparación)    | C-03
+  2    | C-03 ✓                    | revisa C-04      | C-04             | (preparación)    | (preparación)
+  3    | C-04 ✓          ← FORK x4 | C-05             | C-08             | C-06             | C-07
+  4    | C-08 ✓                    | revisa C-09      | (preparación)    | (preparación)    | C-09
+  5    | C-09 ✓          ← FORK x4 | C-11             | C-15             | C-14             | C-10
+  6    | C-10/11/14/15 ✓ ← FORK x4 | C-13             | C-18             | C-16             | C-12
+  7    | C-13/16/18 ✓    ← FORK x3 | C-23 [DIF]       | C-22 [DIF]       | C-17             | revisa C-17 / E2E
+  8    | C-17 ✓ (+12,13,18)        | revisión final   | C-19             | C-21 [DIF]       | C-20 [DIF]
+  9    | C-19 ✓                    | —                | —                | C-24 [DIF]       | —
 ```
+
+- Las oleadas 0, 1, 2 y 4 tienen **un solo change** porque el bloqueo es real (C-01 → C-02 → C-03 → C-04 y C-08 → C-09). Quien no tiene change activo hace preparación sin código de producción (ver `docs/plan-trabajo-equipo.md`).
+- [DIF] = diferenciador opcional. Si PA-01 recorta el plazo, se omite y su responsable apoya el cierre del MVP; el MVP no depende de ninguno.
 
 ### Camino crítico (10 changes — mínimo irreducible)
 
 ```
 C-01 → C-02 → C-03 → C-04 → C-08 → C-09 → C-10 → C-16 → C-17 → C-19
+Flor   Flor   Renzo  Bruno  Bruno  Renzo  Renzo  Jess.  Jess.  Bruno
 ```
 
 (C-12 y C-18 también convergen en C-19 pero no alargan el camino.)
 
 ### Reparto del equipo (4 integrantes)
 
-> Reemplazar "Integrante N" por los nombres reales. C-01 y C-19 son de todo el equipo. Tamaño estimado por change: S = 1, M = 2, L = 3 puntos (estimación inicial; ajustar al planificar cada change).
+> Tamaño estimado: S = 1, M = 2, L = 3 puntos (ajustar al planificar cada change).
 
-| Integrante | Área | Changes propios | Puntos | Revisa |
-|------------|------|-----------------|--------|--------|
-| **Integrante 1** | Núcleo de turnos (backend) | C-03, C-09, C-10, C-12, C-20 | 12 | C-04, C-06, C-08, C-11, C-16, C-23 |
-| **Integrante 2** | Plataforma, seguridad y auditoría | C-02, C-04, C-08, C-15, C-18, C-22 · coordina C-19 | 12 | C-03, C-09, C-13, C-14 |
-| **Integrante 3** | Configuración, notificaciones y paciente | C-06, C-07, C-14, C-16, C-17, C-24 | 11 | C-05, C-10, C-15, C-18, C-20, C-21 |
-| **Integrante 4** | Frontend de paneles internos | C-05, C-11, C-13, C-21, C-23 | 10 | C-02, C-07, C-12, C-17, C-22, C-24 |
+| Integrante | Área | Changes propios | Puntos | Aprueba PR de |
+|------------|------|-----------------|--------|---------------|
+| **Florencia** (líder) | Base del proyecto y frontend de paneles internos | C-01, C-02, C-05, C-11, C-13, C-23 | 12 | Todos los changes de Bruno, Jessica y Renzo |
+| **Bruno** | Plataforma, seguridad, auditoría y tareas programadas | C-04, C-08, C-15, C-18, C-22, C-19 | 12 | Los changes de Florencia |
+| **Jessica** | Configuración de agenda, notificaciones y paciente (reserva pública) | C-06, C-14, C-16, C-17, C-21, C-24 | 11 | — (revisión de apoyo opcional) |
+| **Renzo** | Núcleo de turnos (backend) | C-03, C-07, C-09, C-10, C-12, C-20 | 13 | — (revisión de apoyo opcional) |
 
 Criterios del reparto:
 
-- **Por área**: cada integrante concentra una zona del código, lo que reduce los conflictos entre ramas y da continuidad (por ejemplo, quien hace C-16 sigue con C-17; quien hace C-14 deja listo el canal que usa C-18).
-- **Paralelismo**: en cada fork (gates 4, 6, 7 y 10) los cuatro integrantes tienen trabajo.
-- **Revisión cruzada**: todo change CRITICO o ALTO lo revisa otra persona. Los CRITICOS (C-03, C-04, C-08, C-09, C-10, C-12) se reparten entre Integrante 1 y 2 como autores, con revisores de otra área.
-- **Esperas al inicio**: C-02 → C-03 → C-04 es una cadena secuencial. Mientras tanto, Integrante 3 prepara las plantillas de email y el flujo de reserva, e Integrante 4 diseña las pantallas de los paneles (`frontend-design-ui-ux`).
-
-| Paso | Integrante 1 | Integrante 2 | Integrante 3 | Integrante 4 |
-|------|--------------|--------------|--------------|--------------|
-| 1 | C-01 | C-01 | C-01 | C-01 |
-| 2 | (revisa C-02) | C-02 scaffolding | diseño de plantillas de email | diseño de pantallas (revisa C-02) |
-| 3 | C-03 modelo-recursos | (revisa C-03) | diseño del flujo de reserva | diseño de pantallas |
-| 4 | (revisa C-04) | C-04 auth-roles | — | — |
-| 5 | (revisa C-06 y C-08) | C-08 auditoría | C-06 horarios-bloqueos + C-07 parámetros | C-05 recursos-admin |
-| 6 | C-09 modelo-turno-paciente | (revisa C-09) | apoyo / pruebas | apoyo / pruebas |
-| 7 | C-10 motor-disponibilidad | C-15 privacidad | C-14 email-enlaces | C-11 agenda-vistas |
-| 8 | C-12 carga-manual-sobreturno | C-18 recordatorios | C-16 reserva-online-publica | C-13 asistencia-registro |
-| 9 | (revisa C-16) | (revisa C-13) | C-17 confirmar-cancelar-reprogramar | (revisa C-17) |
-| 10 | C-19 cierre-mvp | C-19 (coordina) | C-19 | C-19 |
-| 11+ | C-20 lista-de-espera | C-22 reintento | C-24 manual | C-21 wa.me + C-23 ausentismo |
+- **Por área**: cada integrante concentra una zona del código (Renzo `dominio/turnos` y `dominio/disponibilidad`; Bruno `infraestructura/seguridad`, `dominio/auditoria` e `infraestructura/scheduler`; Jessica `infraestructura/email` y `frontend/src/features/reserva`; Florencia `frontend/src/features/agenda`) y hay continuidad: C-09 → C-10 → C-12 (Renzo), C-14 → C-16 → C-17 (Jessica), C-18 → C-22 (Bruno), C-11 → C-13 → C-23 (Florencia).
+- **Paralelismo**: en cada fork (oleadas 3, 5, 6 y 7) cada integrante tiene un change independiente, sin dos changes activos de la misma persona.
+- **Camino crítico repartido**: ningún integrante concentra más de 3 changes del camino crítico, así una demora no frena a todos.
 
 ---
 
@@ -158,11 +147,13 @@ Criterios del reparto:
   - ~~Decidir y registrar el stack~~ **Hecho**: DD-08 en `knowledge-base/09_decisiones_y_supuestos.md` (Java 21 + Spring Boot 3, PostgreSQL 16, React + Vite + TypeScript, Render/Vercel/Neon); estructura de directorios y variables de entorno completadas en `knowledge-base/08_arquitectura_propuesta.md`. PA-02 resuelta.
   - **Pendiente**: confirmar el plazo de entrega (PA-01) y recortar el alcance del MVP/diferenciadores según el plazo.
   - **Pendiente**: resolver o agendar PA-03, PA-05, PA-06, PA-10 con fecha límite (bloquean C-10, C-16, C-09).
+  - **Pendiente (2026-11-24)**: registrar como DD nueva el cambio a MySQL 8 nativo + H2 `MODE=MySQL` sin Docker/Testcontainers (anti-solapamiento con bloqueo pesimista por profesional **y** por sillón en lugar de `EXCLUDE USING gist`; hosting de MySQL gratuito en lugar de Neon); actualizar `08_arquitectura_propuesta.md`, `09_decisiones_y_supuestos.md`, las notas de stack de estas fichas y regenerar `CLAUDE.md` (sus reglas duras todavía prohíben H2 y exigen `EXCLUDE USING gist`).
   - Entregable: documento de decisión; sin código.
 - **Dependencias**: ninguna
 - **Governance**: MEDIO
-- **Responsable**: Todo el equipo
-- **Revisor**: —
+- **Responsable**: Florencia (apoyo de Bruno en GitHub y CI)
+- **Oleada**: 0
+- **Revisor (aprueba el PR)**: Bruno
 - **Tamaño estimado**: S
 - **Zona**: `knowledge-base/`, `docs/`
 - **Bloqueado por**: PA-01 (plazo) — este change es el que la resuelve.
@@ -183,8 +174,9 @@ Criterios del reparto:
   - Tests: arranque de la app, conexión a BD (Testcontainers), test de humo de CI.
 - **Dependencias**: `C-01`
 - **Governance**: BAJO
-- **Responsable**: Integrante 2
-- **Revisor**: Integrante 4
+- **Responsable**: Florencia (apoyo de Bruno en GitHub y CI)
+- **Oleada**: 0
+- **Revisor (aprueba el PR)**: Bruno
 - **Tamaño estimado**: M
 - **Zona**: `backend/pom.xml`, `backend/src/main/resources/`, `frontend/`, `docker-compose.yml`, `.github/workflows/`
 - **Leer antes**:
@@ -206,8 +198,9 @@ Criterios del reparto:
   - Tests: invariantes de modelo, duración obligatoria, desactivar sin borrar.
 - **Dependencias**: `C-02`
 - **Governance**: CRITICO (modelos core que todo lo demás referencia)
-- **Responsable**: Integrante 1
-- **Revisor**: Integrante 2
+- **Responsable**: Renzo
+- **Oleada**: 1
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/recursos/`, `backend/src/main/resources/db/migration/`
 - **Leer antes**:
@@ -226,8 +219,9 @@ Criterios del reparto:
   - Tests: acceso denegado por rol, endpoint protegido sin sesión, usuario desactivado no ingresa.
 - **Dependencias**: `C-03`
 - **Governance**: CRITICO
-- **Responsable**: Integrante 2
-- **Revisor**: Integrante 1
+- **Responsable**: Bruno
+- **Oleada**: 2
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: L
 - **Zona**: `backend/src/main/java/ar/dentaflow/infraestructura/seguridad/`, `backend/src/main/java/ar/dentaflow/dominio/usuarios/`, `frontend/src/features/auth/`
 - **Bloqueado por**: PA-09 (un usuario con múltiples roles: asumir un solo rol hasta decidir)
@@ -245,8 +239,9 @@ Criterios del reparto:
   - Tests: CRUD, permisos por rol, duración obligatoria.
 - **Dependencias**: `C-03, C-04`
 - **Governance**: BAJO
-- **Responsable**: Integrante 4
-- **Revisor**: Integrante 3
+- **Responsable**: Florencia
+- **Oleada**: 3
+- **Revisor (aprueba el PR)**: Bruno
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/aplicacion/recursos/`, `backend/src/main/java/ar/dentaflow/presentacion/`, `frontend/src/features/agenda/`
 - **Leer antes**:
@@ -264,8 +259,9 @@ Criterios del reparto:
   - Tests: horarios superpuestos rechazados, bloqueo por cada ámbito, zona horaria.
 - **Dependencias**: `C-03, C-04`
 - **Governance**: MEDIO
-- **Responsable**: Integrante 3
-- **Revisor**: Integrante 1
+- **Responsable**: Jessica
+- **Oleada**: 3
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/disponibilidad/`, `backend/src/main/resources/db/migration/`
 - **Bloqueado por**: PA-11 (qué pasa con turnos existentes al bloquear; no codificar la resolución hasta decidir)
@@ -283,8 +279,9 @@ Criterios del reparto:
   - Tests: lectura/edición de parámetros, permisos, validación de rango.
 - **Dependencias**: `C-04`
 - **Governance**: BAJO
-- **Responsable**: Integrante 3
-- **Revisor**: Integrante 4
+- **Responsable**: Renzo
+- **Oleada**: 3
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: S
 - **Zona**: `backend/src/main/java/ar/dentaflow/aplicacion/configuracion/`, `backend/src/main/resources/db/migration/`
 - **Bloqueado por**: PA-04 (valor por defecto de anticipación mínima; usar un valor provisorio configurable)
@@ -301,8 +298,9 @@ Criterios del reparto:
   - Tests: el registro se escribe junto al cambio, se revierte si el cambio falla, no es modificable.
 - **Dependencias**: `C-04`
 - **Governance**: CRITICO (audit trail)
-- **Responsable**: Integrante 2
-- **Revisor**: Integrante 1
+- **Responsable**: Bruno
+- **Oleada**: 3
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/auditoria/`, `backend/src/main/resources/db/migration/`
 - **Leer antes**:
@@ -327,8 +325,9 @@ Criterios del reparto:
   - Tests: solapamiento rechazado por profesional y por sillón, concurrencia (dos creaciones simultáneas, solo una gana), transiciones inválidas, sobreturno permitido solo con flag.
 - **Dependencias**: `C-03, C-08`
 - **Governance**: CRITICO
-- **Responsable**: Integrante 1
-- **Revisor**: Integrante 2
+- **Responsable**: Renzo
+- **Oleada**: 4
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: L
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/turnos/`, `backend/src/main/java/ar/dentaflow/dominio/pacientes/`, `backend/src/main/resources/db/migration/`
 - **Bloqueado por**: PA-10 (estado inicial del turno online: parametrizar `pendiente`/`confirmado`), PA-06 (asignación de sillón), PA-13 (email obligatorio del paciente), SU-03 (DNI como clave)
@@ -348,8 +347,9 @@ Criterios del reparto:
   - Tests: hueco que no entra la duración, bloqueo parcial, borde exacto de horario, sillón ocupado con profesional libre, zona horaria/cambio de día.
 - **Dependencias**: `C-06, C-09`
 - **Governance**: CRITICO
-- **Responsable**: Integrante 1
-- **Revisor**: Integrante 3
+- **Responsable**: Renzo
+- **Oleada**: 5
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: L
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/disponibilidad/`, `backend/src/main/java/ar/dentaflow/aplicacion/agenda/`
 - **Bloqueado por**: PA-05 (elige profesional o primero disponible), PA-06 (quién se asigna primero, sillón por paciente o sistema); implementar la API con el parámetro profesional opcional y no codificar la política hasta decidir
@@ -368,8 +368,9 @@ Criterios del reparto:
   - Tests: filtros, aislamiento por rol (profesional no ve turnos ajenos), orden y estados.
 - **Dependencias**: `C-04, C-09`
 - **Governance**: MEDIO
-- **Responsable**: Integrante 4
-- **Revisor**: Integrante 1
+- **Responsable**: Florencia
+- **Oleada**: 5
+- **Revisor (aprueba el PR)**: Bruno
 - **Tamaño estimado**: L
 - **Zona**: `frontend/src/features/agenda/`, `backend/src/main/java/ar/dentaflow/aplicacion/agenda/`
 - **Leer antes**:
@@ -386,8 +387,9 @@ Criterios del reparto:
   - Tests: conflicto rechazado, sobreturno permitido solo con permiso y auditado, profesional no puede cargar sobreturno.
 - **Dependencias**: `C-10, C-11`
 - **Governance**: CRITICO
-- **Responsable**: Integrante 1
-- **Revisor**: Integrante 4
+- **Responsable**: Renzo
+- **Oleada**: 6
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/aplicacion/turnos/`, `frontend/src/features/agenda/`
 - **Leer antes**:
@@ -404,8 +406,9 @@ Criterios del reparto:
   - Tests: transiciones de asistencia válidas/inválidas, permisos por rol, registro visible y no editable.
 - **Dependencias**: `C-08, C-11`
 - **Governance**: MEDIO
-- **Responsable**: Integrante 4
-- **Revisor**: Integrante 2
+- **Responsable**: Florencia
+- **Oleada**: 6
+- **Revisor (aprueba el PR)**: Bruno
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/aplicacion/turnos/`, `frontend/src/features/agenda/`
 - **Leer antes**:
@@ -430,8 +433,9 @@ Criterios del reparto:
   - Tests: envío con proveedor simulado, token inválido/vencido, fallo de envío registrado.
 - **Dependencias**: `C-02, C-09`
 - **Governance**: ALTO (datos personales en canal de notificación)
-- **Responsable**: Integrante 3
-- **Revisor**: Integrante 2
+- **Responsable**: Jessica
+- **Oleada**: 5
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/infraestructura/email/`, `backend/src/main/java/ar/dentaflow/dominio/notificaciones/`, `backend/src/main/resources/db/migration/`
 - **Bloqueado por**: PA-13 (email obligatorio)
@@ -451,8 +455,9 @@ Criterios del reparto:
   - Tests: reserva sin aceptación rechazada, fecha de consentimiento guardada, recurso protegido por rol.
 - **Dependencias**: `C-09, C-07`
 - **Governance**: ALTO (datos personales, Ley 25.326)
-- **Responsable**: Integrante 2
-- **Revisor**: Integrante 3
+- **Responsable**: Bruno
+- **Oleada**: 5
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/pacientes/`, `frontend/src/features/reserva/`, `backend/src/main/java/ar/dentaflow/infraestructura/seguridad/`
 - **Bloqueado por**: PA-12 (retención y baja de datos), revisión legal del texto del aviso
@@ -472,8 +477,9 @@ Criterios del reparto:
   - Tests: reserva exitosa, dos reservas simultáneas del mismo hueco (una falla), aviso no aceptado, datos inválidos, sin huecos.
 - **Dependencias**: `C-10, C-14, C-15`
 - **Governance**: ALTO
-- **Responsable**: Integrante 3
-- **Revisor**: Integrante 1
+- **Responsable**: Jessica
+- **Oleada**: 6
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: L
 - **Zona**: `frontend/src/features/reserva/`, `backend/src/main/java/ar/dentaflow/aplicacion/turnos/`, `backend/src/main/java/ar/dentaflow/presentacion/` (rutas públicas)
 - **Bloqueado por**: PA-05, PA-06, PA-10, PA-13
@@ -494,8 +500,9 @@ Criterios del reparto:
   - Tests: dentro/fuera de ventana, hueco nuevo tomado, token ajeno rechazado, doble confirmación idempotente.
 - **Dependencias**: `C-16, C-07, C-14`
 - **Governance**: ALTO
-- **Responsable**: Integrante 3
-- **Revisor**: Integrante 4
+- **Responsable**: Jessica
+- **Oleada**: 7
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `frontend/src/features/reserva/`, `backend/src/main/java/ar/dentaflow/aplicacion/turnos/`
 - **Bloqueado por**: PA-04 (anticipación mínima por defecto, se usa el parámetro de C-07)
@@ -514,8 +521,9 @@ Criterios del reparto:
   - Tests: selección por ventana, no duplicados, turno cancelado/confirmado no se recuerda, falla de envío registrada, endpoint protegido rechaza llamadas sin credencial.
 - **Dependencias**: `C-14, C-09`
 - **Governance**: ALTO
-- **Responsable**: Integrante 2
-- **Revisor**: Integrante 3
+- **Responsable**: Bruno
+- **Oleada**: 6
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/infraestructura/scheduler/`, `backend/src/main/java/ar/dentaflow/dominio/notificaciones/`
 - **Bloqueado por**: PA-07 (cuánto antes y cuántos recordatorios; dejar parametrizable)
@@ -539,8 +547,9 @@ Criterios del reparto:
   - Validación con al menos un consultorio o demo real para contrastar SU-01 y SU-02.
 - **Dependencias**: `C-12, C-13, C-17, C-18`
 - **Governance**: MEDIO
-- **Responsable**: Todo el equipo (coordina Integrante 2)
-- **Revisor**: —
+- **Responsable**: Bruno (aportan E2E todos los autores)
+- **Oleada**: 8
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `frontend/` (Playwright), `.github/workflows/`, configuración de despliegue, documentación
 - **Bloqueado por**: PA-01 (plazo: define el corte real del MVP)
@@ -565,8 +574,9 @@ Criterios del reparto:
   - Tests: oferta a compatibles, dos aceptan a la vez (solo uno gana), vencimiento.
 - **Dependencias**: `C-10, C-17`
 - **Governance**: MEDIO
-- **Responsable**: Integrante 1
-- **Revisor**: Integrante 3
+- **Responsable**: Renzo
+- **Oleada**: 8
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/listaespera/`, `backend/src/main/java/ar/dentaflow/infraestructura/email/`
 - **Bloqueado por**: plazo de oferta no definido (sin PA asignada: dejar parametrizable)
@@ -584,8 +594,9 @@ Criterios del reparto:
   - Tests: construcción del enlace (codificación, teléfono normalizado), caso sin teléfono.
 - **Dependencias**: `C-11`
 - **Governance**: BAJO
-- **Responsable**: Integrante 4
-- **Revisor**: Integrante 3
+- **Responsable**: Jessica
+- **Oleada**: 8
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: S
 - **Zona**: `frontend/src/features/agenda/`
 - **Bloqueado por**: PA-03 (si se automatiza con la API oficial, sería otro change; este asume enlace prellenado, IN-01)
@@ -602,8 +613,9 @@ Criterios del reparto:
   - Tests: reintento solo para `pendiente`, alerta visible, no se repite.
 - **Dependencias**: `C-18`
 - **Governance**: MEDIO
-- **Responsable**: Integrante 2
-- **Revisor**: Integrante 4
+- **Responsable**: Bruno
+- **Oleada**: 7
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: S
 - **Zona**: `backend/src/main/java/ar/dentaflow/infraestructura/scheduler/`, `frontend/src/features/agenda/`
 - **Bloqueado por**: PA-08 (valor de X; dejar parametrizable)
@@ -620,8 +632,9 @@ Criterios del reparto:
   - Tests: cálculo de tasas con datos de ejemplo, permisos por rol.
 - **Dependencias**: `C-13`
 - **Governance**: BAJO
-- **Responsable**: Integrante 4
-- **Revisor**: Integrante 1
+- **Responsable**: Florencia
+- **Oleada**: 7
+- **Revisor (aprueba el PR)**: Bruno
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/aplicacion/reportes/`, `frontend/src/features/agenda/`
 - **Leer antes**:
@@ -635,8 +648,9 @@ Criterios del reparto:
   - Accesible sin autenticación; contenido en español.
 - **Dependencias**: `C-19`
 - **Governance**: BAJO
-- **Responsable**: Integrante 3
-- **Revisor**: Integrante 4
+- **Responsable**: Jessica
+- **Oleada**: 9
+- **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: S
 - **Zona**: `frontend/src/features/reserva/`, documentación
 - **Leer antes**:

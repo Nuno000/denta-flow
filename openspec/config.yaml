@@ -1,32 +1,26 @@
 schema: spec-driven
 
-# Project context (optional)
-# Add only constraints that should guide OpenSpec artifacts and workflows.
-# Include constraints an agent cannot infer by reading the code.
-# Keep general project documentation and discoverable codebase facts out.
-# Example:
-#   context: |
-#     Designs and tasks must cover Windows, macOS, and Linux
-#     Write all artifacts in Spanish
+context: |
+  Proyecto: DentaFlow — Sistema web de gestión de turnos y agenda para consultorios odontológicos chicos en Argentina (1 a 5 profesionales, una sede).
+  Stack (DD-08 adaptado a MySQL 8 y entorno local sin Docker):
+  - Backend: Java 21 LTS, Spring Boot 3, Maven, Spring Web, Spring Security, Spring Data JPA / Hibernate, Bean Validation, Spring Mail, springdoc-openapi.
+  - Base de datos: MySQL 8 + Flyway (`org.flywaydb:flyway-mysql` + `com.mysql:mysql-connector-j`) en desarrollo local nativo y despliegue. En tests automatizados (`perfil test`) se usa H2 en memoria con `MODE=MySQL;DATABASE_TO_LOWER=TRUE`.
+  - Restricción de entorno: NO usar Docker, `docker-compose` ni `Testcontainers` por limitación de memoria RAM local.
+  - Concurrencia de agenda (`RN-03`): Como MySQL 8 no soporta `EXCLUDE USING gist`, los solapamientos de turnos se previenen atómicamente mediante transacciones InnoDB con bloqueo pesimista (`SELECT ... FOR UPDATE` / `@Lock(LockModeType.PESSIMISTIC_WRITE)`) sobre el profesional Y sobre el sillón (RN-TU-01/02), siempre en orden determinístico (primero profesional, luego sillón) para evitar deadlocks, e índices compuestos `(profesional_id, estado, fecha_hora_inicio, fecha_hora_fin)` y `(sillon_id, estado, fecha_hora_inicio, fecha_hora_fin)`. H2 no reproduce fielmente el bloqueo de filas de InnoDB: los tests de concurrencia se corren además contra MySQL 8 local (perfil `it-mysql`).
+  - Tests backend: JUnit 5, Mockito, MockMvc (`@WebMvcTest`), `@DataJpaTest` y `@SpringBootTest` con perfil `test` sobre H2 (`MODE=MySQL`). TDD estricto.
+  - Frontend: React + Vite + TypeScript, React Router, TanStack Query, React Hook Form + Zod, Tailwind CSS. Tests con Vitest + Testing Library y E2E con Playwright.
+  - Idioma: Español para toda la documentación, especificaciones, mensajes de dominio y UI.
+  - Fuente de verdad del dominio: `knowledge-base/` (`01` a `10`) y `CHANGES.md`.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always state what is out of scope
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
-
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+rules:
+  proposal:
+    - Redactar en español y referenciar explícitamente los ítems de `CHANGES.md`, historias `US-NNN` y reglas `RN-XX`.
+    - No incluir Docker, `docker-compose`, `Testcontainers` ni sintaxis exclusiva de PostgreSQL en el alcance.
+  specs:
+    - Redactar requisitos y escenarios en español usando formato RFC (`SHALL` / `MUST` o equivalente claro) y cubriendo casos borde de concurrencia, RBAC y zona horaria `America/Argentina/Buenos_Aires`.
+  design:
+    - Respetar la separación en capas (`presentacion`, `aplicacion`, `dominio`, `infraestructura`) definida en `knowledge-base/08_arquitectura_propuesta.md`.
+    - Diseñar DDL compatible con MySQL 8 (`BIGINT AUTO_INCREMENT`, `DATETIME(6)`, InnoDB) y H2 `MODE=MySQL`, resolviendo la concurrencia de turnos con bloqueo pesimista (`FOR UPDATE`) sobre profesional y sillón, en ese orden.
+  tasks:
+    - Dividir en tareas atómicas ordenadas bajo TDD estricto (primero test que falla, luego implementación mínima, luego refactor).
+    - Prohibido generar tareas que requieran Docker o Testcontainers para ejecutarse localmente.

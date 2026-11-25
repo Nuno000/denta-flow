@@ -1,0 +1,9 @@
+# Pruebas @Tag("mysql") contra MySQL 8 real (local o el preinstalado en el runner de CI).
+spring:
+  config:
+    # .env de la raíz del repo (o de backend/), si existe. Las variables de entorno reales tienen prioridad.
+    import: optional:file:../.env[.properties],optional:file:.env[.properties]
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/dentaflow}
+    username: ${SPRING_DATASOURCE_USERNAME:dentaflow}
+    password: ${SPRING_DATASOURCE_PASSWORD:}

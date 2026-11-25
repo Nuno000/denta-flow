@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mapeo JPA de los recursos del consultorio (C-03, design D2). Las clases de dominio no llevan
+  anotaciones: este archivo es el único lugar que las vincula con las tablas de V003_1. Hibernate
+  accede por campo y valida el mapeo contra el esquema al arrancar (ddl-auto=validate).
+-->
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
+                 version="3.0">
+    <access>FIELD</access>
+
+    <entity class="ar.dentaflow.dominio.recursos.Prestacion" name="Prestacion">
+        <table name="prestacion"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="nombre">
+                <column name="nombre" nullable="false" length="100"/>
+            </basic>
+            <basic name="duracionMinutos">
+                <column name="duracion_minutos" nullable="false"/>
+            </basic>
+            <basic name="activa">
+                <column name="activa" nullable="false"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="ar.dentaflow.dominio.recursos.Sillon" name="Sillon">
+        <table name="sillon"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="nombre">
+                <column name="nombre" nullable="false" length="50"/>
+            </basic>
+            <basic name="activo">
+                <column name="activo" nullable="false"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="ar.dentaflow.dominio.recursos.Profesional" name="Profesional">
+        <table name="profesional"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="nombre">
+                <column name="nombre" nullable="false" length="100"/>
+            </basic>
+            <basic name="apellido">
+                <column name="apellido" nullable="false" length="100"/>
+            </basic>
+            <basic name="matricula">
+                <column name="matricula" nullable="true" length="30"/>
+            </basic>
+            <basic name="email">
+                <column name="email" nullable="false" length="254"/>
+            </basic>
+            <basic name="activo">
+                <column name="activo" nullable="false"/>
+            </basic>
+            <!-- Ids de las prestaciones que realiza (design D4): la relación es una tabla de pares. -->
+            <element-collection name="prestacionIds" target-class="java.lang.Long" fetch="EAGER">
+                <column name="prestacion_id" nullable="false"/>
+                <collection-table name="profesional_prestacion">
+                    <join-column name="profesional_id"/>
+                </collection-table>
+            </element-collection>
+        </attributes>
+    </entity>
+</entity-mappings>

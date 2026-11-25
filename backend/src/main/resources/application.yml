@@ -10,6 +10,9 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+    # Mapeo JPA por dominio en XML (las clases de dominio no llevan anotaciones). Un archivo por dominio.
+    mapping-resources:
+      - META-INF/orm/recursos.xml
     properties:
       hibernate:
         # Los instantes se guardan en UTC (DATETIME(6)) y se mapean a Instant.

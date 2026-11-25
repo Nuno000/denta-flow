@@ -1,0 +1,14 @@
+Verificación contra MySQL 8 local — perfil it-mysql
+Fecha: 2026-11-25 (corrida por Renzo en su terminal; resultados leídos de target/surefire-reports)
+Comando: cd backend; ./mvnw verify -Pit-mysql
+
+Tests @Tag("mysql"):
+- ar.dentaflow.configuracion.ConexionMySqlTest                                   1/1  (C-02)
+- ar.dentaflow.infraestructura.persistencia.IdaYVueltaUtcMySqlTest               2/2  (C-02)
+- ar.dentaflow.infraestructura.persistencia.recursos.RestriccionesRecursosMySqlTest 13/13 (C-03)
+Total: 16 tests, 0 failures, 0 errors, 0 skipped
+
+Notas:
+- El arranque del contexto con ddl-auto=validate aceptó la migración V003_1 y el mapeo XML (columna BOOLEAN sin problemas).
+- En MySQL la violación de ck_prestacion_duracion_positiva es el error 3819 (SQL state HY000) y Spring la deja como
+  UncategorizedSQLException; el test exige DataAccessException que nombre la restricción (válido en H2 y MySQL).

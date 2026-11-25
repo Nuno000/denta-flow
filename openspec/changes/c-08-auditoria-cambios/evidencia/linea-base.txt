@@ -1,0 +1,15 @@
+C-08 — línea base antes de tocar código, 2026-11-25 (JDK 21 Temurin). Árbol: commit b670e85 (main con C-04) + solo los artefactos de C-08, sin código.
+
+## .\mvnw.cmd -B verify (perfil test, H2 MODE=MySQL)
+exit=0
+Tests run: 226, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+recibo: corrida 5d0938978c1d8630e4be01e660714831 (active-stack evidence-capture, fuente arnés)
+
+## .\mvnw.cmd -B verify -Pit-mysql (MySQL 8 local, servicio MySQL84)
+exit=0
+Tests run: 25, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+recibo: corrida 6c2f93c1ba1750f256da067dc2a96550 (active-stack evidence-capture, fuente arnés)
+
+Captura: arnés. Solo se copian las líneas de resultado (sin URL ni credenciales de la base).

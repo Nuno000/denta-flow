@@ -1,0 +1,27 @@
+C-08 — backend, 2026-11-25 (JDK 21 Temurin). Árbol: commit b670e85 + cambios sin commitear del change (huella sha256 28a6d2ed539f…).
+
+## .\mvnw.cmd -B verify (perfil test, H2 MODE=MySQL)
+exit=0
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.aplicacion.auditoria.ServicioDeAuditoriaIntegracionTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.aplicacion.auditoria.ServicioDeAuditoriaTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.dominio.auditoria.AccionDeTurnoTest
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.dominio.auditoria.ActorTest
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.dominio.auditoria.CambioDeTurnoTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.dominio.DominioSinFrameworksTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.auditoria.ConversorValoresJsonTest
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.auditoria.HistorialDeTurnoRepositorioTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.auditoria.HistorialSoloInsercionTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.auditoria.RestriccionesHistorialH2Test
+(resto de las clases de C-02 a C-04 sin cambios, todas con Failures: 0, Errors: 0)
+Tests run: 274, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+recibo: corrida b0b938ec34b484f9b1ecba97852a0bc4 (active-stack evidence-capture, fuente arnés)
+
+Línea base: 226 → 274 (48 tests nuevos de C-08), ninguno de la línea base falla.
+
+## Prueba de mutación manual (tarea 4.3)
+Sin updatable="false" en la columna accion de META-INF/orm/auditoria.xml, el test
+HistorialDeTurnoRepositorioTest#unRegistroGuardadoNoSeModificaAunqueSeCambieLaEntidad falla (Tests run: 1, Failures: 1).
+El archivo se restauró y quedó con las 8 columnas updatable="false". Captura: agent (sin recibo del arnés).
+
+Captura: arnés salvo donde se indica. Solo se copian las líneas de resultado (sin URL ni credenciales de la base).

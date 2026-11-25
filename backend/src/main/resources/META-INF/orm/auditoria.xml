@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mapeo JPA del historial de turnos (C-08, design D3 y D4), con el mismo criterio que recursos.xml y
+  usuarios.xml: la clase de dominio no lleva anotaciones. Todas las columnas son updatable="false": aunque
+  la entidad gestionada cambie, Hibernate nunca emite un UPDATE sobre turno_historial (solo inserción).
+-->
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
+                 version="3.0">
+    <access>FIELD</access>
+
+    <entity class="ar.dentaflow.dominio.auditoria.CambioDeTurno" name="CambioDeTurno">
+        <table name="turno_historial"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="turnoId">
+                <column name="turno_id" nullable="false" updatable="false"/>
+            </basic>
+            <basic name="actorTipo">
+                <column name="actor_tipo" nullable="false" length="10" updatable="false"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.auditoria.ConversorTipoDeActor"/>
+            </basic>
+            <basic name="usuarioId">
+                <column name="usuario_id" nullable="true" updatable="false"/>
+            </basic>
+            <basic name="ocurridoEn">
+                <column name="ocurrido_en" nullable="false" updatable="false"/>
+            </basic>
+            <basic name="accion">
+                <column name="accion" nullable="false" length="20" updatable="false"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.auditoria.ConversorAccionDeTurno"/>
+            </basic>
+            <basic name="valorAnterior">
+                <column name="valor_anterior" nullable="true" length="4000" updatable="false"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.auditoria.ConversorValoresJson"/>
+            </basic>
+            <basic name="valorNuevo">
+                <column name="valor_nuevo" nullable="true" length="4000" updatable="false"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.auditoria.ConversorValoresJson"/>
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>

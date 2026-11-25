@@ -1,0 +1,14 @@
+C-08 — .\mvnw.cmd -B verify -Pit-mysql (JDK 21, MySQL 8 local, servicio MySQL84) — 2026-11-25
+Árbol: commit b670e85 + cambios sin commitear del change (huella sha256 28a6d2ed539f…).
+exit=0
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.configuracion.ConexionMySqlTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.auditoria.RestriccionesHistorialMySqlTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.IdaYVueltaUtcMySqlTest
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.recursos.RestriccionesRecursosMySqlTest
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.usuarios.RestriccionesUsuarioMySqlTest
+Tests run: 33, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+recibo: corrida 4146a46b6cf9a1e3149b332ba4ccdcd5 (active-stack evidence-capture, fuente arnés)
+
+Línea base: 25 → 33 (8 tests de restricciones de turno_historial sobre MySQL real).
+Captura: arnés. Solo se copian las líneas de resultado (sin URL ni credenciales de la base).

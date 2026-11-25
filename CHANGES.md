@@ -71,7 +71,7 @@ C-24 manual-publico         ← C-19
 | C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[ ]` |
 | C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | sí | `[ ]` |
 | C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | sí | `[ ]` |
-| C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | sí | `[ ]` |
+| C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | sí | `[x]` |
 | C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
 | C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
 | C-11 | agenda-interna-vistas | C-04, C-09 | 5 | Florencia | Bruno | MEDIO | L | no | `[ ]` |
@@ -291,7 +291,7 @@ Criterios del reparto:
   - `knowledge-base/04_modelo_de_datos.md` §Seed data inicial
 
 ### [C-08] `auditoria-cambios`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado
 - **Scope**:
   - Mecanismo de auditoría por evento reutilizable: modelo TurnoHistorial (turno_id, actor usuario/paciente/sistema, fecha-hora, acción, valores anterior/nuevo), solo-inserción (sin edición ni borrado).
   - Migración 003; servicio `registrar_cambio` invocable dentro de la misma transacción que el cambio auditado (RN-AU-01).

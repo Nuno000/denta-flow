@@ -1,0 +1,8 @@
+# ./mvnw verify (perfil test, H2 MODE=MySQL) — 2026-11-24 22:54 — exit 0
+name="ar.dentaflow.configuracion.EstadoDeSaludTest" tests="2" errors="0" skipped="0" failures="0" 
+name="ar.dentaflow.configuracion.PerfilTestTest" tests="1" errors="0" skipped="0" failures="0" 
+name="ar.dentaflow.configuracion.PropiedadesJpaTest" tests="3" errors="0" skipped="0" failures="0" 
+name="ar.dentaflow.dominio.DominioSinFrameworksTest" tests="1" errors="0" skipped="0" failures="0" 
+name="ar.dentaflow.dominio.comun.ZonaHorariaConsultorioTest" tests="5" errors="0" skipped="0" failures="0" 
+name="ar.dentaflow.infraestructura.persistencia.IdaYVueltaUtcH2Test" tests="2" errors="0" skipped="0" failures="0" 
+name="ar.dentaflow.infraestructura.tiempo.RelojConfigTest" tests="2" errors="0" skipped="0" failures="0" 

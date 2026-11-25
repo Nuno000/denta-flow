@@ -1,0 +1,11 @@
+# frontend — 2026-11-24 22:54
+## npm run lint
+exit 0
+## npm test
+ Test Files  2 passed (2)
+      Tests  6 passed (6)
+## npm run build
+dist/index.html                   0.46 kB │ gzip:   0.30 kB
+dist/assets/index-BW8alZj3.css    6.87 kB │ gzip:   2.06 kB
+dist/assets/index-CM8Gbci5.js   336.68 kB │ gzip: 105.56 kB
+✓ built in 345ms

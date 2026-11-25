@@ -1,0 +1,28 @@
+# Configuración común a todos los perfiles (design D3).
+# Los valores sensibles llegan siempre por variables de entorno (ver .env.example en la raíz).
+spring:
+  application:
+    name: dentaflow-backend
+  flyway:
+    locations: classpath:db/migration
+  jpa:
+    # El esquema lo crea Flyway; Hibernate solo valida que las entidades coincidan.
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        # Los instantes se guardan en UTC (DATETIME(6)) y se mapean a Instant.
+        jdbc:
+          time_zone: UTC
+
+# Actuator: solo el estado de salud, público y sin detalles ni datos personales.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      show-components: never

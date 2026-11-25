@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Pruebas sobre H2 (perfil test)
+        run: |
+          chmod +x mvnw
+          ./mvnw -B verify
+
+  it-mysql:
+    name: it-mysql
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/dentaflow
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      # MySQL preinstalado en el runner (usuario root/root), sin contenedores (DD-09).
+      - name: Levantar MySQL del runner
+        run: |
+          sudo systemctl start mysql.service
+          mysql --version
+          mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS dentaflow CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci; SELECT VERSION();"
+      - name: Pruebas @Tag("mysql") contra MySQL 8
+        run: |
+          chmod +x mvnw
+          ./mvnw -B verify -Pit-mysql
+
+  frontend:
+    name: frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build

@@ -65,7 +65,7 @@ C-24 manual-publico         ← C-19
 | ID | Change | Depende de | Oleada | Responsable | Revisor | Gov. | Tam. | Corte 26/11 | Estado |
 |----|--------|------------|--------|-------------|---------|------|------|-------------|--------|
 | C-01 | decision-stack-y-plazo | — | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | MEDIO | S | sí | `[x]` |
-| C-02 | scaffolding-proyecto | C-01 | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | BAJO | M | sí | `[ ]` |
+| C-02 | scaffolding-proyecto | C-01 | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | BAJO | M | sí | `[x]` |
 | C-03 | modelo-recursos-consultorio | C-02 | 1 | Renzo | Florencia | CRITICO | M | sí | `[ ]` |
 | C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | sí | `[ ]` |
 | C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[ ]` |
@@ -164,7 +164,7 @@ Criterios del reparto:
   - `knowledge-base/01_vision_y_objetivos.md`
 
 ### [C-02] `scaffolding-proyecto`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-24 (Spring Boot 3.5.16; evidencia en `openspec/changes/c-02-scaffolding-proyecto/evidencia/`; falta ver el CI en verde en el PR, tarea 5.1)
 - **Scope**:
   - Estructura del monorepo (DD-08): `backend/` (Maven, Spring Boot 3, paquetes `ar.dentaflow.{dominio,aplicacion,infraestructura,presentacion}`) y `frontend/` (Vite + React + TypeScript), según `08_arquitectura_propuesta.md`.
   - Configuración por variables de entorno: `SPRING_DATASOURCE_URL`/`_USERNAME`/`_PASSWORD`, `SPRING_MAIL_HOST`/`_PORT`/`_USERNAME`/`_PASSWORD`, `APP_MAIL_FROM`, `APP_BASE_URL`, `AUTH_SECRET`, `TZ=America/Argentina/Buenos_Aires` (SU-09), `VITE_API_BASE_URL`; `.env.example`, sin secretos en el repo.

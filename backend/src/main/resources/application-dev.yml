@@ -1,0 +1,12 @@
+# Desarrollo local contra MySQL 8 nativo (sin Docker). La contraseña llega siempre del entorno.
+spring:
+  config:
+    # .env de la raíz del repo (o de backend/), si existe. Las variables de entorno reales tienen prioridad.
+    import: optional:file:../.env[.properties],optional:file:.env[.properties]
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/dentaflow}
+    username: ${SPRING_DATASOURCE_USERNAME:dentaflow}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+  flyway:
+    # Changes paralelos pueden mergear migraciones con versión menor a la ya aplicada localmente.
+    out-of-order: true

@@ -66,7 +66,7 @@ C-24 manual-publico         ← C-19
 |----|--------|------------|--------|-------------|---------|------|------|-------------|--------|
 | C-01 | decision-stack-y-plazo | — | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | MEDIO | S | sí | `[x]` |
 | C-02 | scaffolding-proyecto | C-01 | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | BAJO | M | sí | `[x]` |
-| C-03 | modelo-recursos-consultorio | C-02 | 1 | Renzo | Florencia | CRITICO | M | sí | `[ ]` |
+| C-03 | modelo-recursos-consultorio | C-02 | 1 | Renzo | Florencia | CRITICO | M | sí | `[x]` |
 | C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | sí | `[ ]` |
 | C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[ ]` |
 | C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | sí | `[ ]` |
@@ -190,10 +190,10 @@ Criterios del reparto:
 > Tras C-04 se abre el primer fork (C-05, C-06, C-07, C-08 en paralelo).
 
 ### [C-03] `modelo-recursos-consultorio`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-25 (H2 108/108, it-mysql 16/16, seed dev 3/2/5; evidencia en `openspec/changes/archive/2026-11-25-c-03-modelo-recursos-consultorio/evidencia/`)
 - **Scope**:
   - Modelos: Profesional, Sillon, Prestacion (con `duracion_minutos`), relación N:M Profesional-Prestacion.
-  - Migración 001 con restricciones (activo/inactivo, duración > 0); repositorios base.
+  - Migración `V003_1__crear_recursos_consultorio.sql` con restricciones (activo/inactivo, duración > 0); repositorios base.
   - Seed de desarrollo/demo: 2-3 profesionales, 2-3 sillones, 4-5 prestaciones con duraciones distintas.
   - Tests: invariantes de modelo, duración obligatoria, desactivar sin borrar.
 - **Dependencias**: `C-02`

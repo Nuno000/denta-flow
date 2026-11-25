@@ -55,8 +55,8 @@
 - [x] 7.1 Ejecutar `./mvnw verify` y `./mvnw verify -Pit-mysql`; guardar los resúmenes en `openspec/changes/c-03-modelo-recursos-consultorio/evidencia/`. Verificar que el número de tests es la línea base de 1.1 más los nuevos, todos en verde
   - **hecho:** `verify` (H2) 108/108 en verde (`evidencia/verificacion-h2.txt`); `verify -Pit-mysql` 16/16 tests `mysql` en verde (`evidencia/verificacion-mysql.txt`).
 - [x] 7.2 Verificar con búsquedas que: no hay `Dockerfile`, `docker-compose*` ni `testcontainers`; `dominio/` no importa Spring, JPA ni Hibernate; el seed no tiene datos personales reales; no se tocaron `presentacion/` ni `aplicacion/`; no hay sintaxis exclusiva de un motor en `V003_1`
-- [ ] 7.3 Marcar C-03 `[x]` en la ficha y en la fila de `CHANGES.md` (con la evidencia) y corregir en la ficha "Migración 001" por `V003_1__crear_recursos_consultorio.sql`. Verificar con `git diff CHANGES.md` que solo cambió C-03
-  - **no aplicado en este apply:** `CHANGES.md` queda fuera del alcance (lo toma el orquestador/Renzo).
+- [x] 7.3 Marcar C-03 `[x]` en la ficha y en la fila de `CHANGES.md` (con la evidencia) y corregir en la ficha "Migración 001" por `V003_1__crear_recursos_consultorio.sql`. Verificar con `git diff CHANGES.md` que solo cambió C-03
+  - **hecho 2026-11-25:** `CHANGES.md` actualizado (fila y ficha de C-03, archivado en `openspec/changes/archive/2026-11-25-c-03-modelo-recursos-consultorio/`); `git diff CHANGES.md` solo toca C-03.
 
 ## Workflow follow-up
 

@@ -1,0 +1,13 @@
+Verificación manual del seed de demo — perfil dev contra MySQL 8 local
+Fecha: 2026-11-25. Ejecutada por Renzo en su máquina; resultado reportado por él.
+
+Comando: cd backend; ./mvnw spring-boot:run "-Dspring-boot.run.profiles=dev"
+Consulta:
+  SELECT (SELECT COUNT(*) FROM dentaflow.profesional) AS profesionales,
+         (SELECT COUNT(*) FROM dentaflow.sillon)      AS sillones,
+         (SELECT COUNT(*) FROM dentaflow.prestacion)  AS prestaciones;
+
+Resultado: profesionales=3, sillones=2, prestaciones=5 (esperado 3/2/5).
+
+La idempotencia (no duplicar al reiniciar) está cubierta por SeedRecursosDemoTest (tarea 6.3):
+correr el seed dos veces no crea filas nuevas, y con un recurso preexistente no crea nada.

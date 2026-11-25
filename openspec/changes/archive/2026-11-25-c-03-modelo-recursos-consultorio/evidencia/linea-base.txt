@@ -1,0 +1,2 @@
+Linea base (antes de tocar codigo) - ./mvnw test en feat/C-03-modelo-recursos-consultorio
+16 tests en verde (0 fallas, 0 errores, 0 omitidos): EstadoDeSalud 2, PerfilTest 1, PropiedadesJpa 3, DominioSinFrameworks 1, ZonaHorariaConsultorio 5, IdaYVueltaUtcH2 2, RelojConfig 2

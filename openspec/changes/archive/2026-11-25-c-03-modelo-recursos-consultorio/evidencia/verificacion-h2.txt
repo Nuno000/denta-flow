@@ -1,0 +1,6 @@
+./mvnw -B verify (perfil test, H2 MODE=MySQL; excluye @Tag(mysql))
+Tests run: 108, Failures: 0, Errors: 0, Skipped: 0 - BUILD SUCCESS
+Linea base 16 + 92 nuevos.
+RestriccionesRecursosMySqlTest NO se ejecuta en esta corrida (verificado: no aparece en el log).
+
+./mvnw -B verify -Pit-mysql: NO verificado. Hay un MySQL escuchando en 3306 pero rechaza al usuario dentaflow sin contrasena (Access denied ... using password: NO) y no hay .env ni SPRING_DATASOURCE_* en el entorno. Pendiente: requiere MySQL 8 local con credenciales.

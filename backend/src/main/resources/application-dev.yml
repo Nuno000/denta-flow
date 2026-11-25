@@ -10,3 +10,9 @@ spring:
   flyway:
     # Changes paralelos pueden mergear migraciones con versión menor a la ya aplicada localmente.
     out-of-order: true
+
+# Datos de demostración de recursos (C-03): profesionales, sillones y prestaciones ficticios.
+# Idempotente. En otros entornos queda apagado salvo APP_SEED_DEMO=true.
+app:
+  seed:
+    demo: true

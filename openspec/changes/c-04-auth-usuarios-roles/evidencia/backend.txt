@@ -1,0 +1,57 @@
+C-04 — backend, 2026-11-25 (JDK 21 Temurin). Árbol: commit 332cb2b + cambios sin commitear del change.
+
+## ./mvnw -B verify (perfil test, H2 MODE=MySQL)
+exit=0
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.aplicacion.usuarios.LimitadorDeIntentosDeIngresoTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.aplicacion.usuarios.ServicioDeIngresoTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.aplicacion.usuarios.ServicioDeUsuariosIntegracionTest
+Tests run: 16, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.aplicacion.usuarios.ServicioDeUsuariosTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.configuracion.EstadoDeSaludTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.configuracion.PerfilTestTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.configuracion.PropiedadesJpaTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.dominio.comun.ZonaHorariaConsultorioTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.dominio.DominioSinFrameworksTest
+Tests run: 18, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.dominio.recursos.PrestacionTest
+Tests run: 23, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.dominio.recursos.ProfesionalTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.dominio.recursos.SillonTest
+Tests run: 20, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.dominio.usuarios.UsuarioTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.IdaYVueltaUtcH2Test
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.recursos.BloqueoRecursosTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.recursos.PrestacionRepositorioTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.recursos.ProfesionalRepositorioTest
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.recursos.RestriccionesRecursosH2Test
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.recursos.SillonRepositorioTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.recursos.SinBorradoDeRecursosTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.usuarios.CatalogoDeRolesConsistenciaTest
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.usuarios.RestriccionesUsuarioH2Test
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.usuarios.UsuarioRepositorioTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.seed.SeedAdministradorInicialTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.seed.SeedNoCorreEnTestTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.seed.SeedRecursosDemoCondicionTest
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.seed.SeedRecursosDemoTest$SobreBaseVacia
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.seed.SeedRecursosDemoTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.seguridad.CodificadorBCryptTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.seguridad.CorsTest
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.seguridad.EmisorDeTokensJwtTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.seguridad.PropiedadesAuthTest
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.seguridad.SeguridadIntegracionTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.tiempo.RelojConfigTest$RelojFijoEnPruebas
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.tiempo.RelojConfigTest$RelojDelSistema
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.tiempo.RelojConfigTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.presentacion.auth.AuthControllerTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.presentacion.errores.ManejadorDeErroresTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.presentacion.GuardasEnControladoresTest
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.presentacion.usuarios.UsuariosControllerTest
+TOTAL: Tests run: 226, Failures: 0, Errors: 0, Skipped: 0
+recibo: corrida 053f90ec350a98592cb356a5fd9443cd, salida sha256 98f71abe0e57a90b… (active-stack evidence-capture, fuente arnés)
+
+## ./mvnw -B verify -Pit-mysql (MySQL 8 local, @Tag("mysql"))
+exit=0
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.configuracion.ConexionMySqlTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.IdaYVueltaUtcMySqlTest
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.recursos.RestriccionesRecursosMySqlTest
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.usuarios.RestriccionesUsuarioMySqlTest
+TOTAL: Tests run: 25, Failures: 0, Errors: 0, Skipped: 0
+recibo: corrida e429925d6f8a195a697a79ca7c7f6991, salida sha256 03523b428a18b140… (active-stack evidence-capture, fuente arnés)
+
+Línea base antes del change: 108 (H2) y 16 (MySQL). Nuevos: 118 (H2) y 9 (MySQL).

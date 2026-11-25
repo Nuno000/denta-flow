@@ -1,0 +1,11 @@
+Línea base C-04 — 2026-11-25, rama feat/C-04-auth-usuarios-roles (base 332cb2b), antes de tocar código.
+
+Backend (backend/, JDK 21 Temurin, ./mvnw -B verify, perfil test sobre H2 MODE=MySQL):
+  exit 0 — 108 tests, 0 failures, 0 errors, 0 skipped (excluye @Tag("mysql"); el primer conteo, 111, sumaba
+  por error dos reportes viejos de it-mysql que quedaron en target/surefire-reports)
+
+Frontend (frontend/, npm ci + npm test):
+  exit 0 — 2 test files, 6 tests en verde
+
+Sin fallas previas.
+Captura: agent (salida redirigida a un archivo fuera del repo; sin datos sensibles).

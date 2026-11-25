@@ -1,0 +1,22 @@
+C-04 — frontend, 2026-11-25 (Node 22+, Vitest + Testing Library, oxlint, tsc + vite build).
+
+## npm test
+exit=0
+ Test Files  10 passed (10)
+      Tests  52 passed (52)
+recibo: corrida d3252c00cd7f74a34af2de1c338a4d44 (active-stack evidence-capture, fuente arnés)
+
+## npm run lint
+exit=0
+> oxlint --deny-warnings
+recibo: corrida a34bf4533e6ec2afdfcdc205d6861d5f (active-stack evidence-capture, fuente arnés)
+
+## npm run build
+exit=0
+✓ built in 194ms
+recibo: corrida bfb5021ef749e8152c1172999f51ce45 (active-stack evidence-capture, fuente arnés)
+
+Línea base antes del change: 6 tests. Nuevos: 46. Sin 'any' (tsconfig strict, oxlint --deny-warnings).
+
+Recibos regenerados tras los arreglos de la prueba manual (diálogo centrado y tema solo claro): 47 tests, lint y build en verde.
+Menú del panel y acceso desde la portada (tareas 11.5 y 11.6): 52 tests, lint y build en verde.

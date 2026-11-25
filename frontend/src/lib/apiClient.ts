@@ -1,6 +1,8 @@
 /**
  * Único cliente HTTP de la SPA (regla dura: nada de fetch suelto en componentes).
  * Toma la URL base de VITE_API_BASE_URL y se usa desde los hooks de TanStack Query.
+ * Desde C-04 envía el token del personal en `Authorization: Bearer` y avisa cuando la API responde 401
+ * a un pedido autenticado (sesión vencida o usuario desactivado).
  */
 
 /** Error de una respuesta HTTP no 2xx, con el cuerpo que devolvió la API (si lo hubo). */
@@ -13,6 +15,27 @@ export class ErrorApi extends Error {
     this.name = 'ErrorApi'
     this.status = status
     this.cuerpo = cuerpo
+  }
+}
+
+/** Opciones de un pedido: las de fetch más `autenticar` (por defecto, manda el token si hay sesión). */
+export interface OpcionesApi extends RequestInit {
+  autenticar?: boolean
+}
+
+let obtenerToken: () => string | null = () => null
+const suscriptoresNoAutorizado = new Set<() => void>()
+
+/** Define de dónde sale el token de la sesión (lo configura el proveedor de sesión). */
+export function configurarToken(proveedor: () => string | null): void {
+  obtenerToken = proveedor
+}
+
+/** Se suscribe a los 401 de pedidos autenticados; devuelve la función para desuscribirse. */
+export function alNoAutorizado(suscriptor: () => void): () => void {
+  suscriptoresNoAutorizado.add(suscriptor)
+  return () => {
+    suscriptoresNoAutorizado.delete(suscriptor)
   }
 }
 
@@ -29,29 +52,37 @@ async function leerCuerpo(respuesta: Response): Promise<unknown> {
   return tipo.includes('json') ? (JSON.parse(texto) as unknown) : texto
 }
 
-async function solicitar<T>(ruta: string, opciones: RequestInit = {}): Promise<T> {
-  const cabeceras = new Headers(opciones.headers)
+async function solicitar<T>(ruta: string, opciones: OpcionesApi = {}): Promise<T> {
+  const { autenticar = true, ...init } = opciones
+  const cabeceras = new Headers(init.headers)
   cabeceras.set('Accept', 'application/json')
-  if (opciones.body !== undefined) {
+  if (init.body !== undefined) {
     cabeceras.set('Content-Type', 'application/json')
   }
+  const token = autenticar ? obtenerToken() : null
+  if (token !== null) {
+    cabeceras.set('Authorization', `Bearer ${token}`)
+  }
 
-  const respuesta = await fetch(`${urlBase()}${ruta}`, { ...opciones, headers: cabeceras })
+  const respuesta = await fetch(`${urlBase()}${ruta}`, { ...init, headers: cabeceras })
   const cuerpo = await leerCuerpo(respuesta)
 
   if (!respuesta.ok) {
+    if (respuesta.status === 401 && token !== null) {
+      suscriptoresNoAutorizado.forEach((suscriptor) => suscriptor())
+    }
     throw new ErrorApi(respuesta.status, cuerpo)
   }
   return cuerpo as T
 }
 
 export const apiClient = {
-  get: <T>(ruta: string, opciones?: RequestInit) => solicitar<T>(ruta, { ...opciones, method: 'GET' }),
-  post: <T>(ruta: string, datos: unknown, opciones?: RequestInit) =>
+  get: <T>(ruta: string, opciones?: OpcionesApi) => solicitar<T>(ruta, { ...opciones, method: 'GET' }),
+  post: <T>(ruta: string, datos: unknown, opciones?: OpcionesApi) =>
     solicitar<T>(ruta, { ...opciones, method: 'POST', body: JSON.stringify(datos) }),
-  put: <T>(ruta: string, datos: unknown, opciones?: RequestInit) =>
+  put: <T>(ruta: string, datos: unknown, opciones?: OpcionesApi) =>
     solicitar<T>(ruta, { ...opciones, method: 'PUT', body: JSON.stringify(datos) }),
-  patch: <T>(ruta: string, datos: unknown, opciones?: RequestInit) =>
+  patch: <T>(ruta: string, datos: unknown, opciones?: OpcionesApi) =>
     solicitar<T>(ruta, { ...opciones, method: 'PATCH', body: JSON.stringify(datos) }),
-  delete: <T>(ruta: string, opciones?: RequestInit) => solicitar<T>(ruta, { ...opciones, method: 'DELETE' }),
+  delete: <T>(ruta: string, opciones?: OpcionesApi) => solicitar<T>(ruta, { ...opciones, method: 'DELETE' }),
 }

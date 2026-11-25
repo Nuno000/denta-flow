@@ -1,0 +1,8 @@
+./mvnw verify -Pit-mysql (MySQL 8 local, perfil it-mysql), 2026-11-25 16:34 — corrido por Renzo
+Tests run: 43, Failures: 0, Errors: 0, Skipped: 0
+Nuevos de C-07 (18):
+  RestriccionesParametrosMySqlTest      8/8  (V007_1 + mapeo XML validados con ddl-auto=validate en MySQL; CHECK ck_parametro_autor_y_fecha)
+  EdicionSimultaneaParametrosMySqlTest 10/10 (@RepeatedTest(10), dos administradores en paralelo, gana la ultima escritura)
+Existentes de C-02/C-03/C-04 (25), sin regresiones:
+  ConexionMySqlTest 1/1, IdaYVueltaUtcMySqlTest 2/2, RestriccionesRecursosMySqlTest 13/13, RestriccionesUsuarioMySqlTest 9/9
+Nota: una corrida previa (16:32) fallo entera por "Access denied ... (using password: NO)": faltaba SPRING_DATASOURCE_PASSWORD en la terminal; no relacionado con C-07.

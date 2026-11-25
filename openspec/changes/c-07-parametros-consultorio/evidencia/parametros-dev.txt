@@ -1,0 +1,14 @@
+Verificacion manual en dev (MySQL 8.0.46 local, perfil dev), 2026-11-25 — hecha por Renzo
+1. Backend arrancado con: .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev" (Flyway aplico V007_1).
+2. Login como administrador (POST /api/auth/login) y token cargado en Swagger UI (Authorize).
+3. PUT /api/parametros/anticipacion-minima-horas con {"valor":"48"} -> 200.
+4. SELECT * FROM parametro; (MySQL Workbench):
+
+clave                     | valor                                              | provisorio | actualizado_en | actualizado_por
+--------------------------+----------------------------------------------------+------------+----------------+----------------
+anticipacion-minima-horas | 48                                                 | false      | 25/11/2026     | 32
+aviso-privacidad-leyenda  | Leí y acepto el aviso de privacidad                | true       | NULL           | NULL
+aviso-privacidad-texto    | Este texto es un borrador pendiente de revisión... | true       | NULL           | NULL
+
+Resultado: la edicion confirma el valor (provisorio pasa a false) y registra autor y fecha;
+los parametros no editados siguen provisorios, sin autor ni fecha (CHECK ck_parametro_autor_y_fecha respetado).

@@ -67,7 +67,7 @@ C-24 manual-publico         ← C-19
 | C-01 | decision-stack-y-plazo | — | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | MEDIO | S | sí | `[x]` |
 | C-02 | scaffolding-proyecto | C-01 | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | BAJO | M | sí | `[x]` |
 | C-03 | modelo-recursos-consultorio | C-02 | 1 | Renzo | Florencia | CRITICO | M | sí | `[x]` |
-| C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | sí | `[ ]` |
+| C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | sí | `[x]` |
 | C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[ ]` |
 | C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | sí | `[ ]` |
 | C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | sí | `[ ]` |
@@ -209,7 +209,7 @@ Criterios del reparto:
   - `knowledge-base/08_arquitectura_propuesta.md` §Patrones
 
 ### [C-04] `auth-usuarios-roles`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-25 (JWT Bearer, DD-11; H2 226/226, it-mysql 25/25, frontend 52 tests; evidencia en `openspec/changes/archive/2026-11-25-c-04-auth-usuarios-roles/evidencia/`)
 - **Scope**:
   - Modelos: Usuario (email, hash de credencial, activo, `profesional_id` opcional), Rol (`administrador`, `recepcion`, `profesional`).
   - Login/logout del personal con Spring Security; **decidir cookie de sesión vs JWT**: front (Vercel) y API (Render) están en dominios distintos, lo que complica SameSite/CORS (zona CRITICA, decisión explícita de este change, no de C-01); hash de credencial; rate limiting de login.

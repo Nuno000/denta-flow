@@ -55,3 +55,10 @@ TOTAL: Tests run: 25, Failures: 0, Errors: 0, Skipped: 0
 recibo: corrida e429925d6f8a195a697a79ca7c7f6991, salida sha256 03523b428a18b140… (active-stack evidence-capture, fuente arnés)
 
 Línea base antes del change: 108 (H2) y 16 (MySQL). Nuevos: 118 (H2) y 9 (MySQL).
+
+## Verificación final — 2026-11-25 (árbol: commit 8a7c684, mergeado en main por b670e85; sin cambios de código)
+./mvnw -B verify (perfil test, H2): exit=0 — TOTAL: Tests run: 226, Failures: 0, Errors: 0, Skipped: 0 — BUILD SUCCESS
+recibo: corrida e7d1433f3fcb972040d60af048aab112, salida sha256 2a7fec1ba73395ce… (active-stack evidence-capture, fuente arnés)
+./mvnw -B verify -Pit-mysql (MySQL 8 local): exit=0 — TOTAL: Tests run: 25, Failures: 0, Errors: 0, Skipped: 0 — BUILD SUCCESS
+recibo: corrida 52ec9324174a249f407700088f9dfb99, salida sha256 e74adb8b39b705c8… (active-stack evidence-capture, fuente arnés)
+Mismo detalle por clase que la corrida anterior.

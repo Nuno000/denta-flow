@@ -7,3 +7,13 @@ Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.387 s -- in ar
 Tests run: 25, Failures: 0, Errors: 0, Skipped: 0
 BUILD SUCCESS
 Captura: agent. Solo se copian las líneas de resultado (sin URL ni credenciales de la base).
+
+Verificación final — 2026-11-25 (commit 8a7c684, mergeado en main por b670e85)
+exit=0
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.configuracion.ConexionMySqlTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.IdaYVueltaUtcMySqlTest
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.recursos.RestriccionesRecursosMySqlTest
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0 -- in ar.dentaflow.infraestructura.persistencia.usuarios.RestriccionesUsuarioMySqlTest
+Tests run: 25, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+recibo: corrida 52ec9324174a249f407700088f9dfb99 (active-stack evidence-capture, fuente arnés; ruta personal redactada)

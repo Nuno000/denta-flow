@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+/* DentaFlow tiene un solo tema (claro), con contraste AA sobre fondo blanco. */
+:root {
+  color-scheme: only light;
+}
+
+body {
+  @apply bg-white text-slate-900;
+}

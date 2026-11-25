@@ -5,3 +5,11 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+
+# Clave de firma SOLO DE PRUEBAS (C-04, design D2): no es un secreto real ni sirve fuera de los tests.
+app:
+  auth:
+    secreto: clave-solo-para-pruebas-automatizadas-no-usar-en-produccion
+  # Los tests crean sus propios usuarios: sin administrador inicial.
+  seed:
+    admin: false

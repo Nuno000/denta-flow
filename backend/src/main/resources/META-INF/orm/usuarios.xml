@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mapeo JPA de los usuarios del personal (C-04, design D4 y D5), con el mismo criterio que recursos.xml:
+  la clase de dominio no lleva anotaciones. El rol se guarda como su código (FK a rol.codigo).
+-->
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
+                 version="3.0">
+    <access>FIELD</access>
+
+    <entity class="ar.dentaflow.dominio.usuarios.Usuario" name="Usuario">
+        <table name="usuario"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="email">
+                <column name="email" nullable="false" length="254"/>
+            </basic>
+            <basic name="credencialHash">
+                <column name="credencial_hash" nullable="false" length="100"/>
+            </basic>
+            <basic name="rol">
+                <column name="rol" nullable="false" length="20"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.usuarios.ConversorRol"/>
+            </basic>
+            <basic name="profesionalId">
+                <column name="profesional_id" nullable="true"/>
+            </basic>
+            <basic name="activo">
+                <column name="activo" nullable="false"/>
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>

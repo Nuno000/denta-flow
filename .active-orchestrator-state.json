@@ -463,5 +463,11 @@
       "front: API via cliente + TanStack Query, RHF + Zod",
       "front: mobile-first + WCAG 2.1 AA"
     ]
+  },
+  "visual_design": {
+    "created_by": "design-system",
+    "mode": "off",
+    "status": "skipped",
+    "path": "design-system/README.md"
   }
 }

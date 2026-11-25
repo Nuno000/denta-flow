@@ -67,8 +67,10 @@ denta-flow/
 
 ## Seguridad
 
-- Autenticación del personal: usuario + credencial con hash; implementada con Spring Security. El esquema (cookie de sesión o JWT) se decide en C-04: el frontend (Vercel) y la API (Render) están en dominios distintos, lo que complica las cookies de sesión (SameSite/CORS).
-- Autorización: RBAC con tres roles (ver `03_actores_y_roles.md`), verificado en el backend, no solo en la UI.
+- Autenticación del personal (DD-11, C-04): email + contraseña con hash BCrypt; Spring Security como resource server con **JWT Bearer** (HS256, firmado con `AUTH_SECRET`, 8 h). Sin cookies ni CSRF, porque el frontend (Vercel) y la API (Render) están en sitios distintos. En cada request se relee el usuario: desactivarlo o cambiarle el rol tiene efecto inmediato. Límite de 5 ingresos fallidos en 15 minutos por email (429).
+- Autorización: RBAC con tres roles (ver `03_actores_y_roles.md`), verificado en el backend, no solo en la UI. Se deniega por defecto: las únicas rutas públicas son `GET /actuator/health`, `POST /api/auth/login`, la documentación OpenAPI (`/v3/api-docs/**`, `/swagger-ui/**`) y `/api/publico/**`, reservado para la reserva online del paciente. Cada endpoint protegido declara su guarda (`@SoloAdministrador`, `@AdministradorORecepcion`, `@PersonalInterno`).
+- Errores de la API: formato `ProblemDetail` (RFC 9457, `application/problem+json`) con título y detalle en español, sin trazas.
+- CORS: solo el origen del frontend (`APP_BASE_URL`), con el header `Authorization` y sin credenciales de navegador.
 - Acceso del paciente: enlaces con token no adivinable por turno (supuesto SU-03); sin cuenta.
 - Validación de input: en el backend para todo dato público (DNI, teléfono, email, fechas).
 - Protección de datos personales (Ley 25.326): minimización, aviso de privacidad, consentimiento registrado, acceso restringido por rol, transporte cifrado (HTTPS). Política de retención de datos: pendiente (PA-12).
@@ -90,7 +92,9 @@ Nombres según convenciones de Spring Boot (binding relajado) y Vite:
 | `SPRING_MAIL_PASSWORD` | Contraseña / clave SMTP | (del proveedor) | Sí |
 | `APP_MAIL_FROM` | Remitente de recordatorios | `turnos@consultorio.example` | No |
 | `APP_BASE_URL` | URL pública base del frontend para armar enlaces de confirmación/cancelación | `https://turnos.example` | No |
-| `AUTH_SECRET` | Clave de firma de sesiones/tokens (uso según el esquema de C-04) | (generada) | Sí |
+| `AUTH_SECRET` | Clave de firma de los tokens JWT (DD-11). Obligatoria, de al menos 32 bytes: el backend no arranca sin ella. Generar con `openssl rand -base64 48` | (generada) | Sí |
+| `APP_ADMIN_EMAIL` | Email del administrador inicial, que se crea al arrancar si no hay ningún administrador activo (C-04) | `admin@consultorio.example` | Sí |
+| `APP_ADMIN_PASSWORD` | Contraseña del administrador inicial (8 a 72 caracteres) | (elegida por el consultorio) | Sí |
 | `TZ` | Zona horaria del consultorio | `America/Argentina/Buenos_Aires` | No |
 | `VITE_API_BASE_URL` | URL base de la API que consume el frontend (pública, se incluye en el bundle) | `https://api.turnos.example` | No |
 

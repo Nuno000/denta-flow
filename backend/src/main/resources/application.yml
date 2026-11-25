@@ -13,6 +13,7 @@ spring:
     # Mapeo JPA por dominio en XML (las clases de dominio no llevan anotaciones). Un archivo por dominio.
     mapping-resources:
       - META-INF/orm/recursos.xml
+      - META-INF/orm/usuarios.xml
     properties:
       hibernate:
         # Los instantes se guardan en UTC (DATETIME(6)) y se mapean a Instant.
@@ -29,3 +30,21 @@ management:
     health:
       show-details: never
       show-components: never
+
+app:
+  # Autenticación del personal (C-04, design D2 y D7). Sin AUTH_SECRET de >= 32 bytes la aplicación no arranca.
+  auth:
+    secreto: ${AUTH_SECRET:}
+    duracion-token: PT8H
+    emisor: dentaflow
+    intentos-maximos: 5
+    ventana-intentos: PT15M
+  # Administrador inicial (C-04, design D11): se crea al arrancar si no hay ningún administrador activo.
+  seed:
+    admin: true
+  admin:
+    email: ${APP_ADMIN_EMAIL:}
+    password: ${APP_ADMIN_PASSWORD:}
+  # Orígenes del frontend que pueden llamar a la API desde el navegador (CORS). Lista separada por comas.
+  cors:
+    origenes-permitidos: ${APP_BASE_URL:http://localhost:5173}

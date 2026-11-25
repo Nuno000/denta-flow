@@ -7,3 +7,11 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/dentaflow}
     username: ${SPRING_DATASOURCE_USERNAME:dentaflow}
     password: ${SPRING_DATASOURCE_PASSWORD:}
+
+# Clave de firma SOLO DE PRUEBAS (C-04, design D2): fija, para no depender del AUTH_SECRET del .env local.
+app:
+  auth:
+    secreto: clave-solo-para-pruebas-automatizadas-no-usar-en-produccion
+  # Los tests no crean el administrador inicial en la base local.
+  seed:
+    admin: false

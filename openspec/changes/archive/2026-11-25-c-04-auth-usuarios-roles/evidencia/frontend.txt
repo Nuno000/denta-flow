@@ -20,3 +20,10 @@ Línea base antes del change: 6 tests. Nuevos: 46. Sin 'any' (tsconfig strict, o
 
 Recibos regenerados tras los arreglos de la prueba manual (diálogo centrado y tema solo claro): 47 tests, lint y build en verde.
 Menú del panel y acceso desde la portada (tareas 11.5 y 11.6): 52 tests, lint y build en verde.
+
+## Verificación final — 2026-11-25 (commit 8a7c684, mergeado en main por b670e85)
+npm test: exit=0 — Test Files 10 passed (10), Tests 52 passed (52) — recibo: corrida 8123af84ab28acc2473a129866a9743c
+npm run lint: exit=0 — oxlint --deny-warnings sin hallazgos — recibo: corrida cdaeff5719ce5d0c20542fb79bf78747
+npm run build: exit=0 — ✓ built in 198ms — recibo: corrida e6c6555ca0ddf5da4f32c727157d79fb
+(active-stack evidence-capture, fuente arnés)
+openspec validate c-04-auth-usuarios-roles --strict: exit=0 — "Change 'c-04-auth-usuarios-roles' is valid"

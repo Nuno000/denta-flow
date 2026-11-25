@@ -12,7 +12,7 @@
 
 - [x] 2.1 Agregar al `pom.xml` `spring-boot-starter-security`, `spring-boot-starter-oauth2-resource-server` y `spring-security-test` (scope test). En `application-test.yml` y `application-it-mysql.yml`, definir `app.auth.secreto` con un valor fijo de ≥ 32 bytes, nombrado como solo de pruebas. Agregar a `EstadoDeSaludTest` el caso "health responde 200 sin token" y verificar que `./mvnw verify` sigue en verde (con la autoconfiguración por defecto, el resto queda protegido)
 - [x] 2.2 RED: `PropiedadesAuthTest` (`ApplicationContextRunner`): sin secreto, o con uno de 31 bytes, el contexto no arranca y el mensaje menciona `AUTH_SECRET` y cómo generarlo; con 32 bytes arranca; `duracion-token` vale `PT8H` por defecto. GREEN: `PropiedadesAuth` (`@ConfigurationProperties("app.auth")`, `@Validated`) en `infraestructura/seguridad` y las claves en `application.yml` (design D2). Verificar que pasa
-- [ ] 2.3 Actualizar `.env.example`: explicar que `AUTH_SECRET` necesita ≥ 32 bytes y el comando para generarlo (`openssl rand -base64 48`), y agregar `APP_ADMIN_EMAIL` y `APP_ADMIN_PASSWORD` con valores ficticios. Verificar a mano que coincide con `application.yml`
+- [x] 2.3 Actualizar `.env.example`: explicar que `AUTH_SECRET` necesita ≥ 32 bytes y el comando para generarlo (`openssl rand -base64 48`), y agregar `APP_ADMIN_EMAIL` y `APP_ADMIN_PASSWORD` con valores ficticios. Verificar a mano que coincide con `application.yml`
 
 ## 3. Dominio puro `dominio.usuarios` (spec "Un solo rol por usuario", "Vínculo con el profesional", "Email único" — normalización, "Desactivar y reactivar sin borrar")
 

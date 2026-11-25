@@ -70,7 +70,7 @@ C-24 manual-publico         ← C-19
 | C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | sí | `[x]` |
 | C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[ ]` |
 | C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | sí | `[ ]` |
-| C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | sí | `[ ]` |
+| C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | sí | `[x]` |
 | C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | sí | `[x]` |
 | C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
 | C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
@@ -272,7 +272,7 @@ Criterios del reparto:
   - `knowledge-base/07_flujos_principales.md` §Flujo 7
 
 ### [C-07] `parametros-consultorio`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-25 (H2 280/280, MySQL 43/43; evidencia en `openspec/changes/archive/2026-11-25-c-07-parametros-consultorio/evidencia/`)
 - **Scope**:
   - Modelo de configuración clave-valor: anticipación mínima de cancelación/reprogramación, textos del aviso de privacidad (US-004).
   - Edición solo por administrador; el valor por defecto se carga desde seed y se marca como provisorio.

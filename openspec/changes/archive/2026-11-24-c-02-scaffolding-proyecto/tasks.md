@@ -29,7 +29,7 @@
 
 ## 5. CI y documentación
 
-- [ ] 5.1 Crear `.github/workflows/ci.yml` con los jobs `backend`, `it-mysql` y `frontend` (design D7). Verificar la sintaxis localmente y, después del push, que los tres jobs corren en verde en el PR
+- [x] 5.1 Crear `.github/workflows/ci.yml` con los jobs `backend`, `it-mysql` y `frontend` (design D7). Verificar la sintaxis localmente y, después del push, que los tres jobs corren en verde en el PR
 - [x] 5.2 Escribir el `README.md` de la raíz: requisitos (Java 21, Node 22+, MySQL 8 nativo), creación de la base y el usuario `dentaflow`, `.env`, comandos para levantar backend (`dev`) y frontend, pruebas (`verify` y `-Pit-mysql`) y enlaces a la KB y al plan del equipo. Verificar siguiendo el README desde cero que el backend arranca en `dev` y responde `/actuator/health`, y que el frontend muestra la página inicial
 
 ## 6. Verificación integral

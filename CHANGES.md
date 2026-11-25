@@ -164,7 +164,7 @@ Criterios del reparto:
   - `knowledge-base/01_vision_y_objetivos.md`
 
 ### [C-02] `scaffolding-proyecto`
-- **Estado**: `[x]` completado el 2026-11-24 (Spring Boot 3.5.16; evidencia en `openspec/changes/c-02-scaffolding-proyecto/evidencia/`; falta ver el CI en verde en el PR, tarea 5.1)
+- **Estado**: `[x]` completado el 2026-11-24 (Spring Boot 3.5.16; jobs de CI `backend`, `it-mysql` y `frontend` en verde en el PR; evidencia en `openspec/changes/archive/2026-11-24-c-02-scaffolding-proyecto/evidencia/`)
 - **Scope**:
   - Estructura del monorepo (DD-08): `backend/` (Maven, Spring Boot 3, paquetes `ar.dentaflow.{dominio,aplicacion,infraestructura,presentacion}`) y `frontend/` (Vite + React + TypeScript), según `08_arquitectura_propuesta.md`.
   - Configuración por variables de entorno: `SPRING_DATASOURCE_URL`/`_USERNAME`/`_PASSWORD`, `SPRING_MAIL_HOST`/`_PORT`/`_USERNAME`/`_PASSWORD`, `APP_MAIL_FROM`, `APP_BASE_URL`, `AUTH_SECRET`, `TZ=America/Argentina/Buenos_Aires` (SU-09), `VITE_API_BASE_URL`; `.env.example`, sin secretos en el repo.

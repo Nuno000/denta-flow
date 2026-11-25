@@ -97,6 +97,13 @@ Provienen de `docs/discovery/discovery.md` e `informe-discovery.md`.
 **Riesgo y plan de degradación**: si el corte no llega completo, la prioridad es C-09 + C-10 (el diferencial DD-02: no solapamiento por profesional y sillón con concurrencia), mostrado con una demo local si no hay despliegue.
 **Relacionado**: PA-01, `01_vision_y_objetivos.md` §Plazo y corte de entrega, `CHANGES.md`.
 
+### DD-11 — Autenticación del personal con JWT Bearer (aprobado 2026-11-25)
+**Decisión**: el personal ingresa con email y contraseña (hash BCrypt) y recibe un **JWT firmado con HMAC-SHA256** usando `AUTH_SECRET` (mínimo 32 bytes; sin clave válida el backend no arranca), con vigencia de **8 horas**, que el frontend envía en el header `Authorization: Bearer`. En cada request el backend relee el usuario por el `sub` del token: un usuario desactivado deja de operar y un cambio de rol se aplica en el request siguiente, sin revocación de tokens. El frontend guarda el token en `sessionStorage`. Todo endpoint exige autenticación salvo `/actuator/health`, `POST /api/auth/login`, la documentación OpenAPI y `/api/publico/**` (reserva online). Un solo rol por usuario (PA-09), con catálogo en la tabla `rol`.
+**Contexto**: el frontend (Vercel) y la API (Render) quedan en sitios distintos; una cookie de sesión sería de terceros y Safari y Firefox la bloquean por defecto.
+**Alternativas consideradas**: cookie de sesión con proxy de Vercel para hacerla first-party (suma CSRF, rewrites y sesiones que se pierden al reiniciar Render); tokens opacos guardados en la base.
+**Trade-offs aceptados**: un token robado vale hasta 8 h (mitigado porque desactivar al usuario lo corta en el request siguiente); un XSS podría leer el token de `sessionStorage`; el límite de intentos de ingreso (5 fallos en 15 min por email) vive en memoria y se reinicia con el servicio.
+**Relacionado**: C-04 (`openspec/changes/c-04-auth-usuarios-roles/design.md`), PA-09, `03_actores_y_roles.md` §RBAC, `08_arquitectura_propuesta.md` §Seguridad.
+
 ## Supuestos inferidos
 
 ### SU-01 — Los pacientes prefieren reservar online sobre WhatsApp

@@ -14,6 +14,7 @@ spring:
     mapping-resources:
       - META-INF/orm/recursos.xml
       - META-INF/orm/usuarios.xml
+      - META-INF/orm/auditoria.xml
     properties:
       hibernate:
         # Los instantes se guardan en UTC (DATETIME(6)) y se mapean a Instant.

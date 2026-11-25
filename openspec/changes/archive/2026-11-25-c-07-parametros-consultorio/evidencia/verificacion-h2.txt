@@ -1,0 +1,3 @@
+./mvnw verify (perfil test, H2), 2026-11-25 16:36
+Tests run: 280, Failures: 0, Errors: 0, Skipped: 0 -- BUILD SUCCESS (51 clases de test; los @Tag(mysql) no se ejecutan sin -Pit-mysql)
+Linea base 217 + 63 nuevos de C-07 (ClaveParametroTest 9, ParametroTest 22, RestriccionesParametrosH2Test 8, ParametroRepositorioTest 3, CatalogoDeParametrosConsistenciaTest 1, ServicioDeParametrosTest 8, ServicioDeParametrosIntegracionTest 2, ParametrosControllerTest 10).

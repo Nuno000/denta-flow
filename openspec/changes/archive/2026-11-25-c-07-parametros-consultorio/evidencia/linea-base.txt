@@ -1,0 +1,4 @@
+217 tests en verde (./mvnw verify, perfil test/H2): 0 fallas, 0 errores, 0 omitidos.
+Linea base previa a C-07, rama feat/C-07-parametros-consultorio, 2026-11-25.
+Nota: mediciones anteriores dieron 233 y 226 por sumar reportes surefire viejos de tests @Tag(mysql);
+el total real se obtiene de la corrida H2 completa posterior: 280 - 63 nuevos de C-07 = 217.

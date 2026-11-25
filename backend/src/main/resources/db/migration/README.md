@@ -10,11 +10,13 @@
 - `<n>`: número correlativo dentro de ese change, desde 1.
 - `descripcion`: en minúsculas, con guiones bajos.
 
-Ejemplos: `V003_1__crear_recursos_consultorio.sql` (existe: profesionales, sillones, prestaciones y su relación), `V004_1__crear_usuarios.sql` (existe: catálogo `rol` y usuarios del personal), `V008_1__crear_turno_historial.sql` (existe: historial solo-inserción de los cambios de turno), `V009_1__crear_turnos.sql`, `V009_2__indices_solapamiento.sql`.
+Ejemplos: `V003_1__crear_recursos_consultorio.sql` (existe: profesionales, sillones, prestaciones y su relación), `V004_1__crear_usuarios.sql` (existe: catálogo `rol` y usuarios del personal), `V007_1__crear_parametros.sql` (existe: parámetros del consultorio con sus valores iniciales), `V008_1__crear_turno_historial.sql` (existe: historial solo-inserción de los cambios de turno), `V009_1__crear_turnos.sql`, `V009_2__indices_solapamiento.sql`.
 
 > **Pendiente para C-09:** `turno_historial.turno_id` no tiene FK porque la tabla `turno` todavía no existía en C-08. La migración de C-09 que crea `turno` debe agregar `ALTER TABLE turno_historial ADD CONSTRAINT fk_turno_historial_turno FOREIGN KEY (turno_id) REFERENCES turno (id)`.
 
 Los datos de demostración no son una migración: los carga `SeedRecursosDemo` (componente condicionado por `app.seed.demo`, solo en `dev`). Tampoco lo es el administrador inicial: lo crea `SeedAdministradorInicial` al arrancar, con `APP_ADMIN_EMAIL` y `APP_ADMIN_PASSWORD`. Sí van en la migración los datos de referencia fijos que deben existir en todo entorno, como los tres roles de la tabla `rol`.
+
+Los valores iniciales de los parámetros del consultorio (`V007_1`) son datos de referencia en la migración y nacen con `provisorio = TRUE`. Para reemplazar uno por su valor definitivo (por ejemplo la anticipación mínima de PA-04) se agrega una `V007_n` nueva con `UPDATE parametro SET valor = ... WHERE clave = ... AND provisorio = TRUE`, para no pisar un valor que el administrador ya confirmó; nunca se edita `V007_1`.
 
 Así los changes que trabajan en paralelo no chocan de versión. En el perfil `dev` está activado `spring.flyway.out-of-order=true`.
 

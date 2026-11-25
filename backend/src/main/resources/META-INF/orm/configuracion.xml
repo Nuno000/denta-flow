@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mapeo JPA de los parámetros del consultorio (C-07, design D3 y D4). La clase de dominio no lleva
+  anotaciones: este archivo la vincula con la tabla de V007_1. Acceso por campo; el id es la clave
+  (texto) porque JPA no aplica un AttributeConverter a un identificador. Hibernate solo valida.
+-->
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
+                 version="3.0">
+    <access>FIELD</access>
+
+    <entity class="ar.dentaflow.dominio.configuracion.Parametro" name="Parametro">
+        <table name="parametro"/>
+        <attributes>
+            <id name="clave">
+                <column name="clave" nullable="false" length="60"/>
+            </id>
+            <basic name="valor">
+                <column name="valor" nullable="false" length="4000"/>
+            </basic>
+            <basic name="provisorio">
+                <column name="provisorio" nullable="false"/>
+            </basic>
+            <basic name="actualizadoEn">
+                <column name="actualizado_en" nullable="true"/>
+            </basic>
+            <basic name="actualizadoPor">
+                <column name="actualizado_por" nullable="true"/>
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>

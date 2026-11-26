@@ -78,7 +78,7 @@ C-24 manual-publico         ← C-19
 | C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
 | C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[x]` |
 | C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | no | `[ ]` |
-| C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[ ]` |
+| C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[ ]` (parcial: US-024) |
 | C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | sí | `[ ]` |
 | C-18 | recordatorios-programados | C-09, C-14 | 6 | Bruno | Florencia | ALTO | M | no | `[ ]` |
 | C-17 | confirmar-cancelar-reprogramar | C-07, C-14, C-16 | 7 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
@@ -401,7 +401,7 @@ Criterios del reparto:
   - `knowledge-base/09_decisiones_y_supuestos.md` §DD-03
 
 ### [C-13] `asistencia-y-registro-cambios`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[ ]` parcial el 2026-11-26 — **US-024 hecha** (`POST /api/turnos/{id}/asistencia` y acciones en `/panel/agenda`; H2 947/947, it-mysql 187/187, frontend 178 tests; archivado en `openspec/changes/archive/2026-11-26-c-13-registro-asistencia-turno/`); **US-025 pendiente** (pantalla del registro de cambios por turno, solo administrador, en un change aparte). No marcar `[x]` hasta completar US-025.
 - **Scope**:
   - Marcar turno como `asistio`, `ausente` o `ausente_con_aviso` por profesional (propios) o recepción, con auditoría (US-024).
   - Pantalla de consulta del registro de cambios por turno (quién, cuándo, qué cambió), solo administrador (US-025).

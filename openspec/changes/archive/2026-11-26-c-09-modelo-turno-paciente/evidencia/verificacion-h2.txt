@@ -3,3 +3,6 @@ Comando: cd backend && ./mvnw -B clean verify  (perfil test, H2 MODE=MySQL; JDK 
 [INFO] Tests run: 560, Failures: 0, Errors: 0, Skipped: 0
 [INFO] BUILD SUCCESS
 Linea base: 337 tests. Nuevos: 223. it-mysql: NO ejecutado (pendiente, lo corre Renzo).
+
+Tras rebase sobre upstream/main (con C-05), 2026-11-26:
+  ./mvnw -B clean verify -> [INFO] Tests run: 641, Failures: 0, Errors: 0, Skipped: 0 -- BUILD SUCCESS

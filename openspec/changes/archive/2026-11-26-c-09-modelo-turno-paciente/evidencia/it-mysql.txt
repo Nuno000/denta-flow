@@ -14,3 +14,6 @@ Adaptado por la FK nueva (C-08, Q12):
 Existentes sin regresiones (43):
   ConexionMySqlTest 1/1, IdaYVueltaUtcMySqlTest 2/2, RestriccionesRecursosMySqlTest 13/13,
   RestriccionesUsuarioMySqlTest 9/9, RestriccionesParametrosMySqlTest 8/8, EdicionSimultaneaParametrosMySqlTest 10/10
+
+Tras rebase sobre upstream/main (con C-05), 2026-11-26 00:58 — corrido por Renzo:
+  .\mvnw.cmd verify -Pit-mysql -> Tests run: 135, Failures: 0, Errors: 0, Skipped: 0 (13 clases @Tag(mysql); +5 de C-05)

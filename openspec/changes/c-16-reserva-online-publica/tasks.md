@@ -10,22 +10,22 @@
 
 ## 1. Línea base
 
-- [ ] 1.1 Correr `./mvnw verify`, `./mvnw verify -Pit-mysql`, `npm run lint`, `npm test` y `npm run build` antes de tocar código y anotar los resultados en `evidencia/linea-base.txt`. Si algo falla, frenar y reportarlo como falla previa
+- [x] 1.1 Correr `./mvnw verify`, `./mvnw verify -Pit-mysql`, `npm run lint`, `npm test` y `npm run build` antes de tocar código y anotar los resultados en `evidencia/linea-base.txt`. Si algo falla, frenar y reportarlo como falla previa
 
 ## 2. Bloque A — Contacto del consultorio (spec `parametros-consultorio`, "Contacto del consultorio público")
 
-- [ ] 2.1 RED: `CatalogoDeParametrosConsistenciaTest` y "Base recién migrada" esperan cuatro claves y cuatro filas provisorias; `ParametrosControllerTest`: `contacto-consultorio` vacío → 400 sin cambiar el valor, válido → 200 y deja de ser provisorio, 301 caracteres → 400. GREEN: `ClaveParametro.CONTACTO_CONSULTORIO` (texto, máx. 300; commit aparte, archivo compartido de C-07), `V016_1__parametro_contacto_consultorio.sql` y `db/migration/README.md`
-- [ ] 2.2 RED: `ContactoPublicoControllerTest`: sin token, `GET /api/publico/contacto` → 200 con exactamente `contacto` y `Cache-Control: no-store`; tras editarlo el administrador, devuelve el nuevo. GREEN: `ContactoPublicoController` + `ContactoRespuesta` sobre la lectura tipada de C-07
+- [x] 2.1 RED: `CatalogoDeParametrosConsistenciaTest` y "Base recién migrada" esperan cuatro claves y cuatro filas provisorias; `ParametrosControllerTest`: `contacto-consultorio` vacío → 400 sin cambiar el valor, válido → 200 y deja de ser provisorio, 301 caracteres → 400. GREEN: `ClaveParametro.CONTACTO_CONSULTORIO` (texto, máx. 300; commit aparte, archivo compartido de C-07), `V016_1__parametro_contacto_consultorio.sql` y `db/migration/README.md`
+- [x] 2.2 RED: `ContactoPublicoControllerTest`: sin token, `GET /api/publico/contacto` → 200 con exactamente `contacto` y `Cache-Control: no-store`; tras editarlo el administrador, devuelve el nuevo. GREEN: `ContactoPublicoController` + `ContactoRespuesta` sobre la lectura tipada de C-07
 
 ## 3. Bloque A — Catálogo público (spec "Catálogo público para reservar")
 
-- [ ] 3.1 RED: `CatalogoPublicoControllerTest`: `GET /api/publico/prestaciones` sin token → solo activas con id, nombre y duración, ordenadas por nombre; `GET /api/publico/profesionales?prestacionId=` → solo activos que la realizan, con id, nombre y apellido (sin email ni matrícula); prestación inexistente o inactiva → 404; sin `prestacionId` → 400. GREEN: `CatalogoPublicoController`, `PrestacionPublica`, `ProfesionalPublico`
-- [ ] 3.2 Confirmar que `GuardasEnControladoresTest` sigue en verde (exime `presentacion.publico`) y que OpenAPI lista los endpoints bajo "Reserva pública"
+- [x] 3.1 RED: `CatalogoPublicoControllerTest`: `GET /api/publico/prestaciones` sin token → solo activas con id, nombre y duración, ordenadas por nombre; `GET /api/publico/profesionales?prestacionId=` → solo activos que la realizan, con id, nombre y apellido (sin email ni matrícula); prestación inexistente o inactiva → 404; sin `prestacionId` → 400. GREEN: `CatalogoPublicoController`, `PrestacionPublica`, `ProfesionalPublico`
+- [x] 3.2 Confirmar que `GuardasEnControladoresTest` sigue en verde (exime `presentacion.publico`) y que OpenAPI lista los endpoints bajo "Reserva pública"
 
 ## 4. Bloque A — Límite anti-abuso (spec "Límite de reservas por origen")
 
-- [ ] 4.1 RED: `LimitadorDeReservasPorOrigenTest` (reloj fijo): 5 pedidos de la misma IP pasan, el 6º lanza `DemasiadasReservasException` con los segundos restantes; otra IP pasa; al vencer la ventana de 10 min vuelve a pasar; las entradas vencidas se limpian. GREEN: `LimitadorDeReservasPorOrigen` (design D5)
-- [ ] 4.2 RED: `ManejadorDeErroresTest`: `DemasiadasReservasException` → 429 `ProblemDetail` en español con `Retry-After`. GREEN: handler aditivo en `ManejadorDeErrores` (commit aparte, archivo compartido)
+- [x] 4.1 RED: `LimitadorDeReservasPorOrigenTest` (reloj fijo): 5 pedidos de la misma IP pasan, el 6º lanza `DemasiadasReservasException` con los segundos restantes; otra IP pasa; al vencer la ventana de 10 min vuelve a pasar; las entradas vencidas se limpian. GREEN: `LimitadorDeReservasPorOrigen` (design D5)
+- [x] 4.2 RED: `ManejadorDeErroresTest`: `DemasiadasReservasException` → 429 `ProblemDetail` en español con `Retry-After`. GREEN: handler aditivo en `ManejadorDeErrores` (commit aparte, archivo compartido)
 
 ## 5. Bloque B — Reserva (requiere C-10 en `main`)
 
@@ -41,11 +41,11 @@
 
 > 6.1 a 6.5 se pueden hacer en el bloque A contra la API simulada (`test/apiSimulada`) con el contrato de design D3 y de C-10 D7; 6.6 y 6.7 necesitan el bloque B.
 
-- [ ] 6.1 RED: `esquemasReserva.test.ts`: DNI de 7 u 8 dígitos, nombre y apellido obligatorios, teléfono y email válidos, aviso obligatorio (reusa `esquemaAvisoPrivacidad`), mensajes en español. GREEN: `esquemasReserva.ts`
-- [ ] 6.2 RED: `reservaApi.test.tsx`: `usePrestacionesPublicas`, `useProfesionalesDe`, `useHuecosDelDia`, `useContacto` y `useReservar` llaman a las rutas de design D3 por `apiClient` y exponen los errores 409/429 con su estado. GREEN: `reservaApi.ts`
-- [ ] 6.3 RED: `ReservaPage.test.tsx`: flujo prestación → "Cualquier profesional" → día → horario → datos + aviso → "Reservar turno" → "¡Listo! Reservaste tu turno" con fecha, hora, prestación, profesional y estado pendiente; cada paso mueve el foco a su `h2`; "Volver" conserva lo elegido. GREEN: `ReservaPage` y pasos
-- [ ] 6.4 RED: errores: DNI vacío → mensaje asociado por `aria-describedby` y foco en el campo; doble toque → un solo pedido y botón deshabilitado; 409 → alerta, nueva consulta de horarios del día, datos conservados; 429 → mensaje de espera; sin huecos → "No hay horarios disponibles" + contacto. GREEN: manejo de estados
-- [ ] 6.5 RED: `rutas.test.tsx`: `/reservar` es pública (sin sesión) e `InicioPage` enlaza "Reservar un turno". GREEN: ruta en `routes/rutas.tsx` (aditivo) y enlace
+- [x] 6.1 RED: `esquemasReserva.test.ts`: DNI de 7 u 8 dígitos, nombre y apellido obligatorios, teléfono y email válidos, aviso obligatorio (reusa `esquemaAvisoPrivacidad`), mensajes en español. GREEN: `esquemasReserva.ts`
+- [x] 6.2 RED: `reservaApi.test.tsx`: `usePrestacionesPublicas`, `useProfesionalesDe`, `useHuecosDelDia`, `useContacto` y `useReservar` llaman a las rutas de design D3 por `apiClient` y exponen los errores 409/429 con su estado. GREEN: `reservaApi.ts`
+- [x] 6.3 RED: `ReservaPage.test.tsx`: flujo prestación → "Cualquier profesional" → día → horario → datos + aviso → "Reservar turno" → "¡Listo! Reservaste tu turno" con fecha, hora, prestación, profesional y estado pendiente; cada paso mueve el foco a su `h2`; "Volver" conserva lo elegido. GREEN: `ReservaPage` y pasos
+- [x] 6.4 RED: errores: DNI vacío → mensaje asociado por `aria-describedby` y foco en el campo; doble toque → un solo pedido y botón deshabilitado; 409 → alerta, nueva consulta de horarios del día, datos conservados; 429 → mensaje de espera; sin huecos → "No hay horarios disponibles" + contacto. GREEN: manejo de estados
+- [x] 6.5 RED: `rutas.test.tsx`: `/reservar` es pública (sin sesión) e `InicioPage` enlaza "Reservar un turno". GREEN: ruta en `routes/rutas.tsx` (aditivo) y enlace
 - [ ] 6.6 Prueba manual con el backend real en `dev` (seed de C-06 y C-10): reservar con "cualquiera" y con profesional, ver el email en el canal simulado, y forzar un 409 reservando el mismo horario desde otra pestaña. Anotar en `evidencia/verificacion-dev.md`
 - [ ] 6.7 Revisión a 390×844 y con teclado (orden de foco, foco visible, contraste, objetivos de 44 px), incluida la del componente `AvisoPrivacidad` trasladada de C-15 4.4; capturas en `evidencia/` si hay navegador (Playwright MCP) o checklist manual si no. Anotar en `evidencia/accesibilidad.md`
 

@@ -83,7 +83,7 @@ C-24 manual-publico         ← C-19
 | C-18 | recordatorios-programados | C-09, C-14 | 6 | Bruno | Florencia | ALTO | M | no | `[ ]` |
 | C-17 | confirmar-cancelar-reprogramar | C-07, C-14, C-16 | 7 | Jessica | Florencia | ALTO | M | sí | `[x]` |
 | C-22 | reintento-confirmacion [DIF] | C-18 | 7 | Bruno | Florencia | MEDIO | S | no | `[ ]` |
-| C-23 | panel-ausentismo [DIF] | C-13 | 7 | Florencia | Bruno | BAJO | M | no | `[ ]` |
+| C-23 | panel-ausentismo [DIF] | C-13 | 7 | Florencia | Bruno | BAJO | M | no | `[x]` |
 | C-19 | cierre-mvp-e2e-y-despliegue | C-12, C-13, C-17, C-18 (en el corte 26/11: solo C-17 y los demás changes del corte) | 8 | Bruno (E2E de cada flujo: su autor) | Florencia | MEDIO | M | sí | `[ ]` |
 | C-20 | lista-de-espera [DIF] | C-10, C-17 | 8 | Renzo | Florencia | MEDIO | M | no | `[ ]` |
 | C-21 | whatsapp-prellenado [DIF] | C-11 | 8 | Jessica | Florencia | BAJO | S | no | `[x]` |
@@ -633,7 +633,7 @@ Criterios del reparto:
   - `knowledge-base/07_flujos_principales.md` §Flujo 2 (paso 4)
 
 ### [C-23] `panel-ausentismo`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-26; archivado en `openspec/changes/archive/2026-11-26-c-23-panel-ausentismo/`)
 - **Scope**:
   - Consultas agregadas de tasa de ausentismo por profesional, franja horaria y paciente a partir de los estados de asistencia (US-031).
   - Vista para administrador (todo), recepción (supuesto) y profesional (propio) según la matriz de permisos.

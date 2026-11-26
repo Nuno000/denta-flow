@@ -1,0 +1,7 @@
+Línea base de C-13 (2026-11-26, rama feat/C-13-registro-asistencia-turno sobre main 6daa14b: C-06, C-11, C-14 y propuestas de C-10 y C-16), antes de tocar código:
+
+- backend ./mvnw verify (perfil test, H2 MODE=MySQL): 920 casos en verde, 0 fallas (contados en los XML de surefire, incluye @Nested)
+- backend ./mvnw verify -Pit-mysql (MySQL 8.0 local): 187 casos en verde, 0 fallas
+- frontend npm test (Vitest): 167 tests en verde en 28 archivos
+
+Sin fallas previas.

@@ -19,7 +19,11 @@ public enum ClaveParametro {
             TipoParametro.TEXTO, null, null, null, 4000, "texto del aviso de privacidad"),
     AVISO_PRIVACIDAD_LEYENDA("aviso-privacidad-leyenda",
             "Leyenda de la casilla de aceptación del aviso de privacidad",
-            TipoParametro.TEXTO, null, null, null, 200, "texto de la leyenda de aceptación");
+            TipoParametro.TEXTO, null, null, null, 200, "texto de la leyenda de aceptación"),
+    /** C-16: se muestra en la reserva pública cuando no hay huecos o el horario ya no está disponible. */
+    CONTACTO_CONSULTORIO("contacto-consultorio",
+            "Contacto del consultorio que ve el paciente cuando no puede reservar online",
+            TipoParametro.TEXTO, null, null, null, 300, "contacto del consultorio");
 
     private final String codigo;
     private final String descripcion;

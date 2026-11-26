@@ -1,0 +1,14 @@
+Línea base de C-16, bloque A (tarea 1.1), 2026-11-26, antes de tocar código.
+Rama feat/C-16-reserva-online-publica avanzada (fast-forward) a origin/main 6daa14b: incluye C-14, C-11 y la
+propuesta de C-16 (PR #24). C-10 todavía sin código en main.
+
+Backend
+  ./mvnw -B verify (perfil test, H2 MODE=MySQL)          Tests run: 920, Failures: 0, Errors: 0, Skipped: 0 — BUILD SUCCESS
+  ./mvnw -B verify -Pit-mysql (MySQL 8 local)            Tests run: 187, Failures: 0, Errors: 0, Skipped: 0 — BUILD SUCCESS
+
+Frontend (después de npm ci)
+  npm run lint (oxlint --deny-warnings)                  sin advertencias
+  npm test (vitest run)                                  Test Files 28 passed, Tests 167 passed
+  npm run build (tsc -b && vite build)                   OK
+
+Sin fallas previas.

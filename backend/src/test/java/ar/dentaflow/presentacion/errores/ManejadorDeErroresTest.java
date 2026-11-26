@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import ar.dentaflow.aplicacion.reservas.DemasiadasReservasException;
 import ar.dentaflow.aplicacion.usuarios.CredencialesInvalidasException;
 import ar.dentaflow.aplicacion.usuarios.DemasiadosIntentosException;
 import ar.dentaflow.dominio.comun.ConflictoException;
@@ -56,6 +57,7 @@ class ManejadorDeErroresTest {
                 case "no-permitida" -> throw new OperacionNoPermitidaException("No podés desactivarte a vos mismo");
                 case "credenciales" -> throw new CredencialesInvalidasException();
                 case "intentos" -> throw new DemasiadosIntentosException(Duration.ofSeconds(90));
+                case "reservas" -> throw new DemasiadasReservasException(Duration.ofSeconds(125));
                 case "sin-permiso" -> throw new AccessDeniedException("denegado");
                 default -> throw new IllegalStateException("detalle interno que no debe salir");
             }
@@ -94,6 +96,17 @@ class ManejadorDeErroresTest {
                 .andExpect(status().isTooManyRequests())
                 .andExpect(header().string("Retry-After", "90"))
                 .andExpect(jsonPath("$.detail", containsString("Demasiados intentos")));
+    }
+
+    @Test
+    void demasiadasReservasDa429ConRetryAfterYMensajeEnEspanol() throws Exception {
+        mockMvc.perform(get("/prueba/reservas"))
+                .andExpect(status().isTooManyRequests())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(header().string("Retry-After", "125"))
+                .andExpect(jsonPath("$.title").value("Demasiados pedidos"))
+                .andExpect(jsonPath("$.detail").value(
+                        "Hiciste demasiados pedidos de reserva. Probá de nuevo en unos minutos."));
     }
 
     @Test

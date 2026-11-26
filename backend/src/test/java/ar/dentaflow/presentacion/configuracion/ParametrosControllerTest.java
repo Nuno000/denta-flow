@@ -85,10 +85,14 @@ class ParametrosControllerTest {
     }
 
     @Test
-    void elAdministradorListaLosTresParametrosEnElOrdenDelCatalogo() throws Exception {
+    void elAdministradorListaLosCuatroParametrosEnElOrdenDelCatalogo() throws Exception {
         mockMvc.perform(get("/api/parametros").header("Authorization", admin))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$.length()").value(4))
+                .andExpect(jsonPath("$[3].clave").value("contacto-consultorio"))
+                .andExpect(jsonPath("$[3].tipo").value("texto"))
+                .andExpect(jsonPath("$[3].longitudMaxima").value(300))
+                .andExpect(jsonPath("$[3].provisorio").value(true))
                 .andExpect(jsonPath("$[0].clave").value("anticipacion-minima-horas"))
                 .andExpect(jsonPath("$[0].tipo").value("entero"))
                 .andExpect(jsonPath("$[0].unidad").value("horas"))
@@ -158,6 +162,24 @@ class ParametrosControllerTest {
         mockMvc.perform(get(ANTICIPACION).header("Authorization", admin))
                 .andExpect(jsonPath("$.valor").value("24"))
                 .andExpect(jsonPath("$.provisorio").value(true));
+    }
+
+    @Test
+    void elContactoDelConsultorioEsObligatorioYAcotado() throws Exception {
+        String contacto = "/api/parametros/contacto-consultorio";
+        for (String invalido : new String[] {"", "   ", "x".repeat(301)}) {
+            mockMvc.perform(cambiar(contacto, "{\"valor\":\"" + invalido + "\"}", admin))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith("application/problem+json"));
+        }
+        mockMvc.perform(get(contacto).header("Authorization", admin))
+                .andExpect(jsonPath("$.provisorio").value(true));
+
+        mockMvc.perform(cambiar(contacto, "{\"valor\":\"  Llamanos al 0261 555-0000 de lunes a viernes de 9 a 18  \"}",
+                        admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.valor").value("Llamanos al 0261 555-0000 de lunes a viernes de 9 a 18"))
+                .andExpect(jsonPath("$.provisorio").value(false));
     }
 
     @Test

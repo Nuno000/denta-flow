@@ -1,0 +1,5 @@
+./mvnw -B verify -Pit-mysql (MySQL 8 local, @Tag("mysql")) — 2026-11-26
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.infraestructura.persistencia.notificaciones.RestriccionesNotificacionMySqlTest
+[INFO] Tests run: 181, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+Línea base: 168. Nuevos: 13 (restricciones de V014_1 en MySQL 8 real).

@@ -81,23 +81,24 @@ CREATE INDEX ix_notificacion_estado_actualizada ON notificacion (estado, actuali
   - `MailSendException` por conexión/timeout o respuesta 4xx → `conexion`;
   - otras → `desconocido`.
 - `EnviadorDeEmailSimulado` (`app.mail.modo=simulado`, **valor por defecto**): guarda los últimos 50 mensajes en memoria (lista sincronizada), con `mensajesPara(destinatario)` y `limpiar()`; se puede configurar para fallar N veces con un motivo (para tests). No loguea el contenido. C-19 lo lee para los E2E.
-- `PlantillaConfirmacionReserva`: arma asunto, texto plano y HTML a partir de un `DatosDelEmail(nombrePaciente, inicio, prestacion, profesional, enlaces)`. Fecha con `ZonaHorariaConsultorio` (`dd/MM/yyyy HH:mm`). HTML con escape propio de `& < > " '`. Sin DNI ni teléfono.
-- `PropiedadesEmail` (`@ConfigurationProperties("app.mail")`, `@Validated`): `modo`, `from`, `nombreRemitente` (por defecto `DentaFlow`). `PropiedadesEnlaces` (`app.base-url`, `@NotBlank`, URL absoluta http/https, se quita la barra final).
+- `PlantillaConfirmacionReserva`: arma asunto, texto plano y HTML a partir de un `DatosDelEmail(destinatario, nombrePaciente, inicio, prestacion, profesional, enlaces)`. Fecha con `ZonaHorariaConsultorio` (`dd/MM/yyyy HH:mm`). HTML con escape propio de `& < > " '`. Sin DNI ni teléfono. **Implementada en `aplicacion/notificaciones/`** (no en `infraestructura/email/`): es Java puro que usa el servicio de aplicación, y así la aplicación no depende de la infraestructura.
+- `PropiedadesEmail` (`@ConfigurationProperties("app.mail")`): `modo`, `from`, `nombreRemitente` (por defecto `DentaFlow`); un `from` inválido no arranca. `PropiedadesEnlaces` (`aplicacion/notificaciones`, `app.enlaces.base-url`, que toma `APP_BASE_URL`): URL absoluta http/https, sin barras finales.
 - Timeouts SMTP: `spring.mail.properties.mail.smtp.connectiontimeout/timeout/writetimeout = 5000` para que un intento no cuelgue el hilo.
 
 ### D5. Aplicación `aplicacion/notificaciones/`
 - `ServicioDeNotificaciones.enviarConfirmacion(long turnoId)`: punto de entrada para C-16, que lo llama **después del commit** de la reserva.
-  1. Delegado a un `Executor` propio (`ejecutorDeEmails`, 2 hilos, cola acotada de 100). En tests, `Executor` síncrono (`Runnable::run`) por configuración del perfil `test`. La request de C-16 no espera al SMTP.
+  1. Delegado a `EjecutorDeEmails` (tipo propio, no un `Executor`, para no reemplazar el ejecutor por defecto de Spring Boot; 2 hilos, cola acotada de 100). Con `app.notificaciones.asincronico=false` (perfil `test`) corre la tarea en un hilo nuevo y espera a que termine: el envío nunca comparte hilo ni transacción con quien llama. Si se llama dentro de una transacción, el envío se registra para después del commit (`TransactionSynchronization.afterCommit`) y no ocurre si se revierte. La request de C-16 no espera al SMTP.
   2. **Transacción corta 1**: si ya existe `(turno, confirmacion)` → no hace nada (idempotente). Si no, lee turno, paciente, prestación y profesional; si `!paciente.puedeRecibirEmails()` guarda `omitida`; si no, guarda `en_curso`. Un `DataIntegrityViolationException` por la clave única (dos llamadas simultáneas) se toma como "ya existe".
   3. **Fuera de transacción**: arma el mensaje y llama a `EnviadorDeEmail` con hasta 3 intentos según `PoliticaDeReintento`, con espera de 1 s y 2 s entre intentos (inyectable para tests: espera nula).
   4. **Transacción corta 2**: guarda intentos y estado final (`enviada` + `enviada_en`, o `fallida` + motivo).
 - Ninguna transacción de base queda abierta mientras se habla con el servidor de correo.
+- Los turnos se leen con `ServicioDeTurnos.buscarPorId` y `buscarPorToken` (C-09), no con `TurnoRepositorio`: C-14 no depende de la persistencia de turnos y respeta la guarda `UnicaViaDeEscrituraDeTurnosTest`.
 - Riesgo aceptado: si el proceso se cae entre 2 y 4 la notificación queda `en_curso`; C-18 ya prevé retomar `en_curso` vencidas. Para la confirmación, en el MVP la recepción ve el turno y puede usar wa.me.
 - Logs: `notificacion={id} turno={id} tipo=confirmacion estado=fallida intentos=3 motivo=conexion`. Nunca destinatario, nombre, token ni enlace.
 
 ### D6. Enlaces y resolución del token
 - `EnlacesDeTurno` (aplicación): `confirmar(Turno)`, `cancelar(Turno)`, `reprogramar(Turno)` y `todos(Turno)` → `<base>/turno/<token>/<accion>`. Usa `turno.tokenAcceso()`: **no** se genera otro token ni se toca `GeneradorDeTokens`. El token está en el *path* (no en query) y es Base64 URL, así que no necesita codificación.
-- `ServicioDeEnlaces.resolver(String token)` (solo lectura): usa `TurnoRepositorio.buscarPorToken` (que ya rechaza formatos inválidos sin consultar) y `SituacionDeEnlace.de(turno, reloj.instant())`:
+- `ServicioDeEnlaces.resolver(String token)` (solo lectura): usa `ServicioDeTurnos.buscarPorToken` → `TurnoRepositorio.buscarPorToken` de C-09 (que ya rechaza formatos inválidos sin consultar) y `SituacionDeEnlace.de(turno, reloj.instant())`:
   - no encontrado → `INEXISTENTE` (no distingue mal formado de inexistente);
   - `cancelado` → `CANCELADO`;
   - `asistio`, `ausente`, `ausente_con_aviso`, o `ahora >= inicio` → `VENCIDO`;
@@ -110,10 +111,14 @@ CREATE INDEX ix_notificacion_estado_actualizada ON notificacion (estado, actuali
 ### D7. Configuración (`application.yml`, `.env.example`, `pom.xml`)
 ```yaml
 app:
-  base-url: ${APP_BASE_URL:http://localhost:5173}
+  enlaces:
+    base-url: ${APP_BASE_URL:http://localhost:5173}
   mail:
     modo: ${APP_MAIL_MODO:simulado}
     from: ${APP_MAIL_FROM:turnos@dentaflow.local}
+  notificaciones:
+    asincronico: true             # false en el perfil test
+    espera-entre-intentos: PT1S   # PT0S en el perfil test; se duplica en el tercer intento
 spring:
   mail:
     host: ${SPRING_MAIL_HOST:}
@@ -122,7 +127,7 @@ spring:
     password: ${SPRING_MAIL_PASSWORD:}
     properties.mail.smtp: { auth: true, starttls.enable: true, connectiontimeout: 5000, timeout: 5000, writetimeout: 5000 }
 ```
-- `ValidadorConfiguracionEmail` al arrancar: con `modo=smtp`, exige `spring.mail.host` y `app.mail.from` válido; falla nombrando la variable, sin imprimir la contraseña.
+- Validación al arrancar (en `ConfiguracionEmail` y en el constructor de `PropiedadesEmail`, sin clase aparte): con `modo=smtp`, exige `spring.mail.host`; en cualquier modo, `app.mail.from` válido. Falla nombrando la variable, sin imprimir la contraseña.
 - Se desactiva el health indicator de mail (`management.health.mail.enabled=false`) para que un SMTP caído no ponga la API en `DOWN` en Render.
 - `spring-boot-starter-mail` en `pom.xml` en un commit aparte (archivo compartido).
 - `orm/notificaciones.xml` se suma a `spring.jpa.mapping-resources` (cambio aditivo).

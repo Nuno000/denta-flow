@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.TimeZone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,33 @@ class HorarioAtencionRepositorioTest {
         assertThat(leido.getFin()).isEqualTo(LocalTime.of(13, 45));
         assertThat(jdbc.queryForObject("SELECT dia_semana FROM horario_atencion WHERE id = ?", Integer.class, id))
                 .isEqualTo(7);
+        assertThat(jdbc.queryForObject("SELECT CAST(hora_inicio AS CHAR(8)) FROM horario_atencion WHERE id = ?",
+                String.class, id)).startsWith("09:30:00");
+        assertThat(jdbc.queryForObject("SELECT CAST(hora_fin AS CHAR(8)) FROM horario_atencion WHERE id = ?",
+                String.class, id)).startsWith("13:45:00");
+    }
+
+    @Test
+    void guardaHoraLocalSinDesplazamientoEnCualquierZonaJvm() {
+        TimeZone original = TimeZone.getDefault();
+        try {
+            TimeZone.setDefault(TimeZone.getTimeZone("America/Argentina/Buenos_Aires"));
+            Long id = guardar(profesional, DayOfWeek.FRIDAY, "20:00", "22:00").getId();
+            em.flush();
+            em.clear();
+
+            assertThat(jdbc.queryForObject("SELECT CAST(hora_inicio AS CHAR(8)) FROM horario_atencion WHERE id = ?",
+                    String.class, id)).startsWith("20:00:00");
+            assertThat(jdbc.queryForObject("SELECT CAST(hora_fin AS CHAR(8)) FROM horario_atencion WHERE id = ?",
+                    String.class, id)).startsWith("22:00:00");
+
+            TimeZone.setDefault(TimeZone.getTimeZone("Asia/Tokyo"));
+            HorarioAtencion leido = horarios.buscarPorId(id).orElseThrow();
+            assertThat(leido.getInicio()).isEqualTo(LocalTime.of(20, 0));
+            assertThat(leido.getFin()).isEqualTo(LocalTime.of(22, 0));
+        } finally {
+            TimeZone.setDefault(original);
+        }
     }
 
     @Test

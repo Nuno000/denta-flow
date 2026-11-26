@@ -25,9 +25,11 @@
             </basic>
             <basic name="inicio">
                 <column name="hora_inicio" nullable="false"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.disponibilidad.ConversorHoraLocal"/>
             </basic>
             <basic name="fin">
                 <column name="hora_fin" nullable="false"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.disponibilidad.ConversorHoraLocal"/>
             </basic>
         </attributes>
     </entity>

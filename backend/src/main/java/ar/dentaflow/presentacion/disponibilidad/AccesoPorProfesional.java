@@ -45,6 +45,13 @@ final class AccesoPorProfesional {
                 && bloqueo.afectaAProfesional(Objects.requireNonNull(usuario.profesionalId()));
     }
 
+    /** Falla con 403 si el usuario tiene rol profesional y el bloqueo no es suyo ni del consultorio. */
+    static void verificarBloqueo(UsuarioAutenticado usuario, Bloqueo bloqueo) {
+        if (!puedeVerBloqueo(usuario, bloqueo)) {
+            throw new AccessDeniedException("Solo podés ver los bloqueos de tu profesional y los del consultorio");
+        }
+    }
+
     private static AccessDeniedException sinPermiso() {
         return new AccessDeniedException("Solo podés ver los datos de tu propio profesional");
     }

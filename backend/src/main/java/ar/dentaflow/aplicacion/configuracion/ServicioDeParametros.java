@@ -68,6 +68,12 @@ public class ServicioDeParametros implements ParametrosDelConsultorio {
                 fila(ClaveParametro.AVISO_PRIVACIDAD_LEYENDA).valor());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public String contactoConsultorio() {
+        return fila(ClaveParametro.CONTACTO_CONSULTORIO).valor();
+    }
+
     private Parametro fila(ClaveParametro clave) {
         return parametros.buscar(clave)
                 .orElseThrow(() -> new IllegalStateException("Falta el parámetro " + clave.codigo() + " en la base"));

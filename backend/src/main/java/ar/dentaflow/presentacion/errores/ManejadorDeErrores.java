@@ -1,5 +1,6 @@
 package ar.dentaflow.presentacion.errores;
 
+import ar.dentaflow.aplicacion.reservas.DemasiadasReservasException;
 import ar.dentaflow.aplicacion.turnos.ConflictoConAlternativasException;
 import ar.dentaflow.aplicacion.usuarios.CredencialesInvalidasException;
 import ar.dentaflow.aplicacion.usuarios.DemasiadosIntentosException;
@@ -83,6 +84,14 @@ public class ManejadorDeErrores extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                 .header(HttpHeaders.RETRY_AFTER, Long.toString(e.reintentarEn().toSeconds()))
                 .body(problema(HttpStatus.TOO_MANY_REQUESTS, "Demasiados intentos", e.getMessage()));
+    }
+
+    /** C-16 design D5: límite de reservas públicas por origen. */
+    @ExceptionHandler(DemasiadasReservasException.class)
+    ResponseEntity<ProblemDetail> demasiadasReservas(DemasiadasReservasException e) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .header(HttpHeaders.RETRY_AFTER, Long.toString(e.reintentarEn().toSeconds()))
+                .body(problema(HttpStatus.TOO_MANY_REQUESTS, "Demasiados pedidos", e.getMessage()));
     }
 
     /** Lo lanza la seguridad por método ({@code @PreAuthorize}) dentro del controlador. */

@@ -27,6 +27,21 @@ describe('ruta /', () => {
     expect(await screen.findByRole('link', { name: 'Ingreso del personal' })).toHaveAttribute('href', '/ingresar')
   })
 
+  it('ofrece reservar un turno, con o sin sesión (C-16)', async () => {
+    simularApi({})
+    renderizarEn('/')
+
+    expect(await screen.findByRole('link', { name: 'Reservar un turno' })).toHaveAttribute('href', '/reservar')
+  })
+
+  it('/reservar es pública: sin sesión muestra la reserva y no manda al ingreso (C-16)', async () => {
+    simularApi({ 'GET /api/publico/prestaciones': { status: 200, cuerpo: [] } })
+    const { router } = renderizarEn('/reservar')
+
+    expect(await screen.findByRole('heading', { level: 1, name: 'Reservá tu turno' })).toBeInTheDocument()
+    expect(router.state.location.pathname).toBe('/reservar')
+  })
+
   it('con sesión ofrece ir al panel', async () => {
     simularApi({ 'GET /api/auth/yo': { status: 200, cuerpo: sesionDe('recepcion').usuario } })
     renderizarEn('/', sesionDe('recepcion'))

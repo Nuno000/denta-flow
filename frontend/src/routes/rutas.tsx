@@ -7,6 +7,7 @@ import { RutaProtegida } from '../features/auth/RutaProtegida'
 import { PrestacionesTab } from '../features/recursos/PrestacionesTab'
 import { ProfesionalesTab } from '../features/recursos/ProfesionalesTab'
 import { RecursosPage } from '../features/recursos/RecursosPage'
+import { ReservaPage } from '../features/reserva/ReservaPage'
 import { SillonesTab } from '../features/recursos/SillonesTab'
 import { UsuariosPage } from '../features/usuarios/UsuariosPage'
 import { InicioPage } from './InicioPage'
@@ -16,6 +17,11 @@ export const rutas: RouteObject[] = [
   {
     path: '/',
     element: <InicioPage />,
+  },
+  {
+    // C-16: reserva online pública, sin sesión (RN-DI-03).
+    path: '/reservar',
+    element: <ReservaPage />,
   },
   {
     path: '/ingresar',

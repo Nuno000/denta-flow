@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { ErrorApi, alNoAutorizado, apiClient, configurarToken } from './apiClient'
+import { ErrorApi, TIEMPO_MAXIMO_PEDIDO_MS, alNoAutorizado, apiClient, configurarToken } from './apiClient'
 
 interface Saludo {
   mensaje: string
@@ -16,6 +16,19 @@ describe('apiClient', () => {
   afterEach(() => {
     vi.unstubAllEnvs()
     vi.unstubAllGlobals()
+  })
+
+  it('corta el pedido si la API no responde en 70 s (arranque en frío de Render)', async () => {
+    const fetchSimulado = vi.fn().mockResolvedValue(respuestaJson({ mensaje: 'hola' }))
+    vi.stubGlobal('fetch', fetchSimulado)
+    const timeout = vi.spyOn(AbortSignal, 'timeout')
+
+    await apiClient.get<Saludo>('/api/saludo')
+
+    expect(timeout).toHaveBeenCalledWith(TIEMPO_MAXIMO_PEDIDO_MS)
+    expect(TIEMPO_MAXIMO_PEDIDO_MS).toBe(70_000)
+    const init = fetchSimulado.mock.calls[0]?.[1] as RequestInit | undefined
+    expect(init?.signal).toBeInstanceOf(AbortSignal)
   })
 
   it('arma la URL sobre VITE_API_BASE_URL', async () => {

@@ -19,11 +19,28 @@ spring:
       - META-INF/orm/disponibilidad.xml
       - META-INF/orm/pacientes.xml
       - META-INF/orm/turnos.xml
+      - META-INF/orm/notificaciones.xml
     properties:
       hibernate:
         # Los instantes se guardan en UTC (DATETIME(6)) y se mapean a Instant.
         jdbc:
           time_zone: UTC
+  # Servidor SMTP del email transaccional (C-14, design D7). Solo se usa con APP_MAIL_MODO=smtp.
+  mail:
+    host: ${SPRING_MAIL_HOST:}
+    port: ${SPRING_MAIL_PORT:587}
+    username: ${SPRING_MAIL_USERNAME:}
+    password: ${SPRING_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          # Un intento no puede colgar el hilo de envío.
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
 # Render y Vercel terminan TLS en su proxy: se respeta X-Forwarded-Proto para saber que el pedido
 # llegó por HTTPS y mandar HSTS (C-15, design D8).
@@ -46,6 +63,10 @@ management:
     health:
       show-details: never
       show-components: never
+  # C-14 (design D7): un SMTP caído no pone la API en DOWN (Render reiniciaría el servicio).
+  health:
+    mail:
+      enabled: false
 
 app:
   # Autenticación del personal (C-04, design D2 y D7). Sin AUTH_SECRET de >= 32 bytes la aplicación no arranca.
@@ -64,3 +85,16 @@ app:
   # Orígenes del frontend que pueden llamar a la API desde el navegador (CORS). Lista separada por comas.
   cors:
     origenes-permitidos: ${APP_BASE_URL:http://localhost:5173}
+  # Enlaces del paciente (C-14, design D6): <APP_BASE_URL>/turno/<token>/confirmar|cancelar|reprogramar.
+  # Debe ser una URL absoluta http o https; si no, la aplicación no arranca.
+  enlaces:
+    base-url: ${APP_BASE_URL:http://localhost:5173}
+  # Email transaccional (C-14, design D1, D4 y D7). Por defecto, canal simulado en memoria (sin conexión).
+  # Con APP_MAIL_MODO=smtp hace falta SPRING_MAIL_HOST (Brevo: smtp-relay.brevo.com; Gmail: smtp.gmail.com).
+  mail:
+    modo: ${APP_MAIL_MODO:simulado}
+    from: ${APP_MAIL_FROM:turnos@dentaflow.local}
+  # Envío fuera del hilo de la request, hasta 3 intentos con espera de 1 s y 2 s (design D5).
+  notificaciones:
+    asincronico: true
+    espera-entre-intentos: PT1S

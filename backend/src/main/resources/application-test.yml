@@ -13,3 +13,9 @@ app:
   # Los tests crean sus propios usuarios: sin administrador inicial.
   seed:
     admin: false
+  # Email simulado, sin espera entre intentos y esperando el resultado (C-14, design D8).
+  mail:
+    modo: simulado
+  notificaciones:
+    asincronico: false
+    espera-entre-intentos: PT0S

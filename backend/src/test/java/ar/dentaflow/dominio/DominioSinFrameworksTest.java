@@ -10,12 +10,20 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
-/** Regla dura de CLAUDE.md: el paquete dominio no importa Spring ni JPA. */
+/**
+ * Regla dura de CLAUDE.md: el paquete dominio no importa Spring ni JPA. Tampoco la API de correo: el dominio de
+ * notificaciones no se acopla al proveedor (C-14, design D3).
+ */
 class DominioSinFrameworksTest {
 
     private static final Path DOMINIO = Path.of("src/main/java/ar/dentaflow/dominio");
-    private static final List<String> PROHIBIDOS =
-            List.of("import org.springframework", "import jakarta.persistence", "import org.hibernate");
+    private static final List<String> PROHIBIDOS = List.of("import org.springframework", "import jakarta.persistence",
+            "import org.hibernate", "import jakarta.mail", "import javax.mail");
+
+    @Test
+    void elDominioDeNotificacionesExiste() {
+        assertThat(DOMINIO.resolve("notificaciones/EnviadorDeEmail.java")).exists();
+    }
 
     @Test
     void ningunArchivoDelDominioImportaFrameworks() throws IOException {

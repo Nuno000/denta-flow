@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mapeo JPA de las notificaciones (C-14, design D2 y D3), con el mismo criterio que los demás dominios: la clase de
+  dominio no lleva anotaciones. turno_id, tipo, canal y creada_en no cambian después del alta.
+-->
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
+                 version="3.0">
+    <access>FIELD</access>
+
+    <entity class="ar.dentaflow.dominio.notificaciones.Notificacion" name="Notificacion">
+        <table name="notificacion"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="turnoId">
+                <column name="turno_id" nullable="false" updatable="false"/>
+            </basic>
+            <basic name="tipo">
+                <column name="tipo" nullable="false" length="20" updatable="false"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.notificaciones.ConversorTipoNotificacion"/>
+            </basic>
+            <basic name="canal">
+                <column name="canal" nullable="false" length="10" updatable="false"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.notificaciones.ConversorCanalNotificacion"/>
+            </basic>
+            <basic name="estado">
+                <column name="estado" nullable="false" length="10"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.notificaciones.ConversorEstadoNotificacion"/>
+            </basic>
+            <basic name="intentos">
+                <column name="intentos" nullable="false"/>
+            </basic>
+            <basic name="motivoFallo">
+                <column name="motivo_fallo" nullable="true" length="20"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.notificaciones.ConversorMotivoFallo"/>
+            </basic>
+            <basic name="creadaEn">
+                <column name="creada_en" nullable="false" updatable="false"/>
+            </basic>
+            <basic name="actualizadaEn">
+                <column name="actualizada_en" nullable="false"/>
+            </basic>
+            <basic name="enviadaEn">
+                <column name="enviada_en" nullable="true"/>
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>

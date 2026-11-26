@@ -81,7 +81,7 @@ C-24 manual-publico         ← C-19
 | C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[x]` |
 | C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | sí | `[x]` |
 | C-18 | recordatorios-programados | C-09, C-14 | 6 | Bruno | Florencia | ALTO | M | no | `[ ]` |
-| C-17 | confirmar-cancelar-reprogramar | C-07, C-14, C-16 | 7 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
+| C-17 | confirmar-cancelar-reprogramar | C-07, C-14, C-16 | 7 | Jessica | Florencia | ALTO | M | sí | `[x]` |
 | C-22 | reintento-confirmacion [DIF] | C-18 | 7 | Bruno | Florencia | MEDIO | S | no | `[ ]` |
 | C-23 | panel-ausentismo [DIF] | C-13 | 7 | Florencia | Bruno | BAJO | M | no | `[ ]` |
 | C-19 | cierre-mvp-e2e-y-despliegue | C-12, C-13, C-17, C-18 (en el corte 26/11: solo C-17 y los demás changes del corte) | 8 | Bruno (E2E de cada flujo: su autor) | Florencia | MEDIO | M | sí | `[ ]` |
@@ -493,7 +493,7 @@ Criterios del reparto:
   - `knowledge-base/03_actores_y_roles.md` §Rutas públicas
 
 ### [C-17] `confirmar-cancelar-reprogramar`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-26, PR #34; archivado en `openspec/changes/archive/2026-11-26-c-17-confirmar-cancelar-reprogramar/`)
 - **Scope**:
   - Enlace de confirmación de un toque: `pendiente` → `confirmado`, reflejado en la agenda (US-011).
   - Cancelación por el paciente hasta la anticipación mínima configurada; libera profesional y sillón; auditada (US-012, RN-CA-01/02).

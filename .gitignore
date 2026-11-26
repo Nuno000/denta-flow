@@ -26,3 +26,7 @@ Thumbs.db
 *.log
 # Plan B de la demo (scripts/demo-local.ps1): PID de los procesos levantados
 scripts/.demo-local.pids
+
+# Reportes de Playwright (C-19)
+frontend/playwright-report/
+frontend/test-results/

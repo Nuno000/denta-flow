@@ -78,7 +78,7 @@ C-24 manual-publico         ← C-19
 | C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | sí | `[x]` |
 | C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[x]` |
 | C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | no | `[ ]` |
-| C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[ ]` (parcial: US-024) |
+| C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[x]` |
 | C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | sí | `[ ]` |
 | C-18 | recordatorios-programados | C-09, C-14 | 6 | Bruno | Florencia | ALTO | M | no | `[ ]` |
 | C-17 | confirmar-cancelar-reprogramar | C-07, C-14, C-16 | 7 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
@@ -381,7 +381,7 @@ Criterios del reparto:
   - `knowledge-base/07_flujos_principales.md` §Flujo 5
 
 ### [C-12] `carga-manual-sobreturno`
-- **Estado**: `[ ]` implementado el 2026-11-26 en la rama `feat/C-12-carga-manual-sobreturno` (`POST /api/turnos`, `POST /api/turnos/sobreturnos`, `POST /api/pacientes/busqueda` y pantalla `/panel/agenda/nuevo-turno`); pendiente verify, commit y PR. Evidencia: `openspec/changes/c-12-carga-manual-sobreturno/evidencia/`.
+- **Estado**: `[x]` completado el 2026-11-26 (PR #31; responsable final: Bruno). Incluye `POST /api/turnos`, `POST /api/turnos/sobreturnos`, `POST /api/pacientes/busqueda` y la pantalla `/panel/agenda/nuevo-turno`. Tests: H2 1039, it-mysql 212, frontend 249. La spec principal es `openspec/specs/carga-manual-turnos/`. Archivado en `openspec/changes/archive/2026-11-26-c-12-carga-manual-sobreturno/`. **Pendiente**: la tarea 7.2 (prueba punta a punta contra el backend real); por ahora la cubren solo los tests MockMvc sobre H2.
 - **Scope**:
   - Carga de turno por recepción: buscar/crear paciente (DNI, teléfono, email obligatorio según DD-12/PA-13), elegir prestación, profesional, sillón y horario; rechaza conflictos de profesional/sillón (no es una alerta), respeta horarios y bloqueos (US-021; la restricción de horario y bloqueos `RestriccionDeHorarioYBloqueos` ya queda activa en `ServicioDeTurnos` desde C-10).
   - Sobreturno explícito: acción separada, solo recepción/administrador, marca `es_sobreturno`, registra quién y cuándo; inexistente en el flujo online (US-022, RN-SO-01/02).
@@ -401,7 +401,7 @@ Criterios del reparto:
   - `knowledge-base/09_decisiones_y_supuestos.md` §DD-03
 
 ### [C-13] `asistencia-y-registro-cambios`
-- **Estado**: `[ ]` parcial el 2026-11-26 — **US-024 hecha** (`POST /api/turnos/{id}/asistencia` y acciones en `/panel/agenda`; H2 947/947, it-mysql 187/187, frontend 178 tests; archivado en `openspec/changes/archive/2026-11-26-c-13-registro-asistencia-turno/`); **US-025 pendiente** (pantalla del registro de cambios por turno, solo administrador, en un change aparte). No marcar `[x]` hasta completar US-025.
+- **Estado**: `[x]` completado el 2026-11-26 — **US-024** (`POST /api/turnos/{id}/asistencia` y acciones en `/panel/agenda`, archivado en `openspec/changes/archive/2026-11-26-c-13-registro-asistencia-turno/`) y **US-025** (`GET /api/turnos/{id}/historial` solo administrador y diálogo de historial en `/panel/agenda`; H2 993/993, it-mysql 207/207, frontend 185 tests; archivado en `openspec/changes/archive/2026-11-26-c-13-registro-cambios-turno/`).
 - **Scope**:
   - Marcar turno como `asistio`, `ausente` o `ausente_con_aviso` por profesional (propios) o recepción, con auditoría (US-024).
   - Pantalla de consulta del registro de cambios por turno (quién, cuándo, qué cambió), solo administrador (US-025).
@@ -540,7 +540,11 @@ Criterios del reparto:
 ## FASE 4 — Cierre del MVP
 
 ### [C-19] `cierre-mvp-e2e-y-despliegue`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[ ]` parcial el 2026-11-26.
+  - **Hecho**: bloque A (perfil `prod`, Dockerfile para Render según DD-13, `vercel.json`, espera del arranque en frío, esqueleto Playwright y job `e2e` en CI), plan B ensayado y revisión de seguridad.
+  - **Decisión de las 11:00**: se presenta con el plan B local (`evidencia/decision-1100.md`).
+  - **Pendiente**: despliegue en Aiven, Render y Vercel (tareas 3.2, 3.3 y 3.5); E2E del bloque B (6.x; C-16 y C-17 ya están en `main`); cron de C-18 (7.1).
+  - No marcar `[x]` hasta desplegar y completar los E2E.
 - **Scope**:
   - Tests end-to-end con Playwright de los flujos principales (reserva, recordatorio/confirmación, cancelación/reprogramación, carga manual con sobreturno, asistencia, configuración).
   - Despliegue (planes gratuitos): API en Render, frontend en Vercel, MySQL 8 en el proveedor que se elija en este change (PA-14); configurar CORS/cookies entre dominios según lo decidido en C-04 y el cron externo de C-18 (si C-18 entra).

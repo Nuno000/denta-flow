@@ -1,0 +1,13 @@
+Verificación final de C-13 parte 2 registro-cambios-turno — US-025 (2026-11-26, rama feat/C-13-registro-cambios-turno)
+
+Backend (desde backend/):
+- ./mvnw verify            (perfil test, H2 MODE=MySQL): 993 casos en verde, 0 fallas, 0 errores (+8: 3 en ConsultaDeHistorialDeTurnoTest + 5 en HistorialTurnoControllerTest).
+- ./mvnw verify -Pit-mysql (MySQL 8.0 local):            207 casos en verde, 0 fallas, 0 errores (sin regresiones).
+
+Frontend (desde frontend/):
+- npm test      (Vitest):               185 tests en verde en 30 archivos (+7: 3 en HistorialDeTurnoDialogo.test.tsx, 1 en api.test.tsx, 3 en AgendaPage.test.tsx).
+- npm run lint  (oxlint --deny-warnings): 0 advertencias, 0 errores en 92 archivos.
+- npm run build (tsc -b && vite build):  correcto (215 módulos, 1.21 s).
+
+OpenSpec:
+- openspec validate --all --strict: 20/20 válidos.

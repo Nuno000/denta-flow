@@ -540,7 +540,11 @@ Criterios del reparto:
 ## FASE 4 — Cierre del MVP
 
 ### [C-19] `cierre-mvp-e2e-y-despliegue`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[ ]` parcial el 2026-11-26.
+  - **Hecho**: bloque A (perfil `prod`, Dockerfile para Render según DD-13, `vercel.json`, espera del arranque en frío, esqueleto Playwright y job `e2e` en CI), plan B ensayado y revisión de seguridad.
+  - **Decisión de las 11:00**: se presenta con el plan B local (`evidencia/decision-1100.md`).
+  - **Pendiente**: despliegue en Aiven, Render y Vercel (tareas 3.2, 3.3 y 3.5); E2E del bloque B (6.x; C-16 ya está en `main`, falta C-17); cron de C-18 (7.1).
+  - No marcar `[x]` hasta desplegar y completar los E2E.
 - **Scope**:
   - Tests end-to-end con Playwright de los flujos principales (reserva, recordatorio/confirmación, cancelación/reprogramación, carga manual con sobreturno, asistencia, configuración).
   - Despliegue (planes gratuitos): API en Render, frontend en Vercel, MySQL 8 en el proveedor que se elija en este change (PA-14); configurar CORS/cookies entre dominios según lo decidido en C-04 y el cron externo de C-18 (si C-18 entra).

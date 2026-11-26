@@ -22,7 +22,21 @@
 | Logs sin datos personales | ✅ Verificado (actual) | `SinValoresDeLaBaseEnLogsTest` y `SinDatosPersonalesEnLogsTest` (`C-09`/`C-15`), `SqlExceptionHelper` en `OFF`. Re-verificar tras `C-14`/`C-16`/`C-17`. |
 | Validación de input en `/api/publico/**` | ⏳ Parcial | DTOs con Bean Validation en endpoints actuales; pendiente cubrir `/api/publico/huecos` (`C-10`) y reserva/confirmación/cancelación (`C-16`/`C-17`). |
 
+## Cierre de la revisión (tarea 8.1) — `main` `d9bf158`, 2026-11-26 11:10
+
+Esta revisión es posterior al merge de C-16 y se hizo con el plan B local (`evidencia/decision-1100.md`).
+
+| Ítem | Estado final | Notas |
+|---|---|---|
+| Rutas públicas vs. `autorizacion-por-rol` | ✅ Revisado | `ConfiguracionSeguridad` deja abiertas solo estas rutas: `/actuator/health` (GET), `/api/auth/login` (POST), la documentación OpenAPI, `OPTIONS` y `/api/publico/**`. Bajo `/api/publico/**` están aviso de privacidad (C-15), catálogo, contacto, huecos (C-10) y reservas (C-16). Todo lo demás exige JWT. |
+| Cada endpoint con rol verificado en backend | ✅ Revisado | Los endpoints internos usan guardas de rol y tienen tests de 401 y 403. C-12 (PR #31, todavía no está en `main`) agrega `@AdministradorORecepcion` en la carga manual, en el sobreturno y en la búsqueda por DNI. |
+| HTTPS y HSTS | ⏳ Sin validar en URL pública | Está en el código (C-15) y el perfil `prod` exige TLS hacia MySQL. No se valida en una URL pública porque no hubo despliegue: es riesgo aceptado para la entrega. |
+| CORS | ⏳ Sin validar en navegador contra Render | `APP_BASE_URL` restringe el origen. La tarea 3.5 queda pendiente porque no hay despliegue. |
+| Validación de input en `/api/publico/**` | ✅ Revisado | `POST /api/publico/reservas` valida el cuerpo con `@Valid` y limita los pedidos por IP con 429 (C-16). `GET /api/publico/huecos` valida los parámetros en `MotorDeDisponibilidad`, que responde 400 ante un rango inválido o demasiado largo. |
+| Logs sin datos personales | ✅ Sin cambios | Siguen vigentes los tests de C-09 y C-15. C-12 no escribe el DNI en logs y lo recibe en el cuerpo, nunca en la URL. |
+
 ## Hallazgos y mejoras documentadas
 
-- *(Sin hallazgos bloqueantes en el corte actual de `main` `34f368e`.)*
+- *(Sin hallazgos bloqueantes en `main` `d9bf158`.)*
+- **Riesgo aceptado (entrega)**: HSTS y CORS no se validaron contra una URL pública porque se usa el plan B local. Hay que verificarlos cuando se despliegue (tareas 3.3 y 3.5).
 - **Mejora documentada (D3)**: el usuario de MySQL en Aiven tiene permisos de DDL para que Flyway migre al arrancar; separar un usuario sin `UPDATE`/`DELETE` sobre `turno_historial` (pendiente de `C-08`) queda como mejora post-MVP.

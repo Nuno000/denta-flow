@@ -124,6 +124,19 @@ Tests:
 - `@DataJpaTest` en H2 `MODE=MySQL` para el cruce de intervalos, el borde de medianoche local y el orden.
 - No hace falta un test `@Tag("mysql")` de concurrencia: es lectura pura. Igual se corre `-Pit-mysql` para confirmar que la consulta funciona en MySQL 8.
 
+### D7 (ajuste tras leer C-09 y C-15 en `main`, 2026-11-26)
+
+- **`Turno` referencia por id**: paciente, profesional, sillón y prestación son `Long`, no relaciones JPA. Por eso no se agrega un método al `TurnoRepositorio` de C-09 (con `JOIN FETCH`), sino un puerto propio de solo lectura, `aplicacion/agenda/LecturaDeAgenda`. Lo implementa `infraestructura/persistencia/agenda/LecturaDeAgendaJpa`: una sola consulta JPQL con *entity joins* por id (`join Paciente pa on pa.id = t.pacienteId`, etc.) que proyecta directo al record `FilaDeAgenda`.
+  - Así se evita el N+1.
+  - Nunca se lee DNI, teléfono, email ni token.
+  - No se toca el servicio de escritura de C-09 ni sus bloqueos.
+  - Los filtros opcionales se agregan a la JPQL solo si vienen, sin parámetros nulos.
+- **Códigos de estado y origen**: `EstadoTurno` y `OrigenTurno` ya usan los códigos del contrato (`pendiente`, `ausente_con_aviso`, `recepcion`, ...). La respuesta los expone con `codigo()`.
+- **Estado desconocido**: no se usa `EstadoTurno.desdeCodigo`, porque su mensaje repite el valor recibido. `ConsultaDeAgenda` responde "Estado de turno desconocido" sin repetirlo (C-15, design D7: errores sin datos del input).
+- **403 en la capa de aplicación**: `ConsultaDeAgenda` lanza `AccessDeniedException`, que `ManejadorDeErrores` ya traduce a 403 en formato de problema. Es la misma regla de "propios" que `AccesoPorProfesional` (C-06).
+- **Paciente anonimizado (C-15)**: `Paciente.anonimizar` deja nombre "Paciente" y apellido "Anonimizado", borra el DNI y sustituye teléfono y email (`.invalid`). La agenda muestra solo el nombre y el apellido sustitutos. No hace falta ningún campo nuevo en el contrato ni cambio en la UI.
+- **Gotcha de tests sobre MySQL**: un `INSERT` JDBC con `Timestamp.from(instante)` se guarda en la zona de la JVM con Connector/J (se corre 3 horas al leerlo con Hibernate en UTC), y uno con `LocalDateTime` se corre en H2. Por eso los tests de la agenda crean los turnos con `Turno.nuevo(...)` y `EntityManager.persist`, que escriben como en producción. El helper `EscenarioDeAgendaJdbc` de C-09 inserta con `Timestamp.from`. Sus tests no leen instantes con JPA, así que no les afecta, pero conviene tenerlo en cuenta.
+
 ### D8. Datos de prueba
 
 `frontend/src/test/datosAgenda.ts` con turnos ficticios: nombres genéricos, sin DNI ni contacto, y fechas de diciembre de 2026. Incluye una función `apiDeAgenda(turnos, usuario)` que combina `GET /api/auth/yo`, profesionales, sillones y la agenda. Sigue el patrón de `datosRecursos.ts`.

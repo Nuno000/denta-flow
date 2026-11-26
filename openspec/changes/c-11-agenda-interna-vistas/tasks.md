@@ -40,21 +40,21 @@
 
 - [x] 5.1 RED→GREEN Agregar "Agenda" a `SECCIONES` antes de "Recursos", para los tres roles, y actualizar los escenarios de `BarraDelPanel.test.tsx` según el delta de `autorizacion-por-rol` (incluido "Profesional en la agenda" con query string). Verificar con `BarraDelPanel.test.tsx`.
 - [x] 5.2 Prueba visual con Playwright MCP a 390x844 y 1440x900 (vistas diaria y semanal, como recepción y como profesional, estado vacío y error), con la API simulada en el navegador por intercepción de red (`browser_run_code_unsafe` / `page.route`), sin datos falsos dentro de la app. Guardar las capturas en `evidencia/capturas/` y los hallazgos en `evidencia/prueba-visual.md`: sin scroll horizontal en 390 px y foco visible con teclado. Si el navegador no está disponible, dejar el checklist manual y anotarlo.
-- [ ] 5.3 Checkpoint con la usuaria: mostrar las capturas y decidir si el PR de la demo sale con el frontend solo o espera al grupo 6 (design, Risks).
+- [x] 5.3 Checkpoint con la usuaria: mostrar las capturas y decidir si el PR de la demo sale con el frontend solo o espera al grupo 6 (design, Risks). Resuelto: opción C (respaldo del frontend en c21a1b9 y backend en la misma rama).
 
 ## 6. Endpoint de lectura en el backend (recién después del merge de C-09)
 
-- [ ] 6.1 Actualizar la rama con `origin/main` que ya contenga C-09; leer su entidad `Turno`, el enum de estados y el repositorio, y anotar en `design.md` (D7) cualquier diferencia de nombres con el contrato. Verificar que `./mvnw verify` está en verde antes de tocar nada.
-- [ ] 6.2 RED→GREEN `ConsultaDeAgenda` (aplicación, Mockito): rango invertido o mayor a 7 días → `ValidacionDeDominioException`; profesional sin vínculo → 403; profesional con otro `profesionalId` → 403; profesional sin filtro → se fuerza el suyo; recepción sin filtros → todos; sin estado → excluye `cancelado`. Verificar con `ConsultaDeAgendaTest`.
-- [ ] 6.3 RED→GREEN Consulta de solo lectura en el repositorio de turnos (JPQL con `JOIN FETCH`, cruce `inicio < finRango AND fin > inicioRango`, orden por inicio, profesional y sillón), sin tocar el servicio de escritura ni sus bloqueos. Verificar con `@DataJpaTest` en H2 `MODE=MySQL`: borde de 23:30 local (02:30Z del día siguiente), turno que empieza a las 00:00 del día siguiente excluido, filtros combinados y orden.
-- [ ] 6.4 RED→GREEN `AgendaController` (`@PersonalInterno`) y record `TurnoDeAgendaRespuesta`: 200 con el JSON del contrato, 400 por fecha mal formada o estado desconocido, 401 sin token, 403 al profesional ajeno, y la respuesta no contiene `dni`, `telefono`, `email` ni `token`. Verificar con `AgendaControllerTest` (MockMvc).
-- [ ] 6.5 REFACTOR: anotaciones OpenAPI (`@Tag("Agenda")`, `@Operation`, `@ApiResponse` 200/400/401/403) y una aserción de que `/v3/api-docs` lista `/api/agenda/turnos`. Verificar `./mvnw verify` en verde.
-- [ ] 6.6 Correr `./mvnw verify -Pit-mysql` contra MySQL 8 local para confirmar la consulta en el motor real, y anotar el resultado.
-- [ ] 6.7 Prueba de punta a punta manual o con Playwright: backend local con seed y turnos creados por el servicio de C-09, y frontend contra el backend real, sin `simularApi`. Confirmar que la UI no necesitó cambios en `api.ts` (o anotar el ajuste). Guardar la captura en `evidencia/`.
+- [x] 6.1 Actualizar la rama con `origin/main` que ya contenga C-09; leer su entidad `Turno`, el enum de estados y el repositorio, y anotar en `design.md` (D7) cualquier diferencia de nombres con el contrato. Verificar que `./mvnw verify` está en verde antes de tocar nada.
+- [x] 6.2 RED→GREEN `ConsultaDeAgenda` (aplicación, Mockito): rango invertido o mayor a 7 días → `ValidacionDeDominioException`; profesional sin vínculo → 403; profesional con otro `profesionalId` → 403; profesional sin filtro → se fuerza el suyo; recepción sin filtros → todos; sin estado → excluye `cancelado`. Verificar con `ConsultaDeAgendaTest`.
+- [x] 6.3 RED→GREEN Consulta de solo lectura en el repositorio de turnos (JPQL con `JOIN FETCH`, cruce `inicio < finRango AND fin > inicioRango`, orden por inicio, profesional y sillón), sin tocar el servicio de escritura ni sus bloqueos. Verificar con `@DataJpaTest` en H2 `MODE=MySQL`: borde de 23:30 local (02:30Z del día siguiente), turno que empieza a las 00:00 del día siguiente excluido, filtros combinados y orden.
+- [x] 6.4 RED→GREEN `AgendaController` (`@PersonalInterno`) y record `TurnoDeAgendaRespuesta`: 200 con el JSON del contrato, 400 por fecha mal formada o estado desconocido, 401 sin token, 403 al profesional ajeno, y la respuesta no contiene `dni`, `telefono`, `email` ni `token`. Verificar con `AgendaControllerTest` (MockMvc).
+- [x] 6.5 REFACTOR: anotaciones OpenAPI (`@Tag("Agenda")`, `@Operation`, `@ApiResponse` 200/400/401/403) y una aserción de que `/v3/api-docs` lista `/api/agenda/turnos`. Verificar `./mvnw verify` en verde.
+- [x] 6.6 Correr `./mvnw verify -Pit-mysql` contra MySQL 8 local para confirmar la consulta en el motor real, y anotar el resultado.
+- [x] 6.7 Prueba de punta a punta manual o con Playwright: backend local con seed y turnos creados por el servicio de C-09, y frontend contra el backend real, sin `simularApi`. Confirmar que la UI no necesitó cambios en `api.ts` (o anotar el ajuste). Guardar la captura en `evidencia/`.
 
 ## 7. Verificación final
 
-- [ ] 7.1 Correr `npm test`, `npm run lint`, `npm run build`, `./mvnw verify` y `./mvnw verify -Pit-mysql`, y `openspec validate c-11-agenda-interna-vistas --strict`; anotar los totales frente a la línea base en `evidencia/verificacion.txt`.
+- [x] 7.1 Correr `npm test`, `npm run lint`, `npm run build`, `./mvnw verify` y `./mvnw verify -Pit-mysql`, y `openspec validate c-11-agenda-interna-vistas --strict`; anotar los totales frente a la línea base en `evidencia/verificacion.txt`.
 
 ## Workflow follow-up
 

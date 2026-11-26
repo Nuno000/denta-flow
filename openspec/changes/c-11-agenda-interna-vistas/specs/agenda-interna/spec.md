@@ -51,6 +51,10 @@ Cada turno SHALL incluir su identificador, inicio, fin, estado, origen, marca de
 - **WHEN** se consulta cualquier rango con turnos
 - **THEN** ningún turno de la respuesta contiene DNI, teléfono, email ni token
 
+#### Scenario: Paciente anonimizado
+- **WHEN** el paciente de un turno fue dado de baja por anonimización (C-15)
+- **THEN** el turno sigue en la agenda con el nombre "Paciente" y el apellido "Anonimizado", sin ningún dato sustituto de contacto
+
 ### Requirement: Orden de los turnos
 Los turnos SHALL devolverse ordenados por inicio ascendente; a igual inicio, por nombre del profesional y después por nombre del sillón.
 

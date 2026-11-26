@@ -19,6 +19,7 @@ describe('BarraDelPanel (spec "Menú del panel según el rol")', () => {
     expect(within(menu).getAllByRole('link').map((enlace) => enlace.textContent)).toEqual([
       'Panel',
       'Agenda',
+      'Lista de espera',
       'Recursos',
       'Usuarios',
     ])
@@ -35,7 +36,12 @@ describe('BarraDelPanel (spec "Menú del panel según el rol")', () => {
     renderizarEn('/panel', sesionDe('recepcion'))
 
     const menu = await screen.findByRole('navigation', { name: 'Secciones del panel' })
-    expect(within(menu).getAllByRole('link').map((enlace) => enlace.textContent)).toEqual(['Panel', 'Agenda', 'Recursos'])
+    expect(within(menu).getAllByRole('link').map((enlace) => enlace.textContent)).toEqual([
+      'Panel',
+      'Agenda',
+      'Lista de espera',
+      'Recursos',
+    ])
     expect(within(menu).getByRole('link', { name: 'Panel' })).toHaveAttribute('aria-current', 'page')
     expect(within(menu).getByRole('link', { name: 'Recursos' })).not.toHaveAttribute('aria-current')
   })
@@ -45,7 +51,11 @@ describe('BarraDelPanel (spec "Menú del panel según el rol")', () => {
     renderizarEn('/panel/recursos/sillones', sesionDe('profesional'))
 
     const menu = await screen.findByRole('navigation', { name: 'Secciones del panel' })
-    expect(within(menu).getAllByRole('link').map((enlace) => enlace.textContent)).toEqual(['Panel', 'Agenda', 'Recursos'])
+    expect(within(menu).getAllByRole('link').map((enlace) => enlace.textContent)).toEqual([
+      'Panel',
+      'Agenda',
+      'Recursos',
+    ])
     expect(within(menu).getByRole('link', { name: 'Recursos' })).toHaveAttribute('aria-current', 'page')
     expect(within(menu).getByRole('link', { name: 'Recursos' })).toHaveAttribute('href', '/panel/recursos')
   })

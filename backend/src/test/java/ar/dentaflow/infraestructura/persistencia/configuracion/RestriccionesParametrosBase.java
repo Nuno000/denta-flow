@@ -26,6 +26,7 @@ abstract class RestriccionesParametrosBase {
     private static final String LEYENDA = "aviso-privacidad-leyenda";
     private static final String CONTACTO = "contacto-consultorio";
     private static final String PLANTILLA_WHATSAPP = "whatsapp-plantilla";
+    private static final String PLAZO_LISTA_ESPERA = "lista-espera-plazo-oferta-horas";
 
     @Autowired
     protected JdbcTemplate jdbc;
@@ -44,12 +45,13 @@ abstract class RestriccionesParametrosBase {
     void laBaseRecienMigradaTieneExactamenteLosCincoParametrosProvisorios() {
         List<String> claves = jdbc.queryForList("SELECT clave FROM parametro", String.class);
 
-        assertThat(claves).containsExactlyInAnyOrder(ANTICIPACION, TEXTO, LEYENDA, CONTACTO, PLANTILLA_WHATSAPP);
+        assertThat(claves).containsExactlyInAnyOrder(
+                ANTICIPACION, TEXTO, LEYENDA, CONTACTO, PLANTILLA_WHATSAPP, PLAZO_LISTA_ESPERA);
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM parametro WHERE provisorio = TRUE", Long.class))
-                .isEqualTo(5L);
+                .isEqualTo(6L);
         assertThat(jdbc.queryForObject(
                 "SELECT COUNT(*) FROM parametro WHERE actualizado_en IS NULL AND actualizado_por IS NULL",
-                Long.class)).isEqualTo(5L);
+                Long.class)).isEqualTo(6L);
     }
 
     @Test

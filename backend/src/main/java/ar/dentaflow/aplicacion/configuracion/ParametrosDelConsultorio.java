@@ -19,4 +19,7 @@ public interface ParametrosDelConsultorio {
 
     /** Plantilla del mensaje de WhatsApp prellenado (C-21), aunque siga siendo provisoria. */
     String plantillaWhatsapp();
+
+    /** Plazo en horas durante el cual una oferta de lista de espera permanece vigente (C-20). */
+    Duration plazoOfertaListaEspera();
 }

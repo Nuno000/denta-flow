@@ -80,6 +80,12 @@ public class ServicioDeParametros implements ParametrosDelConsultorio {
         return fila(ClaveParametro.WHATSAPP_PLANTILLA).valor();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Duration plazoOfertaListaEspera() {
+        return Duration.ofHours(fila(ClaveParametro.LISTA_ESPERA_PLAZO_OFERTA_HORAS).valorEntero());
+    }
+
     private Parametro fila(ClaveParametro clave) {
         return parametros.buscar(clave)
                 .orElseThrow(() -> new IllegalStateException("Falta el parámetro " + clave.codigo() + " en la base"));

@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,12 +69,23 @@ public class ServicioDeTurnos {
     private final GeneradorDeTokens generadorDeTokens;
     private final ObjectProvider<RestriccionDeAgenda> restricciones;
     private final ServicioDeAuditoria auditoria;
+    private final ApplicationEventPublisher eventos;
     private final Clock reloj;
 
     public ServicioDeTurnos(TurnoRepositorio turnos, PacienteRepositorio pacientes,
             PrestacionRepositorio prestaciones, ProfesionalRepositorio profesionales, SillonRepositorio sillones,
             CerrojoDeRecursos cerrojo, GeneradorDeTokens generadorDeTokens,
             ObjectProvider<RestriccionDeAgenda> restricciones, ServicioDeAuditoria auditoria, Clock reloj) {
+        this(turnos, pacientes, prestaciones, profesionales, sillones, cerrojo, generadorDeTokens, restricciones,
+                auditoria, evento -> {}, reloj);
+    }
+
+    @Autowired
+    public ServicioDeTurnos(TurnoRepositorio turnos, PacienteRepositorio pacientes,
+            PrestacionRepositorio prestaciones, ProfesionalRepositorio profesionales, SillonRepositorio sillones,
+            CerrojoDeRecursos cerrojo, GeneradorDeTokens generadorDeTokens,
+            ObjectProvider<RestriccionDeAgenda> restricciones, ServicioDeAuditoria auditoria,
+            ApplicationEventPublisher eventos, Clock reloj) {
         this.turnos = turnos;
         this.pacientes = pacientes;
         this.prestaciones = prestaciones;
@@ -82,6 +95,7 @@ public class ServicioDeTurnos {
         this.generadorDeTokens = generadorDeTokens;
         this.restricciones = restricciones;
         this.auditoria = auditoria;
+        this.eventos = eventos;
         this.reloj = reloj;
     }
 
@@ -142,6 +156,10 @@ public class ServicioDeTurnos {
         Turno guardado = turnos.guardar(turno);
         auditoria.registrarCambio(turnoId, accionPara(nuevo), actor, Map.of("estado", cambio.anterior().codigo()),
                 Map.of("estado", cambio.nuevo().codigo()));
+        if (nuevo == EstadoTurno.CANCELADO) {
+            eventos.publishEvent(new TurnoCanceladoEvent(
+                    guardado.getId(), guardado.getPrestacionId(), guardado.getProfesionalId(), guardado.getInicio()));
+        }
         return guardado;
     }
 

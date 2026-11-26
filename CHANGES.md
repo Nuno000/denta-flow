@@ -381,9 +381,9 @@ Criterios del reparto:
   - `knowledge-base/07_flujos_principales.md` §Flujo 5
 
 ### [C-12] `carga-manual-sobreturno`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[ ]` implementado el 2026-11-26 en la rama `feat/C-12-carga-manual-sobreturno` (`POST /api/turnos`, `POST /api/turnos/sobreturnos`, `POST /api/pacientes/busqueda` y pantalla `/panel/agenda/nuevo-turno`); pendiente verify, commit y PR. Evidencia: `openspec/changes/c-12-carga-manual-sobreturno/evidencia/`.
 - **Scope**:
-  - Carga de turno por recepción: buscar/crear paciente (DNI, teléfono, email opcional), elegir prestación, profesional, sillón y horario; rechaza conflictos de profesional/sillón (no es una alerta), respeta horarios y bloqueos (US-021; la restricción de horario y bloqueos `RestriccionDeHorarioYBloqueos` ya queda activa en `ServicioDeTurnos` desde C-10).
+  - Carga de turno por recepción: buscar/crear paciente (DNI, teléfono, email obligatorio según DD-12/PA-13), elegir prestación, profesional, sillón y horario; rechaza conflictos de profesional/sillón (no es una alerta), respeta horarios y bloqueos (US-021; la restricción de horario y bloqueos `RestriccionDeHorarioYBloqueos` ya queda activa en `ServicioDeTurnos` desde C-10).
   - Sobreturno explícito: acción separada, solo recepción/administrador, marca `es_sobreturno`, registra quién y cuándo; inexistente en el flujo online (US-022, RN-SO-01/02).
   - Ante conflicto, sugerir la alternativa más cercana usando C-10.
   - Tests: conflicto rechazado, sobreturno permitido solo con permiso y auditado, profesional no puede cargar sobreturno.

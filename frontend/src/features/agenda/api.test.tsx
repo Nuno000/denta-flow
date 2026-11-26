@@ -6,7 +6,18 @@ import { ErrorApi } from '../../lib/apiClient'
 import { crearQueryClient } from '../../lib/queryClient'
 import { simularApi } from '../../test/apiSimulada'
 import { TURNOS_DEL_1_12, consultasDeAgenda } from '../../test/datosAgenda'
-import { RUTA_AGENDA, construirConsultaAgenda, useRegistrarAsistencia, useTurnosDeAgenda } from './api'
+import {
+  RUTA_AGENDA,
+  alternativasDeError,
+  construirConsultaAgenda,
+  useBuscarPacientePorDni,
+  useCargarSobreturno,
+  useCargarTurno,
+  useRegistrarAsistencia,
+  useTurnosDeAgenda,
+  type PedidoDeCarga,
+  type TurnoCargado,
+} from './api'
 
 describe('useRegistrarAsistencia (C-13)', () => {
   afterEach(() => {
@@ -47,6 +58,140 @@ describe('useRegistrarAsistencia (C-13)', () => {
     await waitFor(() => expect(result.current.isError).toBe(true))
     expect((result.current.error as ErrorApi).status).toBe(409)
     expect(invalidar).not.toHaveBeenCalled()
+  })
+})
+
+const PEDIDO: PedidoDeCarga = {
+  paciente: { dni: '30123456', nombre: 'Ana', apellido: 'Ejemplo', telefono: '+541155550000', email: 'ana@example.com' },
+  prestacionId: 4,
+  profesionalId: 10,
+  sillonId: 1,
+  inicio: '2026-12-01T09:00:00-03:00',
+}
+
+const TURNO_CARGADO: TurnoCargado = {
+  id: 90,
+  inicio: '2026-12-01T09:00:00-03:00',
+  fin: '2026-12-01T09:40:00-03:00',
+  estado: 'pendiente',
+  esSobreturno: false,
+  pacienteId: 5,
+  prestacionId: 4,
+  profesionalId: 10,
+  sillonId: 1,
+}
+
+describe('carga manual de turnos (C-12, design D6)', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('useBuscarPacientePorDni envía POST /api/pacientes/busqueda con el DNI en el cuerpo, no en la URL', async () => {
+    let cuerpoRecibido: unknown
+    const api = simularApi({
+      'POST /api/pacientes/busqueda': (cuerpo) => {
+        cuerpoRecibido = cuerpo
+        return { status: 200, cuerpo: { id: 5, ...PEDIDO.paciente } }
+      },
+    })
+    const { result } = renderHook(() => useBuscarPacientePorDni(), { wrapper: envoltorio(crearQueryClient()) })
+
+    let paciente: unknown
+    await act(async () => {
+      paciente = await result.current.mutateAsync('30.123.456')
+    })
+
+    expect(cuerpoRecibido).toEqual({ dni: '30.123.456' })
+    expect(paciente).toEqual({ id: 5, ...PEDIDO.paciente })
+    expect(api.mock.calls[0][0]).not.toContain('30')
+  })
+
+  it('useBuscarPacientePorDni deja el 404 como error para avisar que es un paciente nuevo', async () => {
+    simularApi({ 'POST /api/pacientes/busqueda': { status: 404, cuerpo: { detail: 'No hay un paciente con ese DNI' } } })
+    const { result } = renderHook(() => useBuscarPacientePorDni(), { wrapper: envoltorio(crearQueryClient()) })
+
+    await act(async () => {
+      await result.current.mutateAsync('30123456').catch(() => undefined)
+    })
+
+    await waitFor(() => expect(result.current.isError).toBe(true))
+    expect((result.current.error as ErrorApi).status).toBe(404)
+  })
+
+  it('useCargarTurno envía POST /api/turnos con el pedido y refresca la agenda', async () => {
+    let cuerpoRecibido: unknown
+    const api = simularApi({
+      'POST /api/turnos': (cuerpo) => {
+        cuerpoRecibido = cuerpo
+        return { status: 201, cuerpo: TURNO_CARGADO }
+      },
+    })
+    const queryClient = crearQueryClient()
+    const invalidar = vi.spyOn(queryClient, 'invalidateQueries')
+    const { result } = renderHook(() => useCargarTurno(), { wrapper: envoltorio(queryClient) })
+
+    let turno: unknown
+    await act(async () => {
+      turno = await result.current.mutateAsync(PEDIDO)
+    })
+
+    expect(cuerpoRecibido).toEqual(PEDIDO)
+    expect(api.mock.calls[0][1]?.method).toBe('POST')
+    expect(turno).toEqual(TURNO_CARGADO)
+    expect(invalidar).toHaveBeenCalledWith({ queryKey: ['agenda'] })
+  })
+
+  it('useCargarSobreturno envía POST /api/turnos/sobreturnos y refresca la agenda', async () => {
+    const api = simularApi({
+      'POST /api/turnos/sobreturnos': { status: 201, cuerpo: { ...TURNO_CARGADO, esSobreturno: true } },
+    })
+    const queryClient = crearQueryClient()
+    const invalidar = vi.spyOn(queryClient, 'invalidateQueries')
+    const { result } = renderHook(() => useCargarSobreturno(), { wrapper: envoltorio(queryClient) })
+
+    let turno: TurnoCargado | undefined
+    await act(async () => {
+      turno = await result.current.mutateAsync(PEDIDO)
+    })
+
+    expect(turno?.esSobreturno).toBe(true)
+    expect(JSON.parse(api.mock.calls[0][1]?.body as string)).toEqual(PEDIDO)
+    expect(invalidar).toHaveBeenCalledWith({ queryKey: ['agenda'] })
+  })
+
+  it.each([
+    ['useCargarTurno', useCargarTurno, 'POST /api/turnos'],
+    ['useCargarSobreturno', useCargarSobreturno, 'POST /api/turnos/sobreturnos'],
+  ] as const)('%s: un 409 queda como error, con sus alternativas, y no refresca', async (_nombre, hook, clave) => {
+    const alternativas = [{ inicio: '2026-12-01T10:00:00-03:00', fin: '2026-12-01T10:40:00-03:00', profesionalId: 10, sillonId: 2 }]
+    simularApi({ [clave]: { status: 409, cuerpo: { detail: 'El profesional está ocupado', alternativas } } })
+    const queryClient = crearQueryClient()
+    const invalidar = vi.spyOn(queryClient, 'invalidateQueries')
+    const { result } = renderHook(() => hook(), { wrapper: envoltorio(queryClient) })
+
+    await act(async () => {
+      await result.current.mutateAsync(PEDIDO).catch(() => undefined)
+    })
+
+    await waitFor(() => expect(result.current.isError).toBe(true))
+    const error = result.current.error as ErrorApi
+    expect(error.status).toBe(409)
+    expect((error.cuerpo as { alternativas: unknown }).alternativas).toEqual(alternativas)
+    expect(invalidar).not.toHaveBeenCalled()
+  })
+})
+
+describe('alternativasDeError (C-12)', () => {
+  const alternativa = { inicio: '2026-12-01T10:00:00-03:00', fin: '2026-12-01T10:40:00-03:00', profesionalId: 10, sillonId: 2 }
+
+  it('lee las alternativas del cuerpo de un 409', () => {
+    expect(alternativasDeError(new ErrorApi(409, { detail: 'Ocupado', alternativas: [alternativa] }))).toEqual([alternativa])
+  })
+
+  it('devuelve una lista vacía si el cuerpo no las trae o el error no es de la API', () => {
+    expect(alternativasDeError(new ErrorApi(409, { detail: 'Ocupado' }))).toEqual([])
+    expect(alternativasDeError(new ErrorApi(409, { alternativas: 'no es una lista' }))).toEqual([])
+    expect(alternativasDeError(new Error('sin red'))).toEqual([])
   })
 })
 

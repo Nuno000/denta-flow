@@ -71,3 +71,32 @@ describe('rutas de Recursos (C-05, spec "Sección Recursos del panel")', () => {
   })
 })
 
+describe('ruta /panel/agenda/nuevo-turno (C-12, spec "Pantalla de carga de turno en el panel")', () => {
+  afterEach(() => {
+    sessionStorage.clear()
+    vi.unstubAllGlobals()
+  })
+
+  it.each(['administrador', 'recepcion'] as const)('%s entra a la pantalla de carga', async (rol) => {
+    simularApi(apiDeRecursos(sesionDe(rol).usuario))
+    renderizarEn('/panel/agenda/nuevo-turno', sesionDe(rol))
+
+    expect(await screen.findByRole('heading', { level: 1, name: 'Nuevo turno' })).toBeInTheDocument()
+  })
+
+  it('el profesional ve el aviso de que no tiene permiso y no la pantalla', async () => {
+    simularApi(apiDeRecursos(sesionDe('profesional').usuario))
+    renderizarEn('/panel/agenda/nuevo-turno', sesionDe('profesional'))
+
+    expect(await screen.findByRole('heading', { name: 'No tenés permiso para esta sección' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Nuevo turno' })).not.toBeInTheDocument()
+  })
+
+  it('sin sesión lleva al ingreso', async () => {
+    simularApi({})
+    const { router } = renderizarEn('/panel/agenda/nuevo-turno')
+
+    await screen.findByRole('heading', { level: 1 })
+    expect(router.state.location.pathname).toBe('/ingresar')
+  })
+})

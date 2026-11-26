@@ -223,4 +223,47 @@ describe('pantalla de agenda (spec agenda-interna)', () => {
       )
     })
   })
+
+  describe('registro de cambios del turno (C-13 US-025)', () => {
+    it('el administrador ve "Ver historial" incluso en turnos cancelados y abre el diálogo con los cambios', async () => {
+      const usuario = userEvent.setup()
+      const cancelado = { ...TURNOS_DEL_1_12[0], id: 99, estado: 'cancelado' as const }
+      simularApi({
+        ...apiDeAgenda(sesionAdmin.usuario, { status: 200, cuerpo: [cancelado] }),
+        'GET /api/turnos/99/historial': {
+          status: 200,
+          cuerpo: [
+            {
+              id: 5,
+              ocurridoEn: '2026-11-26T13:00:00Z',
+              actorTipo: 'usuario',
+              actorEmail: 'recepcion@example.com',
+              accion: 'cancelacion',
+              valorAnterior: { estado: 'confirmado' },
+              valorNuevo: { estado: 'cancelado' },
+            },
+          ],
+        },
+      })
+      renderizarEn('/panel/agenda?fecha=2026-12-01&estado=cancelado', sesionAdmin)
+
+      const boton = await screen.findByRole('button', { name: 'Ver historial' })
+      await usuario.click(boton)
+
+      const dialogo = await screen.findByRole('dialog', { name: /Historial de cambios/i })
+      expect(await within(dialogo).findByText('recepcion@example.com')).toBeInTheDocument()
+      expect(within(dialogo).getByText('Cancelación')).toBeInTheDocument()
+    })
+
+    it.each([
+      ['recepcion', sesionRecepcion],
+      ['profesional', sesionProfesional],
+    ] as const)('%s no ve el botón "Ver historial" en las tarjetas', async (_rol, sesion) => {
+      simularApi(apiDeAgenda(sesion.usuario))
+      renderizarEn('/panel/agenda?fecha=2026-12-01', sesion)
+
+      await screen.findByText('Ana Ejemplar')
+      expect(screen.queryByRole('button', { name: 'Ver historial' })).not.toBeInTheDocument()
+    })
+  })
 })

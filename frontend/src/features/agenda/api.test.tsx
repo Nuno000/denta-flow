@@ -6,7 +6,50 @@ import { ErrorApi } from '../../lib/apiClient'
 import { crearQueryClient } from '../../lib/queryClient'
 import { simularApi } from '../../test/apiSimulada'
 import { TURNOS_DEL_1_12, consultasDeAgenda } from '../../test/datosAgenda'
-import { RUTA_AGENDA, construirConsultaAgenda, useRegistrarAsistencia, useTurnosDeAgenda } from './api'
+import {
+  RUTA_AGENDA,
+  construirConsultaAgenda,
+  useHistorialDeTurno,
+  useRegistrarAsistencia,
+  useTurnosDeAgenda,
+} from './api'
+
+describe('useHistorialDeTurno (C-13 US-025)', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('consulta GET /api/turnos/{id}/historial solo cuando turnoId no es null', async () => {
+    const api = simularApi({
+      'GET /api/turnos/41/historial': {
+        status: 200,
+        cuerpo: [
+          {
+            id: 1,
+            ocurridoEn: '2026-11-26T13:00:00Z',
+            actorTipo: 'usuario',
+            actorEmail: 'admin@example.com',
+            accion: 'confirmacion',
+            valorAnterior: { estado: 'pendiente' },
+            valorNuevo: { estado: 'confirmado' },
+          },
+        ],
+      },
+    })
+
+    const { result, rerender } = renderHook(({ id }: { id: number | null }) => useHistorialDeTurno(id), {
+      initialProps: { id: null as number | null },
+      wrapper: envoltorio(crearQueryClient()),
+    })
+
+    expect(api).not.toHaveBeenCalled()
+    expect(result.current.fetchStatus).toBe('idle')
+
+    rerender({ id: 41 })
+    await waitFor(() => expect(result.current.data).toHaveLength(1))
+    expect(result.current.data?.[0]?.actorEmail).toBe('admin@example.com')
+  })
+})
 
 describe('useRegistrarAsistencia (C-13)', () => {
   afterEach(() => {

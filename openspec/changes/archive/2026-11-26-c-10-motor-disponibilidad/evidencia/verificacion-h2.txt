@@ -1,0 +1,7 @@
+# Verificación integral H2 (`perfil test`) — C-10 `motor-disponibilidad`
+
+Fecha: 2026-11-26  
+Comando: `./mvnw.cmd clean verify` (sin perfil `it-mysql`)  
+Resultado: **958 tests en verde** (Failures: 0, Errors: 0, Skipped: 0), `BUILD SUCCESS` (04:01 min).  
+Línea base previa: 920 → **+38 tests nuevos** (`CalculadoraDeHuecosTest` 10, `TurnoRepositorioTest` +2, `RestriccionDeHorarioYBloqueosTest` 4, `RestriccionDeHorarioYBloqueosIntegracionTest` 7, `MotorDeDisponibilidadTest` 5, `MotorDeDisponibilidadIntegracionTest` 1, `ServicioDeReservaDeHuecosTest` 3, `ReservaDeHuecosIntegracionTest` 3, `HuecosPublicosControllerTest` 3).  
+Tests `@Tag("mysql")` (`ReservaSimultaneaDeHuecosMySqlTest`) excluidos sin perfil `it-mysql`.

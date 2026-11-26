@@ -1,0 +1,16 @@
+Verificación final de C-13 registro-asistencia-turno (2026-11-26, rama feat/C-13-registro-asistencia-turno)
+
+Backend (desde backend/):
+- ./mvnw verify            (perfil test, H2 MODE=MySQL): 947 casos en verde, 0 fallas, 0 errores en 123 archivos XML de surefire (línea base: 920, +27: 16 en RegistroDeAsistenciaTest con @Nested + 11 en AsistenciaControllerTest).
+- ./mvnw verify -Pit-mysql (MySQL 8.0 local):            187 casos en verde, 0 fallas, 0 errores (línea base: 187, sin regresiones).
+
+Frontend (desde frontend/):
+- npm test      (Vitest):               178 tests en verde en 29 archivos (línea base: 167 en 28 archivos, +11).
+- npm run lint  (oxlint --deny-warnings): 0 advertencias, 0 errores en 90 archivos.
+- npm run build (tsc -b && vite build):  correcto.
+
+OpenSpec:
+- openspec validate --all --strict: 20/20 válidos (incluye change/c-13-registro-asistencia-turno).
+
+Prueba visual con Playwright MCP (390x844 y 1440x900): evidencia/prueba-visual.md y evidencia/capturas/.
+Prueba de punta a punta contra el backend real (H2 en archivo): evidencia/punta-a-punta.md.

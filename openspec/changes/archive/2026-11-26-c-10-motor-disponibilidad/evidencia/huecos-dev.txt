@@ -1,0 +1,47 @@
+# Verificación manual (tarea 9.3) — C-10 `motor-disponibilidad`
+
+Fecha: 2026-11-26
+Entorno: perfil `dev`, **MySQL 8.0.46 real** (`jdbc:mysql://localhost:3306/dentaflow`, esquema `015.1`) con el seed de C-03/C-06 (3 profesionales, 2 sillones, 5 prestaciones; horarios L-V 09:00-13:00 y 14:00-18:00).
+Método: `@SpringBootTest(webEnvironment=RANDOM_PORT)` + `@ActiveProfiles("dev")` (test manual temporal, no commiteado): GET HTTP real a `/api/publico/huecos`, reserva con `ServicioDeReservaDeHuecos` y GET de nuevo. Resultado Surefire: `Tests run: 1, Failures: 0, Errors: 0`.
+
+## Flujo verificado
+
+- Rango consultado: `2026-11-30 .. 2026-12-06` (semana siguiente).
+- Prestación: `17 - Blanqueamiento (90 min)`.
+- Profesional para reservar: `21`.
+- Primer hueco ofrecido: `2026-11-30T09:00 .. 2026-11-30T10:30` (hora del consultorio).
+
+### GET antes de reservar
+
+```
+GET /api/publico/huecos?prestacionId=17&profesionalId=21&desde=2026-11-30&hasta=2026-12-06
+status = 200, Cache-Control = no-store
+primeros huecos (de 15 min en 15 min):
+  {"inicio":"2026-11-30T09:00:00-03:00","fin":"2026-11-30T10:30:00-03:00","profesionalId":21}
+  {"inicio":"2026-11-30T09:15:00-03:00","fin":"2026-11-30T10:45:00-03:00","profesionalId":21}
+  {"inicio":"2026-11-30T09:30:00-03:00","fin":"2026-11-30T11:00:00-03:00","profesionalId":21}
+  ... (lista completa hasta 2026-12-04, ofrecida en `-03:00`, sin sillones)
+```
+
+### Reserva
+
+```
+Reserva vía ServicioDeReservaDeHuecos:
+  turno = 313, profesional = 21, sillón = 7, inicio = 2026-11-30T09:00
+```
+
+### GET después de reservar
+
+```
+GET /api/publico/huecos?prestacionId=17&profesionalId=21&desde=2026-11-30&hasta=2026-12-06
+status = 200
+primeros huecos (los de 09:00 a 10:15 ya no se ofrecen: los solapa el turno de 90 min):
+  {"inicio":"2026-11-30T10:30:00-03:00","fin":"2026-11-30T12:00:00-03:00","profesionalId":21}
+  {"inicio":"2026-11-30T10:45:00-03:00","fin":"2026-11-30T12:15:00-03:00","profesionalId":21}
+  {"inicio":"2026-11-30T11:00:00-03:00","fin":"2026-11-30T12:30:00-03:00","profesionalId":21}
+  ...
+```
+
+**Resultado:** el hueco reservado (`2026-11-30T09:00`) desapareció del GET público (`desapareció = true`); el primer hueco ofrecido pasa a las 10:30.
+
+> La reserva y el paciente de prueba se eliminaron al final del test para dejar la base `dev` como estaba (los cuerpos completos de los GET se guardaron temporalmente en `backend/target/huecos-dev.txt`).

@@ -104,6 +104,24 @@ Provienen de `docs/discovery/discovery.md` e `informe-discovery.md`.
 **Trade-offs aceptados**: un token robado vale hasta 8 h (mitigado porque desactivar al usuario lo corta en el request siguiente); un XSS podría leer el token de `sessionStorage`; el límite de intentos de ingreso (5 fallos en 15 min por email) vive en memoria y se reinicia con el servicio.
 **Relacionado**: C-04 (`openspec/changes/c-04-auth-usuarios-roles/design.md`), PA-09, `03_actores_y_roles.md` §RBAC, `08_arquitectura_propuesta.md` §Seguridad.
 
+### DD-12 — Definiciones cerradas para el corte de entrega (aprobado 2026-11-25)
+**Decisión** (comunicada por Florencia al equipo para que ningún change quede frenado por preguntas abiertas):
+- **PA-13 / SU-03 (C-09)**: el email del paciente es obligatorio y el DNI es obligatorio y único por paciente.
+- **PA-11 (C-06)**: cargar un bloqueo horario no cancela los turnos ya existentes; solo avisa si hay turnos en esa franja e impide reservas nuevas en ella.
+- **Email (C-14)**: Spring Mail por SMTP estándar configurado con variables de entorno (`.env`), con Brevo o una contraseña de aplicación de Gmail; en los tests, adaptador simulado.
+- **PA-12 (C-15)**: aceptación obligatoria del aviso de privacidad al reservar, registrando el instante, y un endpoint de anonimización/baja de los datos personales del paciente; los registros se conservan 5 años.
+- **PA-04 (C-17)**: la anticipación mínima es configurable en los parámetros, por defecto 24 h y ajustable a 0 h para la demo (hoy C-07 acepta de 1 a 168: bajar a 0 requiere ampliar ese rango).
+- **PA-14 (C-19)**: MySQL en Aiven (plan gratuito) como opción principal; si el 2026-11-26 a las 11:00 el tiempo no alcanza, se prioriza una demo local completa funcionando al 100%.
+**Contexto**: entrega el 2026-11-26 a las 12:00 (DD-10).
+**Relacionado**: PA-04, PA-11, PA-12, PA-13, PA-14, SU-03, C-06, C-09, C-14, C-15, C-17, C-19.
+
+### DD-13 — Dockerfile solo para el build remoto de Render (aprobado 2026-11-25)
+**Decisión**: la API se despliega en Render con un `backend/Dockerfile` multietapa (JDK 21 para compilar, JRE 21 para correr) que construye **solo Render, en sus servidores**. Es una excepción acotada a la regla "sin Docker" de DD-09: en desarrollo, tests y CI se sigue sin Docker, sin `docker-compose` y sin Testcontainers.
+**Contexto**: Render no tiene runtime nativo de Java; el motivo de DD-09 es la RAM de las máquinas locales, que esta excepción no afecta.
+**Alternativas consideradas**: otro hosting con buildpacks de Java (cambiar DD-08 a horas de la entrega); presentar solo la demo local.
+**Trade-offs aceptados**: el build de producción difiere del local (imagen vs. `mvnw` nativo); se mitiga con el mismo JDK 21 y el smoke test después de cada deploy.
+**Relacionado**: DD-08, DD-09, DD-12, C-19 (`openspec/changes/c-19-cierre-mvp-e2e-y-despliegue/design.md` D1).
+
 ## Supuestos inferidos
 
 ### SU-01 — Los pacientes prefieren reservar online sobre WhatsApp
@@ -123,6 +141,7 @@ Provienen de `docs/discovery/discovery.md` e `informe-discovery.md`.
 **Origen**: inferido de "sin registro, DNI y teléfono" (`discovery.md`, Supuestos aceptados).
 **Riesgo si es falso**: duplicados de pacientes o acceso indebido a turnos.
 **Cómo validar**: diseño de seguridad con el equipo.
+**Validado el 2026-11-25 (DD-12)**: DNI obligatorio y único; email obligatorio.
 
 ### SU-04 — Modelo de datos conceptual
 **Supuesto**: las entidades de `04_modelo_de_datos.md` son un punto de partida razonable.

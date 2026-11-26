@@ -21,16 +21,11 @@
 
 | ID | Prioridad | Pregunta | Bloquea | Decisor |
 |----|-----------|----------|---------|---------|
-| PA-04 | Media | ¿Cuál es la anticipación mínima de cancelación por defecto? | US-004, RN-CA-02 | Equipo |
 | PA-07 | Media | ¿Cuánto antes del turno se envía el recordatorio? ¿Uno o varios? | Flujo 2 | Equipo |
 | PA-08 | Baja | ¿Cuántas horas (X) se espera antes del reintento de confirmación? | US-033 | Equipo |
 | PA-09 | Baja | ¿Un usuario puede tener más de un rol? | RBAC | Equipo |
-| PA-11 | Media | Al crear un bloqueo sobre turnos ya existentes, ¿qué ocurre con esos turnos? | Flujo 7 | Equipo |
-| PA-12 | Baja | ¿Cuál es la política de retención y baja de datos personales (Ley 25.326)? | Privacidad | Equipo |
-| PA-13 | Baja | ¿El email del paciente es obligatorio en la reserva? | SU-07, recordatorios | Equipo |
-| PA-14 | Media | ¿Qué proveedor gratuito de MySQL 8 se usa en producción? (reemplaza al de DD-08) | C-19 (despliegue) | Equipo, en C-19 |
 
-Nota: PA-01 a PA-05 corresponden a las cinco preguntas abiertas de `docs/discovery/discovery.md`, sección 11; PA-06 a PA-13 las identificó esta KB al estructurar el modelo; PA-14 surge de DD-09. PA-01, PA-02, PA-03, PA-05, PA-06 y PA-10 están resueltas (ver abajo).
+Nota: PA-01 a PA-05 corresponden a las cinco preguntas abiertas de `docs/discovery/discovery.md`, sección 11; PA-06 a PA-13 las identificó esta KB al estructurar el modelo; PA-14 surge de DD-09. PA-01 a PA-06 y PA-10 a PA-14 están resueltas (ver abajo).
 
 ## Preguntas resueltas
 
@@ -42,3 +37,8 @@ Nota: PA-01 a PA-05 corresponden a las cinco preguntas abiertas de `docs/discove
 | PA-05 | En la reserva online, ¿el paciente elige profesional o se asigna el primero disponible? | El paciente elige un profesional o la opción "cualquiera / primero disponible" (parámetro opcional del motor de disponibilidad). | 2026-11-24 | RN-DI-04, US-010, C-10, C-16 |
 | PA-06 | ¿Quién se asigna primero y cómo se asigna el sillón en la reserva online? | Primero se fija el profesional; luego el sistema asigna el primer sillón libre en ese rango. El paciente nunca elige sillón. | 2026-11-24 | C-10, C-16 |
 | PA-10 | ¿El turno online nace `pendiente` o `confirmado`? | Nace `pendiente` y pasa a `confirmado` con el enlace del email. | 2026-11-24 | RN-TU-05, US-011, C-09, C-17 |
+| PA-13 | ¿El email del paciente es obligatorio en la reserva? | Sí; además el DNI es obligatorio y único (valida SU-03). | 2026-11-25 | DD-12, C-09 |
+| PA-11 | Al crear un bloqueo sobre turnos ya existentes, ¿qué ocurre con esos turnos? | No se cancelan; el sistema avisa que hay turnos en la franja e impide reservas nuevas en ella. | 2026-11-25 | DD-12, C-06 |
+| PA-12 | ¿Cuál es la política de retención y baja de datos personales (Ley 25.326)? | Aceptación obligatoria del aviso al reservar, con instante registrado; endpoint de anonimización/baja; retención de 5 años. | 2026-11-25 | DD-12, C-15 |
+| PA-04 | ¿Cuál es la anticipación mínima de cancelación por defecto? | 24 h, configurable en parámetros y ajustable a 0 h para la demo. | 2026-11-25 | DD-12, C-07, C-17 |
+| PA-14 | ¿Qué proveedor gratuito de MySQL 8 se usa en producción? | Aiven (plan gratuito); plan B: demo local completa si a las 11:00 del 26/11 no alcanza el tiempo. | 2026-11-25 | DD-12, C-19 |

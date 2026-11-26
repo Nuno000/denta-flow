@@ -1,0 +1,13 @@
+       × recepcion ve "WhatsApp" solo en turnos pendientes y confirmados y abre el diálogo 200ms
+       × administrador ve "WhatsApp" solo en turnos pendientes y confirmados y abre el diálogo 153ms
+Error: Failed to resolve import "./WhatsappDialogo" from "src/features/agenda/WhatsappDialogo.test.tsx". Does the file exist?
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "WhatsApp"
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "WhatsApp"
+ Test Files  2 failed (2)
+      Tests  2 failed | 21 passed (23)
+
+Dialogo (devolución del foco en StrictMode): en jsdom no se reproduce (no tiene showModal ni inert), así que
+el RED se observó en Chromium con Playwright: tras cerrar el diálogo con Escape, document.activeElement era
+BODY en lugar del botón "WhatsApp". Después de la corrección, el mismo recorrido devuelve BUTTON:WhatsApp
+(ver accesibilidad.md). Dialogo.test.tsx queda como regresión del comportamiento en jsdom.

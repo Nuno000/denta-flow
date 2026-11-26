@@ -101,3 +101,7 @@ Resultado: `Optional<String>` con solo dígitos (`5492615550000`). No intenta va
 - **[Riesgo] Teléfonos cargados con un formato raro quedan sin enlace.** → Mitigación: el aviso lo explica y recepción puede corregir el teléfono en la próxima carga manual (C-12) o copiar el mensaje.
 - **[Riesgo] El token del enlace pasa por el navegador de recepción.** → Aceptado. Es el mismo enlace que el paciente recibe por email y recepción ya opera sobre el turno desde el panel. No se guarda ni se loguea.
 - **[Trade-off] La heurística del `15` puede fallar con algún código de área de 4 dígitos que termine en `15`.** → Aceptado: es poco frecuente y termina en el aviso, no en un mensaje a un número equivocado, porque la longitud se sigue validando.
+
+## Notas de implementación
+
+- **`Dialogo` (componente compartido de C-05):** guardaba al elemento que abrió el diálogo dentro del efecto. En desarrollo, StrictMode repite el efecto con el modal ya abierto, y lo que quedaba guardado era un control del propio diálogo, así que al cerrar el foco se perdía (en Chromium terminaba en `BODY`). Ahora el elemento se lee una sola vez con `useState`. En producción no había falla, pero la corrección también beneficia al historial de C-13.

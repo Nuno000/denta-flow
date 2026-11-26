@@ -86,7 +86,7 @@ C-24 manual-publico         ← C-19
 | C-23 | panel-ausentismo [DIF] | C-13 | 7 | Florencia | Bruno | BAJO | M | no | `[ ]` |
 | C-19 | cierre-mvp-e2e-y-despliegue | C-12, C-13, C-17, C-18 (en el corte 26/11: solo C-17 y los demás changes del corte) | 8 | Bruno (E2E de cada flujo: su autor) | Florencia | MEDIO | M | sí | `[ ]` |
 | C-20 | lista-de-espera [DIF] | C-10, C-17 | 8 | Renzo | Florencia | MEDIO | M | no | `[ ]` |
-| C-21 | whatsapp-prellenado [DIF] | C-11 | 8 | Jessica | Florencia | BAJO | S | no | `[ ]` |
+| C-21 | whatsapp-prellenado [DIF] | C-11 | 8 | Jessica | Florencia | BAJO | S | no | `[x]` |
 | C-24 | manual-publico [DIF] | C-19 | 9 | Jessica | Florencia | BAJO | S | no | `[ ]` |
 
 ### Paralelismo por oleada (1 change activo por persona)
@@ -595,7 +595,7 @@ Criterios del reparto:
   - `knowledge-base/04_modelo_de_datos.md` §ListaEspera
 
 ### [C-21] `whatsapp-prellenado`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-26, PR #36; archivado en `openspec/changes/archive/2026-11-26-c-21-whatsapp-prellenado/`)
 - **Scope**:
   - Botón en el panel de recepción que abre un enlace `wa.me` con mensaje prellenado (recordatorio/confirmación) para el turno (US-032).
   - Plantilla de mensaje configurable; sin envío automático ni API (RN-NO-04).

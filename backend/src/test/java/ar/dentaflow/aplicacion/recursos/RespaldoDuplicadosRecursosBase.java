@@ -108,6 +108,11 @@ abstract class RespaldoDuplicadosRecursosBase {
             }
 
             @Override
+            public Optional<Sillon> bloquearPorId(Long id) {
+                return sillonesReales.bloquearPorId(id);
+            }
+
+            @Override
             public List<Sillon> listarTodos() {
                 return List.of();
             }
@@ -153,6 +158,11 @@ abstract class RespaldoDuplicadosRecursosBase {
             @Override
             public Optional<Profesional> buscarPorId(Long id) {
                 return profesionalesReales.buscarPorId(id);
+            }
+
+            @Override
+            public Optional<Profesional> bloquearPorId(Long id) {
+                return profesionalesReales.bloquearPorId(id);
             }
 
             @Override

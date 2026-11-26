@@ -1,0 +1,3 @@
+Línea base C-06 (2026-11-25), rama feat/C-06-horarios-y-bloqueos @ f506b1e
+Comando: ./mvnw -B verify (perfil test, H2 MODE=MySQL)
+Resultado: BUILD SUCCESS — 337 tests en verde (0 fallas, 0 errores, 0 omitidos)

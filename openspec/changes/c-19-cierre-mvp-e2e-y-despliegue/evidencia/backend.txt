@@ -1,0 +1,3 @@
+C-19 bloque A - backend (rama feat/C-19-cierre-mvp-e2e-y-despliegue, 2026-11-26)
+./mvnw clean verify (H2 MODE=MySQL): exit 0, 413 tests, 0 fallas, 0 errores, 0 omitidos (incluye los 4 de PerfilProdTest)
+Nota: sin "clean", target/ arrastraba clases y reportes de otras ramas e inflaba el conteo.

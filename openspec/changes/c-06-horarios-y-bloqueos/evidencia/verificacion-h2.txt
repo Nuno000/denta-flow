@@ -1,0 +1,8 @@
+./mvnw.cmd -B verify (perfil test, H2 MODE=MySQL), 2026-11-26 02:21
+Tests run: 460, Failures: 0, Errors: 0, Skipped: 0 -- BUILD SUCCESS (los @Tag("mysql") no se ejecutan sin -Pit-mysql)
+Linea base 337 + 123 nuevos de C-06:
+- Dominio (41): HorarioAtencionTest 15, BloqueoTest 7, CalendarioDeDisponibilidadTest 19
+- Aplicacion (35): ServicioDeHorariosTest 11, ServicioDeHorariosIntegracionTest 1, ServicioDeBloqueosTest 14, ServicioDeDisponibilidadTest 8, ServicioDeDisponibilidadIntegracionTest 1
+- Persistencia (19): RestriccionesDisponibilidadH2Test 8, HorarioAtencionRepositorioTest 4, BloqueoRepositorioTest 5, BloquearPorIdTest 2
+- Seed (3): SeedRecursosDemoTest (+2 en SobreBaseVacia), SeedRecursosDemoCondicionTest (+1)
+- Presentacion (25): AccesoPorProfesionalTest 4, HorariosControllerTest 10, BloqueosControllerTest 11

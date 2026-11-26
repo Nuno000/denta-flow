@@ -1,0 +1,7 @@
+# Contexto del build remoto de Render (DD-13): solo lo necesario para compilar.
+target/
+.env
+.env.*
+*.log
+.idea/
+.vscode/

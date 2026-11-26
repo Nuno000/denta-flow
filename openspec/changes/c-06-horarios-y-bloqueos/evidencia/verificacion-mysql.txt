@@ -1,0 +1,8 @@
+./mvnw.cmd -B verify -Pit-mysql (MySQL 8.4.9 local, perfil it-mysql), 2026-11-26 02:22
+Tests run: 80, Failures: 0, Errors: 0, Skipped: 0 -- BUILD SUCCESS
+Nuevos de C-06 (29):
+  RestriccionesDisponibilidadMySqlTest 8/8  (V006_1 + mapeo XML disponibilidad.xml validados con ddl-auto=validate en MySQL; CHECK de horario_atencion y bloqueo)
+  HorarioAtencionHoraLocalMySqlTest    1/1  (ConversorHoraLocal: 20:00-22:00 guardado como 20:00:00-22:00:00 sin desplazamiento UTC ni violacion de ck_horario_atencion_rango entre zonas JVM)
+  AltaSimultaneaHorariosMySqlTest     20/20 (@RepeatedTest(10): dos hilos simultaneos superpuestos sobre el mismo profesional -> 1 gana, 1 ConflictoException; control con 2 profesionales distintos -> ambos pasan)
+Existentes de C-02/C-03/C-04/C-07/C-08 (51), sin regresiones:
+  ConexionMySqlTest 1/1, IdaYVueltaUtcMySqlTest 2/2, RestriccionesRecursosMySqlTest 13/13, RestriccionesUsuarioMySqlTest 9/9, RestriccionesParametrosMySqlTest 8/8, EdicionSimultaneaParametrosMySqlTest 10/10, RestriccionesHistorialMySqlTest 8/8

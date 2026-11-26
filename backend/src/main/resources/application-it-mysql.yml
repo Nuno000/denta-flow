@@ -7,6 +7,9 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/dentaflow}
     username: ${SPRING_DATASOURCE_USERNAME:dentaflow}
     password: ${SPRING_DATASOURCE_PASSWORD:}
+  flyway:
+    # Changes paralelos pueden mergear migraciones con versión menor a la ya aplicada en la base local.
+    out-of-order: true
 
 # Clave de firma SOLO DE PRUEBAS (C-04, design D2): fija, para no depender del AUTH_SECRET del .env local.
 app:

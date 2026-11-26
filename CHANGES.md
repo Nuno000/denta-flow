@@ -381,7 +381,7 @@ Criterios del reparto:
   - `knowledge-base/07_flujos_principales.md` §Flujo 5
 
 ### [C-12] `carga-manual-sobreturno`
-- **Estado**: `[ ]` implementado el 2026-11-26 en la rama `feat/C-12-carga-manual-sobreturno` (`POST /api/turnos`, `POST /api/turnos/sobreturnos`, `POST /api/pacientes/busqueda` y pantalla `/panel/agenda/nuevo-turno`); pendiente verify, commit y PR. Evidencia: `openspec/changes/c-12-carga-manual-sobreturno/evidencia/`.
+- **Estado**: `[x]` completado el 2026-11-26 (PR #31; responsable final: Bruno). Incluye `POST /api/turnos`, `POST /api/turnos/sobreturnos`, `POST /api/pacientes/busqueda` y la pantalla `/panel/agenda/nuevo-turno`. Tests: H2 1039, it-mysql 212, frontend 249. La spec principal es `openspec/specs/carga-manual-turnos/`. Archivado en `openspec/changes/archive/2026-11-26-c-12-carga-manual-sobreturno/`. **Pendiente**: la tarea 7.2 (prueba punta a punta contra el backend real); por ahora la cubren solo los tests MockMvc sobre H2.
 - **Scope**:
   - Carga de turno por recepción: buscar/crear paciente (DNI, teléfono, email obligatorio según DD-12/PA-13), elegir prestación, profesional, sillón y horario; rechaza conflictos de profesional/sillón (no es una alerta), respeta horarios y bloqueos (US-021; la restricción de horario y bloqueos `RestriccionDeHorarioYBloqueos` ya queda activa en `ServicioDeTurnos` desde C-10).
   - Sobreturno explícito: acción separada, solo recepción/administrador, marca `es_sobreturno`, registra quién y cuándo; inexistente en el flujo online (US-022, RN-SO-01/02).
@@ -543,7 +543,7 @@ Criterios del reparto:
 - **Estado**: `[ ]` parcial el 2026-11-26.
   - **Hecho**: bloque A (perfil `prod`, Dockerfile para Render según DD-13, `vercel.json`, espera del arranque en frío, esqueleto Playwright y job `e2e` en CI), plan B ensayado y revisión de seguridad.
   - **Decisión de las 11:00**: se presenta con el plan B local (`evidencia/decision-1100.md`).
-  - **Pendiente**: despliegue en Aiven, Render y Vercel (tareas 3.2, 3.3 y 3.5); E2E del bloque B (6.x; C-16 ya está en `main`, falta C-17); cron de C-18 (7.1).
+  - **Pendiente**: despliegue en Aiven, Render y Vercel (tareas 3.2, 3.3 y 3.5); E2E del bloque B (6.x; C-16 y C-17 ya están en `main`); cron de C-18 (7.1).
   - No marcar `[x]` hasta desplegar y completar los E2E.
 - **Scope**:
   - Tests end-to-end con Playwright de los flujos principales (reserva, recordatorio/confirmación, cancelación/reprogramación, carga manual con sobreturno, asistencia, configuración).

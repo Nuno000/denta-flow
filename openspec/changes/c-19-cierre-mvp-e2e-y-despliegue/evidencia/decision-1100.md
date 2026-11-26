@@ -16,4 +16,7 @@ Se presenta el **plan B local** (`scripts/demo-local.ps1` + `docs/demo.md`). No 
 
 - La demo corre en la máquina del equipo que presenta. Hace falta MySQL 8 nativo, JDK 21, Node 22 y los `.env` locales (ver `docs/demo.md` §1).
 - No hay URL pública. Las tareas 3.2, 3.3, 3.5, 6.6 y 7.1 quedan pendientes y fuera de la entrega.
-- En el guion de `docs/demo.md` §3 hay pasos que dependen de changes que no están en `main` y se tachan antes del ensayo: C-17 (confirmar, cancelar y reprogramar por enlace, pasos 4 a 6) y C-07 (no tiene pantalla de parámetros, paso 11). C-16 sí está en `main`, así que la reserva online (pasos 2, 3 y 12) se muestra.
+- Estado del guion de `docs/demo.md` §3 a las 11:15:
+  - C-16 (reserva online, pasos 2, 3 y 12) y C-17 (confirmar, cancelar y reprogramar por enlace, pasos 4 a 6) ya están en `main` (`f07ba45`). Esos pasos se muestran, pero no se ensayaron con el plan B: hay que recorrerlos en el smoke test (tarea 8.2).
+  - El paso 11 se tacha: C-07 no tiene pantalla de parámetros.
+  - C-12 también está en `main`: la carga manual y el sobreturno en `/panel/agenda/nuevo-turno` se pueden mostrar.

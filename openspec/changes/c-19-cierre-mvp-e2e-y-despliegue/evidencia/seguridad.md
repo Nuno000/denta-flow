@@ -38,5 +38,6 @@ Esta revisión es posterior al merge de C-16 y se hizo con el plan B local (`evi
 ## Hallazgos y mejoras documentadas
 
 - *(Sin hallazgos bloqueantes en `main` `d9bf158`.)*
+- **Fuera de esta revisión**: C-17 (`f07ba45`) y C-12 (`e0b4573`) entraron a `main` después de la base revisada. Sus rutas no se revisaron en este cierre: queda para el próximo pase de seguridad. C-12 solo agrega rutas internas, protegidas con `@AdministradorORecepcion` y con tests de 401 y 403.
 - **Riesgo aceptado (entrega)**: HSTS y CORS no se validaron contra una URL pública porque se usa el plan B local. Hay que verificarlos cuando se despliegue (tareas 3.3 y 3.5).
 - **Mejora documentada (D3)**: el usuario de MySQL en Aiven tiene permisos de DDL para que Flyway migre al arrancar; separar un usuario sin `UPDATE`/`DELETE` sobre `turno_historial` (pendiente de `C-08`) queda como mejora post-MVP.

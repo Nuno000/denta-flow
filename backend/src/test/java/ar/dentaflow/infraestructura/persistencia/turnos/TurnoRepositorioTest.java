@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import ar.dentaflow.dominio.comun.ZonaHorariaConsultorio;
 import ar.dentaflow.dominio.turnos.EstadoTurno;
+import ar.dentaflow.dominio.turnos.OcupacionDeRecurso;
 import ar.dentaflow.dominio.turnos.OrigenTurno;
 import ar.dentaflow.dominio.turnos.Turno;
 import ar.dentaflow.dominio.turnos.TurnoRepositorio;
@@ -251,5 +252,64 @@ class TurnoRepositorioTest {
 
         assertThat(turnos.buscarPorIdParaActualizar(turno.getId())).map(Turno::getId).contains(turno.getId());
         assertThat(turnos.buscarPorIdParaActualizar(999_999_999L)).isEmpty();
+    }
+
+    @Test
+    void listarOcupacionesDeProfesionalesYSillonesFiltraPorEstadoSobreturnoBordeYExclusion() {
+        long profB = escenario.profesional();
+        long profC = escenario.profesional();
+        long sillonB = escenario.sillon();
+        long sillonC = escenario.sillon();
+
+        Turno pendienteA = guardar(profesional, sillon, DOCE, 30, EstadoTurno.PENDIENTE, false);
+        guardar(profB, sillonB, DOCE_Y_MEDIA, 30, EstadoTurno.CONFIRMADO, false);
+        guardar(profesional, sillon, UNA, 30, EstadoTurno.ASISTIO, false);
+        guardar(profesional, sillon, DOCE, 30, EstadoTurno.CANCELADO, false);
+        guardar(profesional, sillon, DOCE, 30, EstadoTurno.PENDIENTE, true);
+        guardar(profC, sillonC, DOCE, 30, EstadoTurno.PENDIENTE, false);
+        guardar(profesional, sillon, Instant.parse("2026-12-01T11:30:00Z"), 30, EstadoTurno.PENDIENTE, false);
+
+        Instant desde = DOCE;
+        Instant hasta = Instant.parse("2026-12-01T13:30:00Z");
+
+        assertThat(turnos.listarOcupacionesDeProfesionales(
+                java.util.List.of(profesional, profB), desde, hasta, null))
+                .containsExactlyInAnyOrder(
+                        new OcupacionDeRecurso(profesional, DOCE, DOCE_Y_MEDIA),
+                        new OcupacionDeRecurso(profB, DOCE_Y_MEDIA, UNA),
+                        new OcupacionDeRecurso(profesional, UNA, Instant.parse("2026-12-01T13:30:00Z")));
+
+        assertThat(turnos.listarOcupacionesDeProfesionales(
+                java.util.List.of(profesional, profB), desde, hasta, pendienteA.getId()))
+                .hasSize(2);
+
+        assertThat(turnos.listarOcupacionesDeSillones(
+                java.util.List.of(sillon, sillonB), desde, hasta, pendienteA.getId()))
+                .containsExactlyInAnyOrder(
+                        new OcupacionDeRecurso(sillonB, DOCE_Y_MEDIA, UNA),
+                        new OcupacionDeRecurso(sillon, UNA, Instant.parse("2026-12-01T13:30:00Z")));
+    }
+
+    @Test
+    void ocupacionesCoincidenExactamenteConHaySolapamientoEnRangosAntesSolapadoYContiguo() {
+        guardarActivo(DOCE, 30);
+
+        Instant[][] rangos = {
+            { Instant.parse("2026-12-01T11:00:00Z"), DOCE },
+            { Instant.parse("2026-12-01T12:15:00Z"), Instant.parse("2026-12-01T12:45:00Z") },
+            { DOCE_Y_MEDIA, UNA }
+        };
+
+        for (Instant[] r : rangos) {
+            boolean solapaProf = turnos.haySolapamientoDeProfesional(profesional, r[0], r[1], null);
+            boolean hayOcupProf = !turnos.listarOcupacionesDeProfesionales(
+                    java.util.List.of(profesional), r[0], r[1], null).isEmpty();
+            assertThat(hayOcupProf).isEqualTo(solapaProf);
+
+            boolean solapaSillon = turnos.haySolapamientoDeSillon(sillon, r[0], r[1], null);
+            boolean hayOcupSillon = !turnos.listarOcupacionesDeSillones(
+                    java.util.List.of(sillon), r[0], r[1], null).isEmpty();
+            assertThat(hayOcupSillon).isEqualTo(solapaSillon);
+        }
     }
 }

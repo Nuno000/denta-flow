@@ -127,6 +127,28 @@ export function useHistorialDeTurno(turnoId: number | null) {
   })
 }
 
+// --- Mensaje de WhatsApp prellenado (C-21, US-032, RN-NO-04)
+
+/** Mensaje armado con la plantilla del consultorio y enlace `wa.me`; `enlace` es null sin teléfono utilizable. */
+export interface MensajeWhatsapp {
+  mensaje: string
+  enlace: string | null
+}
+
+/**
+ * Pide el mensaje de WhatsApp de un turno (solo administrador y recepción). El teléfono y el token viajan solo
+ * dentro del enlace: no se guardan más allá del diálogo (`gcTime: 0`, design D7).
+ */
+export function useMensajeWhatsapp(turnoId: number | null) {
+  return useQuery({
+    queryKey: ['turno-whatsapp', turnoId],
+    queryFn: () => apiClient.get<MensajeWhatsapp>(`/api/turnos/${turnoId}/whatsapp`),
+    enabled: turnoId !== null,
+    gcTime: 0,
+    staleTime: 0,
+  })
+}
+
 // --- Carga manual de turnos y sobreturnos (C-12, US-021, US-022)
 
 /** Datos de contacto del paciente tal como se envían y se reciben. */

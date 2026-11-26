@@ -6,6 +6,7 @@ import type { TurnoDeAgenda } from './api'
 import { EtiquetaDeEstado, EtiquetaDeSobreturno } from './EtiquetaDeEstado'
 import { horaEnConsultorio } from './fechas'
 import { HistorialDeTurnoDialogo } from './HistorialDeTurnoDialogo'
+import { WhatsappDialogo } from './WhatsappDialogo'
 
 interface TarjetaDeTurnoProps {
   turno: TurnoDeAgenda
@@ -16,8 +17,13 @@ interface TarjetaDeTurnoProps {
 /** Un turno de la agenda: horario en hora del consultorio, paciente, prestación, profesional, sillón y estado. */
 export function TarjetaDeTurno({ turno, compacta = false }: TarjetaDeTurnoProps) {
   const sesion = useContext(ContextoSesion)
-  const esAdministrador = sesion?.usuario?.rol === 'administrador'
+  const rol = sesion?.usuario?.rol
+  const esAdministrador = rol === 'administrador'
+  // C-21 (US-032): recordar o pedir confirmación por WhatsApp solo tiene sentido en turnos vigentes.
+  const puedeEnviarWhatsapp =
+    (rol === 'administrador' || rol === 'recepcion') && (turno.estado === 'pendiente' || turno.estado === 'confirmado')
   const [viendoHistorial, setViendoHistorial] = useState(false)
+  const [viendoWhatsapp, setViendoWhatsapp] = useState(false)
   const cancelado = turno.estado === 'cancelado'
   const claseRotulo = compacta ? 'sr-only' : 'font-medium'
   return (
@@ -49,14 +55,22 @@ export function TarjetaDeTurno({ turno, compacta = false }: TarjetaDeTurnoProps)
         <dd>{turno.sillon.nombre}</dd>
       </dl>
       <AccionesDeAsistencia turno={turno} />
-      {esAdministrador && (
-        <div className="pt-1">
-          <button type="button" onClick={() => setViendoHistorial(true)} className={CLASES_ACCION}>
-            Ver historial
-          </button>
+      {(puedeEnviarWhatsapp || esAdministrador) && (
+        <div className="flex flex-wrap gap-2 pt-1">
+          {puedeEnviarWhatsapp && (
+            <button type="button" onClick={() => setViendoWhatsapp(true)} className={CLASES_ACCION}>
+              WhatsApp
+            </button>
+          )}
+          {esAdministrador && (
+            <button type="button" onClick={() => setViendoHistorial(true)} className={CLASES_ACCION}>
+              Ver historial
+            </button>
+          )}
         </div>
       )}
       {viendoHistorial && <HistorialDeTurnoDialogo turno={turno} alCerrar={() => setViendoHistorial(false)} />}
+      {viendoWhatsapp && <WhatsappDialogo turno={turno} alCerrar={() => setViendoWhatsapp(false)} />}
     </li>
   )
 }

@@ -289,5 +289,48 @@ describe('pantalla de agenda (spec agenda-interna)', () => {
       expect(screen.queryByRole('link', { name: 'Nuevo turno' })).not.toBeInTheDocument()
     })
   })
+
+  describe('mensaje de WhatsApp prellenado (C-21, US-032)', () => {
+    it.each([
+      ['recepcion', sesionRecepcion],
+      ['administrador', sesionAdmin],
+    ] as const)('%s ve "WhatsApp" solo en turnos pendientes y confirmados y abre el diálogo', async (_rol, sesion) => {
+      const usuario = userEvent.setup()
+      simularApi({
+        ...apiDeAgenda(sesion.usuario),
+        'GET /api/turnos/1/whatsapp': {
+          status: 200,
+          cuerpo: { mensaje: 'Hola Ana', enlace: 'https://wa.me/5491155550000?text=Hola%20Ana' },
+        },
+      })
+      renderizarEn('/panel/agenda?fecha=2026-12-01', sesion)
+
+      await screen.findByText('Ana Ejemplar')
+      // Del 1/12: confirmado (1), pendiente (2) y confirmado (6); asistio, ausente y ausente_con_aviso no.
+      const botones = screen.getAllByRole('button', { name: 'WhatsApp' })
+      expect(botones).toHaveLength(3)
+      await usuario.click(botones[0])
+
+      const dialogo = await screen.findByRole('dialog', { name: /WhatsApp/ })
+      expect(await within(dialogo).findByRole('link', { name: 'Abrir WhatsApp' })).toBeInTheDocument()
+    })
+
+    it('el profesional no ve "WhatsApp"', async () => {
+      simularApi(apiDeAgenda(sesionProfesional.usuario))
+      renderizarEn('/panel/agenda?fecha=2026-12-01', sesionProfesional)
+
+      await screen.findByText('Ana Ejemplar')
+      expect(screen.queryByRole('button', { name: 'WhatsApp' })).not.toBeInTheDocument()
+    })
+
+    it('un turno cancelado no muestra "WhatsApp"', async () => {
+      const cancelado = { ...TURNOS_DEL_1_12[0], id: 99, estado: 'cancelado' as const }
+      simularApi(apiDeAgenda(sesionRecepcion.usuario, { status: 200, cuerpo: [cancelado] }))
+      renderizarEn('/panel/agenda?fecha=2026-12-01&estado=cancelado', sesionRecepcion)
+
+      await screen.findByText('Ana Ejemplar')
+      expect(screen.queryByRole('button', { name: 'WhatsApp' })).not.toBeInTheDocument()
+    })
+  })
 })
 

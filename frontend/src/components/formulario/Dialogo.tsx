@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 
 interface DialogoProps {
   titulo: string
@@ -14,10 +14,12 @@ interface DialogoProps {
 export function Dialogo({ titulo, alCerrar, children }: DialogoProps) {
   const ref = useRef<HTMLDialogElement>(null)
   const idTitulo = useId()
+  // Quién abrió el diálogo, leído una sola vez al montar. En StrictMode el efecto se repite con el modal ya
+  // abierto y document.activeElement ya es un control del diálogo: leerlo ahí perdía el foco al cerrar (C-21).
+  const [anterior] = useState(() => (document.activeElement instanceof HTMLElement ? document.activeElement : null))
 
   useEffect(() => {
     const dialogo = ref.current
-    const anterior = document.activeElement instanceof HTMLElement ? document.activeElement : null
     if (dialogo !== null && !dialogo.open) {
       if (typeof dialogo.showModal === 'function') {
         dialogo.showModal()
@@ -29,7 +31,7 @@ export function Dialogo({ titulo, alCerrar, children }: DialogoProps) {
     return () => {
       anterior?.focus()
     }
-  }, [])
+  }, [anterior])
 
   return (
     <dialog

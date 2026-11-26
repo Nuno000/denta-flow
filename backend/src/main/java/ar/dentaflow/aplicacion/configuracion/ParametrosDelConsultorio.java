@@ -13,4 +13,7 @@ public interface ParametrosDelConsultorio {
 
     /** Texto y leyenda del aviso de privacidad vigentes, aunque sigan siendo provisorios. */
     AvisoPrivacidad avisoPrivacidad();
+
+    /** Contacto del consultorio para la reserva pública (C-16), aunque siga siendo provisorio. */
+    String contactoConsultorio();
 }

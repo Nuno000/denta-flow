@@ -24,6 +24,7 @@ abstract class RestriccionesParametrosBase {
     private static final String ANTICIPACION = "anticipacion-minima-horas";
     private static final String TEXTO = "aviso-privacidad-texto";
     private static final String LEYENDA = "aviso-privacidad-leyenda";
+    private static final String CONTACTO = "contacto-consultorio";
 
     @Autowired
     protected JdbcTemplate jdbc;
@@ -39,19 +40,20 @@ abstract class RestriccionesParametrosBase {
     }
 
     @Test
-    void laBaseRecienMigradaTieneExactamenteLosTresParametrosProvisorios() {
+    void laBaseRecienMigradaTieneExactamenteLosCuatroParametrosProvisorios() {
         List<String> claves = jdbc.queryForList("SELECT clave FROM parametro", String.class);
 
-        assertThat(claves).containsExactlyInAnyOrder(ANTICIPACION, TEXTO, LEYENDA);
+        assertThat(claves).containsExactlyInAnyOrder(ANTICIPACION, TEXTO, LEYENDA, CONTACTO);
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM parametro WHERE provisorio = TRUE", Long.class))
-                .isEqualTo(3L);
+                .isEqualTo(4L);
         assertThat(jdbc.queryForObject(
                 "SELECT COUNT(*) FROM parametro WHERE actualizado_en IS NULL AND actualizado_por IS NULL",
-                Long.class)).isEqualTo(3L);
+                Long.class)).isEqualTo(4L);
     }
 
     @Test
     void losValoresInicialesSonLosDelDiseno() {
+        assertThat(valor(CONTACTO)).isEqualTo("Comunicate con el consultorio por teléfono para coordinar tu turno.");
         assertThat(valor(ANTICIPACION)).isEqualTo("24");
         assertThat(valor(LEYENDA)).isEqualTo("Leí y acepto el aviso de privacidad");
         assertThat(valor(TEXTO)).contains("borrador").contains("25.326");

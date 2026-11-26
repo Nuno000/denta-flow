@@ -27,7 +27,7 @@
 - [x] 4.1 RED: `avisoPrivacidadApi.test.ts`: `true` válido; `false` y ausente inválidos con el mensaje en español. GREEN: esquema Zod (design D9)
 - [x] 4.2 RED: `AvisoPrivacidad.test.tsx` (hook `useAvisoPrivacidad` en `avisoPrivacidadApi.ts`): con el cliente API simulado devuelve `texto` y `leyenda`; ante error expone el estado de error. GREEN: hook con TanStack Query sobre `lib/apiClient.ts`
 - [x] 4.3 RED: `AvisoPrivacidad.test.tsx` (Testing Library): muestra la leyenda como etiqueta de la casilla; el texto se despliega; al enviar sin marcar muestra el error asociado con `aria-describedby` y mueve el foco; marcada, el formulario de prueba envía `aceptaAvisoPrivacidad: true`. GREEN: componente `AvisoPrivacidad.tsx`
-- [ ] 4.4 Revisar el componente a 390 px de ancho y con teclado (orden de foco, contraste); anotar el resultado en `evidencia/accesibilidad.md`
+- [ ] 4.4 Revisar el componente a 390 px de ancho y con teclado (orden de foco, contraste); anotar el resultado en `evidencia/accesibilidad.md` — **Trasladada a C-16** (2026-11-26): el componente todavía no está en ninguna pantalla; la revisión a 390 px y con teclado se hace cuando C-16 lo incruste en la reserva
 
 ## 5. Bloque B — Esquema (requiere C-09) (spec "Datos mínimos del paciente")
 

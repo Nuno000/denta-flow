@@ -74,7 +74,7 @@ C-24 manual-publico         ← C-19
 | C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | sí | `[x]` |
 | C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | sí | `[x]` |
 | C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
-| C-11 | agenda-interna-vistas | C-04, C-09 | 5 | Florencia | Bruno | MEDIO | L | no | `[ ]` |
+| C-11 | agenda-interna-vistas | C-04, C-09 | 5 | Florencia | Bruno | MEDIO | L | no | `[x]` |
 | C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
 | C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[x]` |
 | C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | no | `[ ]` |
@@ -362,7 +362,7 @@ Criterios del reparto:
   - `knowledge-base/10_preguntas_abiertas.md` §PA-05, §PA-06
 
 ### [C-11] `agenda-interna-vistas`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-26 (H2 834 casos, it-mysql 174/174, frontend 167 tests; `GET /api/agenda/turnos` y `/panel/agenda`; evidencia en `openspec/changes/archive/2026-11-26-c-11-agenda-interna-vistas/evidencia/`)
 - **Scope**:
   - Vistas diaria y semanal de la agenda para recepción/administrador, filtrables por profesional y por sillón, mostrando el estado de cada turno (US-020).
   - Vista "mi agenda del día" del profesional: solo ve sus turnos, verificado en backend (US-023).

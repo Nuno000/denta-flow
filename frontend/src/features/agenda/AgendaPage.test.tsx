@@ -266,4 +266,28 @@ describe('pantalla de agenda (spec agenda-interna)', () => {
       expect(screen.queryByRole('button', { name: 'Ver historial' })).not.toBeInTheDocument()
     })
   })
+
+  describe('acceso a "Nuevo turno" (C-12)', () => {
+    it.each([
+      ['recepcion', sesionRecepcion],
+      ['administrador', sesionAdmin],
+    ] as const)('%s ve el acceso y lleva a la pantalla de carga', async (_rol, sesion) => {
+      const usuario = userEvent.setup()
+      simularApi(apiDeAgenda(sesion.usuario, { status: 200, cuerpo: [] }))
+      const { router } = renderizarEn('/panel/agenda', sesion)
+
+      await usuario.click(await screen.findByRole('link', { name: 'Nuevo turno' }))
+
+      expect(router.state.location.pathname).toBe('/panel/agenda/nuevo-turno')
+    })
+
+    it('el profesional no ve el acceso', async () => {
+      simularApi(apiDeAgenda(sesionProfesional.usuario, { status: 200, cuerpo: [] }))
+      renderizarEn('/panel/agenda', sesionProfesional)
+
+      await screen.findByRole('heading', { level: 1, name: 'Mi agenda' })
+      expect(screen.queryByRole('link', { name: 'Nuevo turno' })).not.toBeInTheDocument()
+    })
+  })
 })
+

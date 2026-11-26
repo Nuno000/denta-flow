@@ -27,6 +27,21 @@ describe('ruta /', () => {
     expect(await screen.findByRole('link', { name: 'Ingreso del personal' })).toHaveAttribute('href', '/ingresar')
   })
 
+  it('ofrece reservar un turno, con o sin sesión (C-16)', async () => {
+    simularApi({})
+    renderizarEn('/')
+
+    expect(await screen.findByRole('link', { name: 'Reservar un turno' })).toHaveAttribute('href', '/reservar')
+  })
+
+  it('/reservar es pública: sin sesión muestra la reserva y no manda al ingreso (C-16)', async () => {
+    simularApi({ 'GET /api/publico/prestaciones': { status: 200, cuerpo: [] } })
+    const { router } = renderizarEn('/reservar')
+
+    expect(await screen.findByRole('heading', { level: 1, name: 'Reservá tu turno' })).toBeInTheDocument()
+    expect(router.state.location.pathname).toBe('/reservar')
+  })
+
   it('con sesión ofrece ir al panel', async () => {
     simularApi({ 'GET /api/auth/yo': { status: 200, cuerpo: sesionDe('recepcion').usuario } })
     renderizarEn('/', sesionDe('recepcion'))
@@ -71,3 +86,32 @@ describe('rutas de Recursos (C-05, spec "Sección Recursos del panel")', () => {
   })
 })
 
+describe('ruta /panel/agenda/nuevo-turno (C-12, spec "Pantalla de carga de turno en el panel")', () => {
+  afterEach(() => {
+    sessionStorage.clear()
+    vi.unstubAllGlobals()
+  })
+
+  it.each(['administrador', 'recepcion'] as const)('%s entra a la pantalla de carga', async (rol) => {
+    simularApi(apiDeRecursos(sesionDe(rol).usuario))
+    renderizarEn('/panel/agenda/nuevo-turno', sesionDe(rol))
+
+    expect(await screen.findByRole('heading', { level: 1, name: 'Nuevo turno' })).toBeInTheDocument()
+  })
+
+  it('el profesional ve el aviso de que no tiene permiso y no la pantalla', async () => {
+    simularApi(apiDeRecursos(sesionDe('profesional').usuario))
+    renderizarEn('/panel/agenda/nuevo-turno', sesionDe('profesional'))
+
+    expect(await screen.findByRole('heading', { name: 'No tenés permiso para esta sección' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Nuevo turno' })).not.toBeInTheDocument()
+  })
+
+  it('sin sesión lleva al ingreso', async () => {
+    simularApi({})
+    const { router } = renderizarEn('/panel/agenda/nuevo-turno')
+
+    await screen.findByRole('heading', { level: 1 })
+    expect(router.state.location.pathname).toBe('/ingresar')
+  })
+})

@@ -114,6 +114,15 @@ export function fechaDeInstante(instanteIso: string): string {
   return hoyEnConsultorio(new Date(instanteIso))
 }
 
+/**
+ * Inicio de un turno para la API (C-12, design D6): la fecha y la hora del consultorio con su desplazamiento.
+ * Argentina no tiene horario de verano, así que el desplazamiento es siempre -03:00; el cálculo no depende de
+ * la zona de la máquina. Si eso cambiara, este es el único lugar a ajustar.
+ */
+export function inicioEnConsultorio(fecha: string, hora: string): string {
+  return `${fecha}T${hora}:00-03:00`
+}
+
 /** "Semana del lunes 30/11 al domingo 6/12". */
 export function tituloDeSemana(fecha: string): string {
   const lunes = lunesDeLaSemana(fecha)

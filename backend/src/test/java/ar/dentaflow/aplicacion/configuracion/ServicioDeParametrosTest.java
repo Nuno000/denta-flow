@@ -105,13 +105,22 @@ class ServicioDeParametrosTest {
     @Test
     void listarDevuelveLasFilasEnElOrdenDelCatalogoAunqueElRepositorioLasDevuelvaEnOtro() {
         when(repositorio.listarTodos()).thenReturn(List.of(
+                fila(ClaveParametro.CONTACTO_CONSULTORIO, "c"),
                 fila(ClaveParametro.AVISO_PRIVACIDAD_LEYENDA, "l"),
                 fila(ClaveParametro.ANTICIPACION_MINIMA_HORAS, "24"),
                 fila(ClaveParametro.AVISO_PRIVACIDAD_TEXTO, "t")));
 
         assertThat(servicio.listar()).extracting(Parametro::clave).containsExactly(
                 ClaveParametro.ANTICIPACION_MINIMA_HORAS, ClaveParametro.AVISO_PRIVACIDAD_TEXTO,
-                ClaveParametro.AVISO_PRIVACIDAD_LEYENDA);
+                ClaveParametro.AVISO_PRIVACIDAD_LEYENDA, ClaveParametro.CONTACTO_CONSULTORIO);
+    }
+
+    @Test
+    void elContactoDelConsultorioSeLeeAunqueSeaProvisorio() {
+        when(repositorio.buscar(ClaveParametro.CONTACTO_CONSULTORIO))
+                .thenReturn(Optional.of(fila(ClaveParametro.CONTACTO_CONSULTORIO, "Llamanos al 0261 555-0000")));
+
+        assertThat(servicio.contactoConsultorio()).isEqualTo("Llamanos al 0261 555-0000");
     }
 
     @Test

@@ -17,7 +17,8 @@ class ClaveParametroTest {
     @CsvSource({
             "anticipacion-minima-horas, ANTICIPACION_MINIMA_HORAS",
             "aviso-privacidad-texto, AVISO_PRIVACIDAD_TEXTO",
-            "aviso-privacidad-leyenda, AVISO_PRIVACIDAD_LEYENDA"})
+            "aviso-privacidad-leyenda, AVISO_PRIVACIDAD_LEYENDA",
+            "contacto-consultorio, CONTACTO_CONSULTORIO"})
     void desdeCodigoDevuelveLaClaveDelCatalogo(String codigo, ClaveParametro esperada) {
         assertThat(ClaveParametro.desdeCodigo(codigo)).isEqualTo(esperada);
         assertThat(esperada.codigo()).isEqualTo(codigo);
@@ -49,8 +50,11 @@ class ClaveParametroTest {
         assertThat(ClaveParametro.AVISO_PRIVACIDAD_TEXTO.tipo()).isEqualTo(TipoParametro.TEXTO);
         assertThat(ClaveParametro.AVISO_PRIVACIDAD_TEXTO.longitudMaxima()).isEqualTo(4000);
         assertThat(ClaveParametro.AVISO_PRIVACIDAD_LEYENDA.longitudMaxima()).isEqualTo(200);
+        assertThat(ClaveParametro.CONTACTO_CONSULTORIO.tipo()).isEqualTo(TipoParametro.TEXTO);
+        assertThat(ClaveParametro.CONTACTO_CONSULTORIO.longitudMaxima()).isEqualTo(300);
         for (ClaveParametro clave : new ClaveParametro[] {
-                ClaveParametro.AVISO_PRIVACIDAD_TEXTO, ClaveParametro.AVISO_PRIVACIDAD_LEYENDA}) {
+                ClaveParametro.AVISO_PRIVACIDAD_TEXTO, ClaveParametro.AVISO_PRIVACIDAD_LEYENDA,
+                ClaveParametro.CONTACTO_CONSULTORIO}) {
             assertThat(clave.unidad()).isNull();
             assertThat(clave.minimo()).isNull();
             assertThat(clave.maximo()).isNull();

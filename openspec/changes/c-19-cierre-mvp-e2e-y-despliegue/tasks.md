@@ -51,7 +51,7 @@
 
 ## 8. Cierre (26/11, antes de las 11:00)
 
-- [ ] 8.1 Completar `evidencia/seguridad.md` con la lista de design D9 y los hallazgos
+- [x] 8.1 Completar `evidencia/seguridad.md` con la lista de design D9 y los hallazgos
 - [ ] 8.2 Redeploy desde `main`, smoke test con `docs/demo.md` y decisión de las 11:00 (nube o plan B) anotada en `evidencia/decision-1100.md`
-- [ ] 8.3 Actualizar el `README.md` (puesta en marcha local, despliegue y URLs de la demo) y `CHANGES.md` (estado de C-19)
-- [ ] 8.4 Correr `openspec validate c-19-cierre-mvp-e2e-y-despliegue --strict` y anotar la tabla escenario → prueba en `evidencia/trazabilidad.md`
+- [x] 8.3 Actualizar el `README.md` (puesta en marcha local, despliegue y URLs de la demo) y `CHANGES.md` (estado de C-19)
+- [x] 8.4 Correr `openspec validate c-19-cierre-mvp-e2e-y-despliegue --strict` y anotar la tabla escenario → prueba en `evidencia/trazabilidad.md`

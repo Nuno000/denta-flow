@@ -1,5 +1,5 @@
-import { useSearchParams } from 'react-router-dom'
-import { CLASES_BOTON_SECUNDARIO } from '../../components/formulario/estilos'
+import { Link, useSearchParams } from 'react-router-dom'
+import { CLASES_BOTON_PRIMARIO, CLASES_BOTON_SECUNDARIO } from '../../components/formulario/estilos'
 import { ErrorApi } from '../../lib/apiClient'
 import { BarraDelPanel } from '../auth/BarraDelPanel'
 import { useSesion } from '../auth/contextoSesion'
@@ -40,7 +40,14 @@ export function AgendaPage() {
     <>
       <BarraDelPanel />
       <main className="mx-auto flex max-w-7xl flex-col gap-4 p-4 sm:p-6">
-        <h1 className="text-2xl font-bold text-slate-900">{esProfesional ? 'Mi agenda' : 'Agenda'}</h1>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-2xl font-bold text-slate-900">{esProfesional ? 'Mi agenda' : 'Agenda'}</h1>
+          {!esProfesional && (
+            <Link to="/panel/agenda/nuevo-turno" className={CLASES_BOTON_PRIMARIO}>
+              Nuevo turno
+            </Link>
+          )}
+        </div>
         <NavegacionDeFecha vista={vista} fecha={fecha} hoy={hoy} alCambiar={cambiar} />
         <FiltrosDeAgenda
           filtros={esProfesional ? filtrosDeConsulta : filtros}

@@ -1,11 +1,14 @@
 package ar.dentaflow.presentacion.errores;
 
+import ar.dentaflow.aplicacion.reservas.DemasiadasReservasException;
+import ar.dentaflow.aplicacion.turnos.ConflictoConAlternativasException;
 import ar.dentaflow.aplicacion.usuarios.CredencialesInvalidasException;
 import ar.dentaflow.aplicacion.usuarios.DemasiadosIntentosException;
 import ar.dentaflow.dominio.comun.ConflictoException;
 import ar.dentaflow.dominio.comun.OperacionNoPermitidaException;
 import ar.dentaflow.dominio.comun.RecursoNoEncontradoException;
 import ar.dentaflow.dominio.comun.ValidacionDeDominioException;
+import ar.dentaflow.presentacion.turnos.AlternativaRespuesta;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -63,6 +66,14 @@ public class ManejadorDeErrores extends ResponseEntityExceptionHandler {
         return responder(HttpStatus.CONFLICT, "Conflicto", e.getMessage());
     }
 
+    /** 409 de la carga manual con horarios libres cercanos (C-12, design D4); más específico que el de conflicto. */
+    @ExceptionHandler(ConflictoConAlternativasException.class)
+    ResponseEntity<ProblemDetail> conflictoConAlternativas(ConflictoConAlternativasException e) {
+        ProblemDetail problema = problema(HttpStatus.CONFLICT, "Conflicto", e.getMessage());
+        problema.setProperty("alternativas", e.alternativas().stream().map(AlternativaRespuesta::de).toList());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problema);
+    }
+
     @ExceptionHandler(CredencialesInvalidasException.class)
     ResponseEntity<ProblemDetail> credenciales(CredencialesInvalidasException e) {
         return responder(HttpStatus.UNAUTHORIZED, "Credenciales inválidas", e.getMessage());
@@ -73,6 +84,14 @@ public class ManejadorDeErrores extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                 .header(HttpHeaders.RETRY_AFTER, Long.toString(e.reintentarEn().toSeconds()))
                 .body(problema(HttpStatus.TOO_MANY_REQUESTS, "Demasiados intentos", e.getMessage()));
+    }
+
+    /** C-16 design D5: límite de reservas públicas por origen. */
+    @ExceptionHandler(DemasiadasReservasException.class)
+    ResponseEntity<ProblemDetail> demasiadasReservas(DemasiadasReservasException e) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .header(HttpHeaders.RETRY_AFTER, Long.toString(e.reintentarEn().toSeconds()))
+                .body(problema(HttpStatus.TOO_MANY_REQUESTS, "Demasiados pedidos", e.getMessage()));
     }
 
     /** Lo lanza la seguridad por método ({@code @PreAuthorize}) dentro del controlador. */

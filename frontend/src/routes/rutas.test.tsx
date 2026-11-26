@@ -140,3 +140,50 @@ describe('ruta /panel/agenda/nuevo-turno (C-12, spec "Pantalla de carga de turno
     expect(router.state.location.pathname).toBe('/ingresar')
   })
 })
+
+describe('ruta /panel/ausentismo (C-23, US-031)', () => {
+  afterEach(() => {
+    sessionStorage.clear()
+    vi.unstubAllGlobals()
+  })
+
+  it('sin sesión lleva al ingreso', async () => {
+    simularApi({})
+    const { router } = renderizarEn('/panel/ausentismo')
+
+    await screen.findByRole('heading', { level: 1 })
+    expect(router.state.location.pathname).toBe('/ingresar')
+  })
+
+  it.each(['administrador', 'recepcion', 'profesional'] as const)('%s accede al panel de ausentismo', async (rol) => {
+    simularApi({
+      'GET /api/auth/yo': { status: 200, cuerpo: sesionDe(rol).usuario },
+      'GET /api/profesionales': { status: 200, cuerpo: [] },
+      'GET /api/reportes/ausentismo': {
+        status: 200,
+        cuerpo: {
+          desde: '2026-11-01',
+          hasta: '2026-11-26',
+          profesionalId: null,
+          minimoAusencias: 2,
+          general: {
+            totalEvaluados: 0,
+            asistidos: 0,
+            ausentesSinAviso: 0,
+            ausentesConAviso: 0,
+            totalAusentes: 0,
+            tasaAusentismo: 0,
+          },
+          porProfesional: [],
+          porFranja: [],
+          porDiaSemana: [],
+          pacientesReiterados: [],
+        },
+      },
+    })
+    renderizarEn('/panel/ausentismo?desde=2026-11-01&hasta=2026-11-26&minimoAusencias=2', sesionDe(rol))
+
+    const tituloEsperado = rol === 'profesional' ? 'Mi ausentismo' : 'Panel de ausentismo'
+    expect(await screen.findByRole('heading', { level: 1, name: tituloEsperado })).toBeInTheDocument()
+  })
+})

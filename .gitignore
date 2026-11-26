@@ -24,3 +24,5 @@ Thumbs.db
 *.bak
 *.tmp
 *.log
+# Plan B de la demo (scripts/demo-local.ps1): PID de los procesos levantados
+scripts/.demo-local.pids

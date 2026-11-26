@@ -28,7 +28,7 @@
 
 ## 4. Bloque A — Plan B local (spec "Demo local equivalente como plan B")
 
-- [ ] 4.1 Escribir `scripts/demo-local.ps1` y `docs/demo.md` (design D8). Ensayarlo en una máquina del equipo desde cero, cronometrando; anotar el tiempo y los problemas en `evidencia/ensayo-plan-b.md`
+- [x] 4.1 Escribir `scripts/demo-local.ps1` y `docs/demo.md` (design D8). Ensayarlo en una máquina del equipo desde cero, cronometrando; anotar el tiempo y los problemas en `evidencia/ensayo-plan-b.md`
 
 ## 5. Bloque A — Esqueleto E2E (spec "Flujos del corte verificados de punta a punta")
 

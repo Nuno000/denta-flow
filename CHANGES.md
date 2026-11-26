@@ -76,7 +76,7 @@ C-24 manual-publico         ← C-19
 | C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
 | C-11 | agenda-interna-vistas | C-04, C-09 | 5 | Florencia | Bruno | MEDIO | L | no | `[ ]` |
 | C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
-| C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[ ]` |
+| C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[x]` |
 | C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | no | `[ ]` |
 | C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[ ]` |
 | C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | sí | `[ ]` |
@@ -448,7 +448,7 @@ Criterios del reparto:
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad, §Variables de entorno
 
 ### [C-15] `privacidad-ley-25326`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-26, PR #16; archivado en `openspec/changes/archive/2026-11-26-c-15-privacidad-ley-25326/`). La revisión del componente a 390 px y con teclado pasa a C-16
 - **Scope**:
   - Aviso de privacidad (texto editable desde parámetros) visible en la reserva, con aceptación obligatoria; registro de la fecha de consentimiento en Paciente (US-040).
   - Minimización de datos: solo DNI, nombre, teléfono, email; sin campos clínicos (RN-PR-03).

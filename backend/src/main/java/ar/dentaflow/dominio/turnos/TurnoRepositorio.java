@@ -25,6 +25,9 @@ public interface TurnoRepositorio {
      */
     boolean haySolapamientoDeProfesional(Long profesionalId, Instant inicio, Instant fin, Long excluirTurnoId);
 
+    /** Hay turnos {@code pendiente} o {@code confirmado} del paciente que empiezan después de {@code ahora} (C-15). */
+    boolean hayTurnosActivosFuturosDelPaciente(Long pacienteId, Instant ahora);
+
     /** Ídem {@link #haySolapamientoDeProfesional} para el sillón. */
     boolean haySolapamientoDeSillon(Long sillonId, Instant inicio, Instant fin, Long excluirTurnoId);
 }

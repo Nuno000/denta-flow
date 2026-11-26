@@ -1,4 +1,9 @@
-## ADDED Requirements
+# privacidad-datos-personales Specification
+
+## Purpose
+Define cómo DentaFlow cumple la Ley 25.326 con los datos de los pacientes (RN-PR-01..03, US-040, PA-12): aviso de privacidad público y aceptación obligatoria al reservar con su instante registrado, datos mínimos del paciente, baja por anonimización con retención de 5 años de los turnos, ningún email a pacientes anonimizados, ningún dato personal en logs ni errores, y transporte cifrado en el despliegue.
+
+## Requirements
 
 ### Requirement: Aviso de privacidad público
 El sistema SHALL exponer sin autenticación `GET /api/publico/aviso-privacidad`, que devuelve el texto del aviso y la leyenda de aceptación vigentes en los parámetros del consultorio (`aviso-privacidad-texto`, `aviso-privacidad-leyenda`), sin datos personales ni la marca `provisorio`, el autor o la fecha de modificación.
@@ -23,7 +28,7 @@ Toda reserva online SHALL exigir la aceptación explícita del aviso de privacid
 - **THEN** la reserva sigue su curso normal
 
 ### Requirement: Instante del consentimiento registrado
-Al aceptar el aviso en una reserva, el sistema SHALL guardar en el paciente el instante de la aceptación, tomado del reloj del sistema y almacenado en UTC, en la misma transacción que la reserva. Si el paciente ya existía (mismo DNI), MUST guardar el instante de la última aceptación. Si la reserva falla, MUST NOT quedar registrado el consentimiento.
+Al aceptar el aviso en una reserva, el sistema SHALL guardar en el paciente el instante de la aceptación, tomado del reloj del sistema y almacenado en UTC, junto con el alta o la actualización del paciente. Si el paciente ya existía (mismo DNI), MUST guardar el instante de la última aceptación. El registro online de un paciente sin aceptación MUST rechazarse sin crear ni modificar al paciente.
 
 #### Scenario: Paciente nuevo
 - **WHEN** un paciente nuevo reserva aceptando el aviso con el reloj en `2026-12-01T13:15:00Z`
@@ -34,8 +39,12 @@ Al aceptar el aviso en una reserva, el sistema SHALL guardar en el paciente el i
 - **THEN** su consentimiento queda registrado en `2026-12-05T10:00:00Z`
 
 #### Scenario: Reserva que falla por solapamiento
-- **WHEN** una reserva que acepta el aviso es rechazada porque el hueco ya fue tomado
-- **THEN** el instante de consentimiento del paciente no cambia
+- **WHEN** una reserva que acepta el aviso registra al paciente y después el turno es rechazado porque el hueco ya fue tomado
+- **THEN** el paciente queda con el instante de esa aceptación
+
+#### Scenario: Registro online sin aceptación
+- **WHEN** se registra un paciente desde la reserva online sin instante de aceptación
+- **THEN** el sistema lo rechaza con un error de validación y no crea ni modifica al paciente
 
 ### Requirement: Datos mínimos del paciente
 El paciente SHALL guardar solo DNI, nombre, apellido, teléfono, email, el instante de consentimiento y los datos de anonimización (RN-PR-03, SU-07). El sistema MUST NOT tener campos clínicos ni datos personales adicionales del paciente.
@@ -45,7 +54,7 @@ El paciente SHALL guardar solo DNI, nombre, apellido, teléfono, email, el insta
 - **THEN** coinciden con la lista permitida y no hay ninguno más
 
 ### Requirement: Anonimización del paciente
-El administrador SHALL poder anonimizar un paciente con `POST /api/pacientes/{id}/anonimizar`. La anonimización MUST reemplazar nombre, apellido, DNI, teléfono y email por valores sustitutos que no identifican a la persona y que no reciben emails (dominio `.invalid`), MUST registrar el usuario y el instante (UTC) y MUST conservar los turnos del paciente y su historial de auditoría, que se retienen 5 años (PA-12, DD-12).
+El administrador SHALL poder anonimizar un paciente con `POST /api/pacientes/{id}/anonimizar`. La anonimización MUST borrar el DNI (queda vacío, lo que solo se permite a un paciente anonimizado) y reemplazar nombre, apellido, teléfono y email por valores sustitutos que no identifican a la persona y que no reciben emails (dominio `.invalid`), MUST registrar el usuario y el instante (UTC) y MUST conservar los turnos del paciente y su historial de auditoría, que se retienen 5 años (PA-12, DD-12).
 
 #### Scenario: Anonimización exitosa
 - **WHEN** un administrador anonimiza a un paciente sin turnos futuros activos

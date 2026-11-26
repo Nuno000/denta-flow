@@ -42,6 +42,31 @@ describe('ruta /', () => {
     expect(router.state.location.pathname).toBe('/reservar')
   })
 
+  it.each([
+    ['confirmar', 'Confirmá tu turno'],
+    ['cancelar', 'Cancelá tu turno'],
+    ['reprogramar', 'Reprogramá tu turno'],
+  ])('/turno/:token/%s es pública: sin sesión no manda al ingreso (C-17)', async (accion, titulo) => {
+    simularApi({
+      'GET /api/publico/turnos/tok-1': {
+        status: 200,
+        cuerpo: {
+          situacion: 'VIGENTE',
+          inicio: '2026-12-05T10:00:00-03:00',
+          fin: '2026-12-05T10:30:00-03:00',
+          prestacion: 'Limpieza',
+          profesional: 'Ana Pérez',
+          estado: 'pendiente',
+          puedeModificar: true,
+        },
+      },
+    })
+    const { router } = renderizarEn(`/turno/tok-1/${accion}`)
+
+    expect(await screen.findByRole('heading', { level: 1, name: titulo })).toBeInTheDocument()
+    expect(router.state.location.pathname).toBe(`/turno/tok-1/${accion}`)
+  })
+
   it('con sesión ofrece ir al panel', async () => {
     simularApi({ 'GET /api/auth/yo': { status: 200, cuerpo: sesionDe('recepcion').usuario } })
     renderizarEn('/', sesionDe('recepcion'))

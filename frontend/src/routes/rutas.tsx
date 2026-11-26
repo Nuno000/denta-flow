@@ -9,6 +9,9 @@ import { ProfesionalesTab } from '../features/recursos/ProfesionalesTab'
 import { RecursosPage } from '../features/recursos/RecursosPage'
 import { ReservaPage } from '../features/reserva/ReservaPage'
 import { SillonesTab } from '../features/recursos/SillonesTab'
+import { CancelarTurnoPage } from '../features/turno-paciente/CancelarTurnoPage'
+import { ConfirmarTurnoPage } from '../features/turno-paciente/ConfirmarTurnoPage'
+import { ReprogramarTurnoPage } from '../features/turno-paciente/ReprogramarTurnoPage'
 import { UsuariosPage } from '../features/usuarios/UsuariosPage'
 import { InicioPage } from './InicioPage'
 
@@ -23,6 +26,10 @@ export const rutas: RouteObject[] = [
     path: '/reservar',
     element: <ReservaPage />,
   },
+  // C-17: gestión del turno con el token del email, pública y sin sesión.
+  { path: '/turno/:token/confirmar', element: <ConfirmarTurnoPage /> },
+  { path: '/turno/:token/cancelar', element: <CancelarTurnoPage /> },
+  { path: '/turno/:token/reprogramar', element: <ReprogramarTurnoPage /> },
   {
     path: '/ingresar',
     element: <IngresarPage />,

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mapeo JPA de los turnos (C-09, design D10). Las demás entidades se referencian por id (sin asociaciones JPA),
+  como Profesional.prestacionIds. Estado y origen se guardan por código mediante conversores. Los instantes son
+  UTC (hibernate.jdbc.time_zone=UTC). El token de acceso no se puede modificar después del alta.
+-->
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
+                 version="3.0">
+    <access>FIELD</access>
+
+    <entity class="ar.dentaflow.dominio.turnos.Turno" name="Turno">
+        <table name="turno"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="pacienteId">
+                <column name="paciente_id" nullable="false" updatable="false"/>
+            </basic>
+            <basic name="profesionalId">
+                <column name="profesional_id" nullable="false"/>
+            </basic>
+            <basic name="sillonId">
+                <column name="sillon_id" nullable="false"/>
+            </basic>
+            <basic name="prestacionId">
+                <column name="prestacion_id" nullable="false" updatable="false"/>
+            </basic>
+            <basic name="inicio">
+                <column name="inicio" nullable="false"/>
+            </basic>
+            <basic name="fin">
+                <column name="fin" nullable="false"/>
+            </basic>
+            <basic name="estado">
+                <column name="estado" nullable="false" length="20"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.turnos.ConversorEstadoTurno"/>
+            </basic>
+            <basic name="origen">
+                <column name="origen" nullable="false" length="10" updatable="false"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.turnos.ConversorOrigenTurno"/>
+            </basic>
+            <basic name="esSobreturno">
+                <column name="es_sobreturno" nullable="false" updatable="false"/>
+            </basic>
+            <basic name="creadoPorUsuarioId">
+                <column name="creado_por_usuario_id" nullable="true" updatable="false"/>
+            </basic>
+            <basic name="creadoEn">
+                <column name="creado_en" nullable="false" updatable="false"/>
+            </basic>
+            <basic name="tokenAcceso">
+                <column name="token_acceso" nullable="false" length="64" updatable="false"/>
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>

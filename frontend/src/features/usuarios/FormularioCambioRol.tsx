@@ -4,14 +4,14 @@ import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
 import type { Rol } from '../auth/sesion'
 import {
-  leerErrorDeApi,
   useCambiarRol,
   type ProfesionalDisponible,
   type RolDisponible,
   type UsuarioGestionado,
 } from './api'
-import { Campo } from './Campo'
-import { CLASES_BOTON_PRIMARIO, CLASES_BOTON_SECUNDARIO, CLASES_CONTROL, ariaDeError } from './estilosFormulario'
+import { leerErrorDeApi } from '../../lib/erroresApi'
+import { Campo } from '../../components/formulario/Campo'
+import { CLASES_BOTON_PRIMARIO, CLASES_BOTON_SECUNDARIO, CLASES_CONTROL, ariaDeError } from '../../components/formulario/estilos'
 
 const esquema = z
   .object({ rol: z.string().min(1, 'Elegí el rol'), profesionalId: z.string() })

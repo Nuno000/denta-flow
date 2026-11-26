@@ -3,9 +3,10 @@ import { useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
 import type { Rol } from '../auth/sesion'
-import { leerErrorDeApi, useCrearUsuario, type ProfesionalDisponible, type RolDisponible } from './api'
-import { Campo } from './Campo'
-import { CLASES_BOTON_PRIMARIO, CLASES_BOTON_SECUNDARIO, CLASES_CONTROL, ariaDeError } from './estilosFormulario'
+import { useCrearUsuario, type ProfesionalDisponible, type RolDisponible } from './api'
+import { leerErrorDeApi } from '../../lib/erroresApi'
+import { Campo } from '../../components/formulario/Campo'
+import { CLASES_BOTON_PRIMARIO, CLASES_BOTON_SECUNDARIO, CLASES_CONTROL, ariaDeError } from '../../components/formulario/estilos'
 
 const esquema = z
   .object({

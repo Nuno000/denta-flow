@@ -68,15 +68,15 @@ C-24 manual-publico         ← C-19
 | C-02 | scaffolding-proyecto | C-01 | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | BAJO | M | sí | `[x]` |
 | C-03 | modelo-recursos-consultorio | C-02 | 1 | Renzo | Florencia | CRITICO | M | sí | `[x]` |
 | C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | sí | `[x]` |
-| C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[ ]` |
+| C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[x]` |
 | C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | sí | `[ ]` |
 | C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | sí | `[x]` |
 | C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | sí | `[x]` |
-| C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
+| C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | sí | `[x]` |
 | C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
 | C-11 | agenda-interna-vistas | C-04, C-09 | 5 | Florencia | Bruno | MEDIO | L | no | `[ ]` |
 | C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
-| C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[ ]` |
+| C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[x]` |
 | C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | no | `[ ]` |
 | C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[ ]` |
 | C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | sí | `[ ]` |
@@ -232,7 +232,7 @@ Criterios del reparto:
   - `knowledge-base/06_funcionalidades.md` §US-003
 
 ### [C-05] `gestion-recursos-admin`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-26 (PR #15; H2 418/418, it-mysql 56/56, frontend 96 tests; evidencia en `openspec/changes/archive/2026-11-26-c-05-gestion-recursos-admin/evidencia/`)
 - **Scope**:
   - Endpoints/pantallas de administrador para alta, edición y desactivación de profesionales, sillones y prestaciones; asociación de prestaciones por profesional (US-001).
   - Validación de input en backend; solo rol administrador (lectura para recepción y profesional según matriz).
@@ -315,7 +315,7 @@ Criterios del reparto:
 > Corazón del diferencial (DD-02). C-09 y C-10 son CRITICOS: ninguna regla de solapamiento puede vivir solo en la UI.
 
 ### [C-09] `modelo-turno-paciente`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-26 (H2 641/641, it-mysql 135/135; evidencia en `openspec/changes/archive/2026-11-26-c-09-modelo-turno-paciente/evidencia/`)
 - **Scope**:
   - Modelos: Paciente (nombre, apellido, DNI, teléfono, email, fecha de consentimiento), Turno (paciente, profesional, sillón, prestación, inicio, fin = inicio + duración, estado, origen online|recepción, `es_sobreturno`, creado_por, token de acceso del paciente).
   - Migración `V009_1__...` (Flyway, MySQL 8 + H2 `MODE=MySQL`); índices (profesional_id, estado, inicio, fin), (sillon_id, estado, inicio, fin), (paciente_id), (estado, inicio).
@@ -448,7 +448,7 @@ Criterios del reparto:
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad, §Variables de entorno
 
 ### [C-15] `privacidad-ley-25326`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-26, PR #16; archivado en `openspec/changes/archive/2026-11-26-c-15-privacidad-ley-25326/`). La revisión del componente a 390 px y con teclado pasa a C-16
 - **Scope**:
   - Aviso de privacidad (texto editable desde parámetros) visible en la reserva, con aceptación obligatoria; registro de la fecha de consentimiento en Paciente (US-040).
   - Minimización de datos: solo DNI, nombre, teléfono, email; sin campos clínicos (RN-PR-03).

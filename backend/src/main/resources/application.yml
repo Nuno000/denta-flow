@@ -16,11 +16,24 @@ spring:
       - META-INF/orm/usuarios.xml
       - META-INF/orm/configuracion.xml
       - META-INF/orm/auditoria.xml
+      - META-INF/orm/pacientes.xml
+      - META-INF/orm/turnos.xml
     properties:
       hibernate:
         # Los instantes se guardan en UTC (DATETIME(6)) y se mapean a Instant.
         jdbc:
           time_zone: UTC
+
+# Render y Vercel terminan TLS en su proxy: se respeta X-Forwarded-Proto para saber que el pedido
+# llegó por HTTPS y mandar HSTS (C-15, design D8).
+server:
+  forward-headers-strategy: framework
+
+# Sin datos personales en logs (C-15, design D7): ante una violación de clave única, Hibernate escribe
+# los valores repetidos (DNI, email). La excepción igual se propaga y los servicios la traducen a 409.
+logging:
+  level:
+    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: "OFF"
 
 # Actuator: solo el estado de salud, público y sin detalles ni datos personales.
 management:

@@ -84,6 +84,28 @@ Abrí <http://localhost:5173>: muestra la página inicial de DentaFlow.
 
 Un test de concurrencia solo cuenta como verificado con `-Pit-mysql` (DD-09). CI (`.github/workflows/ci.yml`) corre los tres jobs —`backend`, `it-mysql` y `frontend`— en cada PR a `main`.
 
+E2E con Playwright: `cd frontend && npm run e2e`, con backend y frontend levantados en local (C-19).
+
+## 6. Demo de la entrega (plan B local)
+
+La entrega del 2026-11-26 se presenta en local. A las 11:00 no había un entorno en la nube (ver `openspec/changes/c-19-cierre-mvp-e2e-y-despliegue/evidencia/decision-1100.md`). Desde la raíz del repo:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\demo-local.ps1
+```
+
+El guion, el checklist y la solución de problemas están en [docs/demo.md](docs/demo.md). La demo es local: no hay URL pública.
+
+## 7. Despliegue (preparado, sin activar)
+
+El código para desplegar ya está en el repo y probado:
+- perfil `prod` (`application-prod.yml`);
+- `backend/Dockerfile`, que solo construye Render en sus servidores (DD-13);
+- `frontend/vercel.json`;
+- variables en `.env.example`.
+
+El destino previsto es API en Render, frontend en Vercel y MySQL en Aiven. Falta crear las cuentas y cargar los secretos: tareas 3.2 a 3.5 de C-19.
+
 ## Flujo de trabajo
 
 Una rama por change de `CHANGES.md` (`feat/C-XX-nombre-corto`), TDD estricto, Conventional Commits en castellano y PR a `main`. El detalle está en [CLAUDE.md](CLAUDE.md) y en [docs/plan-trabajo-equipo.md](docs/plan-trabajo-equipo.md).

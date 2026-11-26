@@ -73,12 +73,12 @@ C-24 manual-publico         ← C-19
 | C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | sí | `[x]` |
 | C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | sí | `[x]` |
 | C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | sí | `[x]` |
-| C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
+| C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | sí | `[x]` |
 | C-11 | agenda-interna-vistas | C-04, C-09 | 5 | Florencia | Bruno | MEDIO | L | no | `[x]` |
-| C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
+| C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | sí | `[x]` |
 | C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[x]` |
 | C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | no | `[ ]` |
-| C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[ ]` |
+| C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[ ]` (parcial: US-024) |
 | C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | sí | `[ ]` |
 | C-18 | recordatorios-programados | C-09, C-14 | 6 | Bruno | Florencia | ALTO | M | no | `[ ]` |
 | C-17 | confirmar-cancelar-reprogramar | C-07, C-14, C-16 | 7 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
@@ -340,7 +340,7 @@ Criterios del reparto:
   - `knowledge-base/09_decisiones_y_supuestos.md` §DD-02, §DD-04, §SU-03
 
 ### [C-10] `motor-disponibilidad`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-26 (H2 958/958, it-mysql verificado por Renzo; evidencia en `openspec/changes/archive/2026-11-26-c-10-motor-disponibilidad/evidencia/`)
 - **Scope**:
   - Motor único de disponibilidad: dado prestación (y profesional si aplica) y rango de fechas, calcula huecos = horario de atención − bloqueos − turnos activos de profesional y sillón, solo huecos donde entra la duración completa (RN-DI-01).
   - Asignación de profesional y sillón al hueco elegido; verificación final dentro de la transacción de creación (reusa C-09) para que el hueco tomado en el medio se rechace.
@@ -383,7 +383,7 @@ Criterios del reparto:
 ### [C-12] `carga-manual-sobreturno`
 - **Estado**: `[ ]` pendiente
 - **Scope**:
-  - Carga de turno por recepción: buscar/crear paciente (DNI, teléfono, email opcional), elegir prestación, profesional, sillón y horario; rechaza conflictos de profesional/sillón (no es una alerta), respeta horarios y bloqueos (US-021).
+  - Carga de turno por recepción: buscar/crear paciente (DNI, teléfono, email opcional), elegir prestación, profesional, sillón y horario; rechaza conflictos de profesional/sillón (no es una alerta), respeta horarios y bloqueos (US-021; la restricción de horario y bloqueos `RestriccionDeHorarioYBloqueos` ya queda activa en `ServicioDeTurnos` desde C-10).
   - Sobreturno explícito: acción separada, solo recepción/administrador, marca `es_sobreturno`, registra quién y cuándo; inexistente en el flujo online (US-022, RN-SO-01/02).
   - Ante conflicto, sugerir la alternativa más cercana usando C-10.
   - Tests: conflicto rechazado, sobreturno permitido solo con permiso y auditado, profesional no puede cargar sobreturno.
@@ -401,7 +401,7 @@ Criterios del reparto:
   - `knowledge-base/09_decisiones_y_supuestos.md` §DD-03
 
 ### [C-13] `asistencia-y-registro-cambios`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[ ]` parcial el 2026-11-26 — **US-024 hecha** (`POST /api/turnos/{id}/asistencia` y acciones en `/panel/agenda`; H2 947/947, it-mysql 187/187, frontend 178 tests; archivado en `openspec/changes/archive/2026-11-26-c-13-registro-asistencia-turno/`); **US-025 pendiente** (pantalla del registro de cambios por turno, solo administrador, en un change aparte). No marcar `[x]` hasta completar US-025.
 - **Scope**:
   - Marcar turno como `asistio`, `ausente` o `ausente_con_aviso` por profesional (propios) o recepción, con auditoría (US-024).
   - Pantalla de consulta del registro de cambios por turno (quién, cuándo, qué cambió), solo administrador (US-025).
@@ -425,7 +425,7 @@ Criterios del reparto:
 > C-14 y C-15 pueden ir en paralelo con C-10/C-11. Todo lo público requiere validación estricta de input y anti-abuso.
 
 ### [C-14] `email-transaccional-y-enlaces`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-26 (migración `V014_1__crear_notificacion.sql`, servicio transaccional y enlaces con token; archivado en `openspec/changes/archive/2026-11-26-c-14-email-transaccional-y-enlaces/`)
 - **Scope**:
   - Modelo Notificacion (turno_id, tipo recordatorio|confirmación|reintento, canal email, enviada_en, estado de envío); Migración 005.
   - Adaptador de email transaccional detrás de una interfaz (sin acoplar el dominio al proveedor); plantillas de confirmación de reserva.
@@ -498,6 +498,7 @@ Criterios del reparto:
   - Enlace de confirmación de un toque: `pendiente` → `confirmado`, reflejado en la agenda (US-011).
   - Cancelación por el paciente hasta la anticipación mínima configurada; libera profesional y sillón; auditada (US-012, RN-CA-01/02).
   - Reprogramación: solo huecos válidos del motor (C-10), cambio transaccional que valida solapamientos, auditado.
+  - **Contrato C-10 para reprogramar** (C-10 no implementó su grupo opcional 8): usar `MotorDeDisponibilidad.buscarHuecos(prestacionId, profesionalId, desde, hasta, turnoAExcluir = turnoId)` para obtener los huecos válidos excluyendo el turno propio, y confirmar cada candidato con `ServicioDeTurnos.reprogramar`. El 409 de hueco tomado llega como `HuecoNoDisponibleException` / `TurnoSolapadoException`.
   - Fuera de la ventana: mensaje indicando contactar al consultorio (RN-CA-03); enlace vencido o turno cancelado: mensaje explicativo.
   - Tests: dentro/fuera de ventana, hueco nuevo tomado, token ajeno rechazado, doble confirmación idempotente.
 - **Dependencias**: `C-16, C-07, C-14`

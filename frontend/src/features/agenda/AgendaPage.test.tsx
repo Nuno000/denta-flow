@@ -143,4 +143,84 @@ describe('pantalla de agenda (spec agenda-interna)', () => {
       expect(screen.queryByRole('button', { name: 'Reintentar' })).not.toBeInTheDocument()
     })
   })
+
+  describe('registro de asistencia (C-13)', () => {
+    /** Martes 1/12 a las 12:00 del consultorio: los turnos de la mañana ya empezaron. */
+    const MEDIODIA_DEL_1_12 = new Date('2026-12-01T15:00:00Z')
+
+    async function primerTurno() {
+      const lista = await screen.findByRole('list', { name: /Turnos del/ })
+      return within(lista).getAllByRole('listitem')[0]
+    }
+
+    it('tocar "Asistió" envía el registro, refresca la agenda y lo anuncia', async () => {
+      vi.setSystemTime(MEDIODIA_DEL_1_12)
+      const usuario = userEvent.setup()
+      let registrado = false
+      const api = simularApi({
+        ...apiDeAgenda(sesionRecepcion.usuario, () => ({
+          status: 200,
+          cuerpo: registrado
+            ? [{ ...TURNOS_DEL_1_12[0], estado: 'asistio' }, ...TURNOS_DEL_1_12.slice(1)]
+            : TURNOS_DEL_1_12,
+        })),
+        'POST /api/turnos/1/asistencia': () => {
+          registrado = true
+          return { status: 200, cuerpo: { id: 1, estado: 'asistio' } }
+        },
+      })
+      renderizarEn('/panel/agenda?fecha=2026-12-01', sesionRecepcion)
+      const primero = await primerTurno()
+      const consultasAntes = consultasDeAgenda(api).length
+
+      await usuario.click(within(primero).getByRole('button', { name: 'Asistió' }))
+
+      expect(await screen.findByText('Asistencia registrada')).toBeInTheDocument()
+      await waitFor(async () =>
+        expect(within(await primerTurno()).getByRole('button', { name: 'Asistió' })).toHaveAttribute(
+          'aria-pressed',
+          'true',
+        ),
+      )
+      expect(consultasDeAgenda(api).length).toBeGreaterThan(consultasAntes)
+    })
+
+    it('un 409 muestra el motivo en la tarjeta y el estado no cambia', async () => {
+      vi.setSystemTime(MEDIODIA_DEL_1_12)
+      const usuario = userEvent.setup()
+      simularApi({
+        ...apiDeAgenda(sesionRecepcion.usuario),
+        'POST /api/turnos/1/asistencia': {
+          status: 409,
+          cuerpo: { detail: 'La asistencia se registra desde el inicio del turno' },
+        },
+      })
+      renderizarEn('/panel/agenda?fecha=2026-12-01', sesionRecepcion)
+      const primero = await primerTurno()
+
+      await usuario.click(within(primero).getByRole('button', { name: 'Ausente' }))
+
+      expect(await within(primero).findByRole('alert')).toHaveTextContent(
+        'La asistencia se registra desde el inicio del turno',
+      )
+      expect(within(primero).getByText('Confirmado')).toBeInTheDocument()
+    })
+
+    it('un 403 se muestra como falta de permiso', async () => {
+      vi.setSystemTime(MEDIODIA_DEL_1_12)
+      const usuario = userEvent.setup()
+      simularApi({
+        ...apiDeAgenda(sesionProfesional.usuario),
+        'POST /api/turnos/1/asistencia': { status: 403, cuerpo: { detail: 'Sin permiso' } },
+      })
+      renderizarEn('/panel/agenda?fecha=2026-12-01', sesionProfesional)
+      const primero = await primerTurno()
+
+      await usuario.click(within(primero).getByRole('button', { name: 'Ausente con aviso' }))
+
+      expect(await within(primero).findByRole('alert')).toHaveTextContent(
+        'No tenés permiso para registrar la asistencia de este turno',
+      )
+    })
+  })
 })

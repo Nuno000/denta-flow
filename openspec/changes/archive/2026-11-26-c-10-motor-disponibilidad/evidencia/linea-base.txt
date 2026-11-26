@@ -1,0 +1,5 @@
+# Línea base antes de implementar C-10 (`upstream/main` `6daa14b`)
+
+Fecha: 2026-11-26  
+Comando: `./mvnw.cmd verify` (perfil `test`, H2 `MODE=MySQL`)  
+Resultado: **920 tests en verde** (Failures: 0, Errors: 0, Skipped: 0), `BUILD SUCCESS` (04:05 min).

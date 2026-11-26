@@ -2,7 +2,7 @@
  * Único punto de contacto de la agenda con la API (C-11, design D1 y D3). Los componentes usan solo
  * `useTurnosDeAgenda`; si el backend real cambiara un nombre de campo, el ajuste queda en este archivo.
  */
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '../../lib/apiClient'
 import type { RangoAgenda } from './fechas'
 
@@ -74,5 +74,29 @@ export function useTurnosDeAgenda(rango: RangoAgenda, filtros: FiltrosAgenda) {
     queryKey: ['agenda', rango, filtros],
     queryFn: () => obtenerTurnosDeAgenda(rango, filtros),
     placeholderData: keepPreviousData,
+  })
+}
+
+// --- Asistencia (C-13, US-024)
+
+/** Estados que se registran como asistencia, en el orden en que se ofrecen. */
+export const ESTADOS_DE_ASISTENCIA = ['asistio', 'ausente', 'ausente_con_aviso'] as const
+
+export type EstadoDeAsistencia = (typeof ESTADOS_DE_ASISTENCIA)[number]
+
+export interface AsistenciaRegistrada {
+  id: number
+  estado: EstadoTurno
+}
+
+/** Registra la asistencia de un turno y, si sale bien, refresca todas las vistas de la agenda. */
+export function useRegistrarAsistencia() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ turnoId, estado }: { turnoId: number; estado: EstadoDeAsistencia }) =>
+      apiClient.post<AsistenciaRegistrada>(`/api/turnos/${turnoId}/asistencia`, { estado }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['agenda'] })
+    },
   })
 }

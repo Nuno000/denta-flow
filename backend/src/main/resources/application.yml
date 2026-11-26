@@ -98,3 +98,7 @@ app:
   notificaciones:
     asincronico: true
     espera-entre-intentos: PT1S
+  # Motor de disponibilidad (C-10, design D8).
+  disponibilidad:
+    paso-minutos: 15
+    dias-maximos: 14

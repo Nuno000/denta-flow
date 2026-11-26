@@ -1,12 +1,54 @@
 import { QueryClientProvider, type QueryClient } from '@tanstack/react-query'
-import { renderHook, waitFor } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { ErrorApi } from '../../lib/apiClient'
 import { crearQueryClient } from '../../lib/queryClient'
 import { simularApi } from '../../test/apiSimulada'
 import { TURNOS_DEL_1_12, consultasDeAgenda } from '../../test/datosAgenda'
-import { RUTA_AGENDA, construirConsultaAgenda, useTurnosDeAgenda } from './api'
+import { RUTA_AGENDA, construirConsultaAgenda, useRegistrarAsistencia, useTurnosDeAgenda } from './api'
+
+describe('useRegistrarAsistencia (C-13)', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('envía POST /api/turnos/{id}/asistencia con el estado y refresca la agenda', async () => {
+    let cuerpoRecibido: unknown
+    const api = simularApi({
+      'POST /api/turnos/41/asistencia': (cuerpo) => {
+        cuerpoRecibido = cuerpo
+        return { status: 200, cuerpo: { id: 41, estado: 'asistio' } }
+      },
+    })
+    const queryClient = crearQueryClient()
+    const invalidar = vi.spyOn(queryClient, 'invalidateQueries')
+    const { result } = renderHook(() => useRegistrarAsistencia(), { wrapper: envoltorio(queryClient) })
+
+    await act(async () => {
+      await result.current.mutateAsync({ turnoId: 41, estado: 'asistio' })
+    })
+
+    expect(cuerpoRecibido).toEqual({ estado: 'asistio' })
+    expect(api.mock.calls[0][1]?.method).toBe('POST')
+    expect(invalidar).toHaveBeenCalledWith({ queryKey: ['agenda'] })
+  })
+
+  it('un 409 queda como error y no refresca', async () => {
+    simularApi({ 'POST /api/turnos/41/asistencia': { status: 409, cuerpo: { detail: 'Turno cancelado' } } })
+    const queryClient = crearQueryClient()
+    const invalidar = vi.spyOn(queryClient, 'invalidateQueries')
+    const { result } = renderHook(() => useRegistrarAsistencia(), { wrapper: envoltorio(queryClient) })
+
+    await act(async () => {
+      await result.current.mutateAsync({ turnoId: 41, estado: 'ausente' }).catch(() => undefined)
+    })
+
+    await waitFor(() => expect(result.current.isError).toBe(true))
+    expect((result.current.error as ErrorApi).status).toBe(409)
+    expect(invalidar).not.toHaveBeenCalled()
+  })
+})
 
 function envoltorio(queryClient: QueryClient) {
   return function Envoltorio({ children }: { children: ReactNode }) {

@@ -1,3 +1,4 @@
+import { AccionesDeAsistencia } from './AccionesDeAsistencia'
 import type { TurnoDeAgenda } from './api'
 import { EtiquetaDeEstado, EtiquetaDeSobreturno } from './EtiquetaDeEstado'
 import { horaEnConsultorio } from './fechas'
@@ -40,6 +41,7 @@ export function TarjetaDeTurno({ turno, compacta = false }: TarjetaDeTurnoProps)
         <dt className={claseRotulo}>Sillón</dt>
         <dd>{turno.sillon.nombre}</dd>
       </dl>
+      <AccionesDeAsistencia turno={turno} />
     </li>
   )
 }

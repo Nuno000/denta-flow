@@ -6,6 +6,7 @@ import {
   fechaLarga,
   horaEnConsultorio,
   hoyEnConsultorio,
+  inicioEnConsultorio,
   lunesDeLaSemana,
   rangoDeVista,
   sumarDias,
@@ -105,6 +106,23 @@ describe('fechas del consultorio (America/Argentina/Buenos_Aires)', () => {
 
     it('la vista semanal pide de lunes a domingo', () => {
       expect(rangoDeVista('semana', '2026-12-02')).toEqual({ desde: '2026-11-30', hasta: '2026-12-06' })
+    })
+  })
+
+  describe('inicioEnConsultorio (C-12)', () => {
+    it('arma el inicio con el desplazamiento -03:00 del consultorio', () => {
+      expect(inicioEnConsultorio('2026-12-01', '09:00')).toBe('2026-12-01T09:00:00-03:00')
+    })
+
+    it('no cambia de día ni de hora: 23:30 sigue siendo 23:30 del mismo día', () => {
+      expect(inicioEnConsultorio('2026-12-01', '23:30')).toBe('2026-12-01T23:30:00-03:00')
+    })
+
+    it('es el mismo instante que la hora del consultorio, sin importar la zona de la máquina', () => {
+      const instante = new Date(inicioEnConsultorio('2026-12-01', '09:00'))
+
+      expect(instante.toISOString()).toBe('2026-12-01T12:00:00.000Z')
+      expect(horaEnConsultorio(instante.toISOString())).toBe('09:00')
     })
   })
 })

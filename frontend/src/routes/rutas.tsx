@@ -1,5 +1,6 @@
 import { Navigate, type RouteObject } from 'react-router-dom'
 import { AgendaPage } from '../features/agenda/AgendaPage'
+import { CargaDeTurnoPage } from '../features/agenda/CargaDeTurnoPage'
 import { IngresarPage } from '../features/auth/IngresarPage'
 import { PanelPage } from '../features/auth/PanelPage'
 import { RutaProtegida } from '../features/auth/RutaProtegida'
@@ -40,6 +41,15 @@ export const rutas: RouteObject[] = [
     element: (
       <RutaProtegida>
         <AgendaPage />
+      </RutaProtegida>
+    ),
+  },
+  {
+    // C-12: la carga manual de turnos y sobreturnos es de recepción y del administrador (lo verifica el backend).
+    path: '/panel/agenda/nuevo-turno',
+    element: (
+      <RutaProtegida roles={['administrador', 'recepcion']}>
+        <CargaDeTurnoPage />
       </RutaProtegida>
     ),
   },

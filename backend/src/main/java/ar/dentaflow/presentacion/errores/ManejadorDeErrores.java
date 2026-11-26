@@ -1,12 +1,14 @@
 package ar.dentaflow.presentacion.errores;
 
 import ar.dentaflow.aplicacion.reservas.DemasiadasReservasException;
+import ar.dentaflow.aplicacion.turnos.ConflictoConAlternativasException;
 import ar.dentaflow.aplicacion.usuarios.CredencialesInvalidasException;
 import ar.dentaflow.aplicacion.usuarios.DemasiadosIntentosException;
 import ar.dentaflow.dominio.comun.ConflictoException;
 import ar.dentaflow.dominio.comun.OperacionNoPermitidaException;
 import ar.dentaflow.dominio.comun.RecursoNoEncontradoException;
 import ar.dentaflow.dominio.comun.ValidacionDeDominioException;
+import ar.dentaflow.presentacion.turnos.AlternativaRespuesta;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -62,6 +64,14 @@ public class ManejadorDeErrores extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ConflictoException.class, OperacionNoPermitidaException.class})
     ResponseEntity<ProblemDetail> conflicto(RuntimeException e) {
         return responder(HttpStatus.CONFLICT, "Conflicto", e.getMessage());
+    }
+
+    /** 409 de la carga manual con horarios libres cercanos (C-12, design D4); más específico que el de conflicto. */
+    @ExceptionHandler(ConflictoConAlternativasException.class)
+    ResponseEntity<ProblemDetail> conflictoConAlternativas(ConflictoConAlternativasException e) {
+        ProblemDetail problema = problema(HttpStatus.CONFLICT, "Conflicto", e.getMessage());
+        problema.setProperty("alternativas", e.alternativas().stream().map(AlternativaRespuesta::de).toList());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problema);
     }
 
     @ExceptionHandler(CredencialesInvalidasException.class)

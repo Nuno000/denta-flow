@@ -57,7 +57,7 @@ class ParametroTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"1", "168"})
+    @ValueSource(strings = {"0", "1", "168"})
     void aceptaLosExtremosDelRango(String valor) {
         Parametro parametro = anticipacion();
 
@@ -77,13 +77,13 @@ class ParametroTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    @ValueSource(strings = {"0", "-5", "169", "veinte", "24.5", "+48", "   ", "1234567890"})
+    @ValueSource(strings = {"-1", "-5", "169", "veinte", "24.5", "+48", "   ", "1234567890"})
     void rechazaUnaAnticipacionInvalidaYNoCambiaNada(String invalido) {
         Parametro parametro = anticipacion();
 
         assertThatThrownBy(() -> parametro.actualizar(invalido, 7L, AHORA))
                 .isInstanceOf(ValidacionDeDominioException.class)
-                .hasMessage("La anticipación mínima debe ser un número entero de horas entre 1 y 168");
+                .hasMessage("La anticipación mínima debe ser un número entero de horas entre 0 y 168");
 
         assertThat(parametro.valor()).isEqualTo("24");
         assertThat(parametro.isProvisorio()).isTrue();

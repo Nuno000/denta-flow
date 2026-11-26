@@ -96,7 +96,7 @@ class ParametrosControllerTest {
                 .andExpect(jsonPath("$[0].clave").value("anticipacion-minima-horas"))
                 .andExpect(jsonPath("$[0].tipo").value("entero"))
                 .andExpect(jsonPath("$[0].unidad").value("horas"))
-                .andExpect(jsonPath("$[0].minimo").value(1))
+                .andExpect(jsonPath("$[0].minimo").value(0))
                 .andExpect(jsonPath("$[0].maximo").value(168))
                 .andExpect(jsonPath("$[0].valor").value("24"))
                 .andExpect(jsonPath("$[0].provisorio").value(true))
@@ -144,12 +144,23 @@ class ParametrosControllerTest {
     }
 
     @Test
+    void guardarCeroComoAnticipacionMinimaEsValido() throws Exception {
+        mockMvc.perform(cambiar(ANTICIPACION, "{\"valor\":\"0\"}", admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.valor").value("0"))
+                .andExpect(jsonPath("$.provisorio").value(false));
+
+        mockMvc.perform(get(ANTICIPACION).header("Authorization", admin))
+                .andExpect(jsonPath("$.valor").value("0"));
+    }
+
+    @Test
     void unValorInvalidoDa400YNoCambiaNada() throws Exception {
-        for (String invalido : new String[] {"0", "169", "veinte"}) {
+        for (String invalido : new String[] {"-1", "169", "veinte"}) {
             mockMvc.perform(cambiar(ANTICIPACION, "{\"valor\":\"" + invalido + "\"}", admin))
                     .andExpect(status().isBadRequest())
                     .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
-                    .andExpect(jsonPath("$.detail", containsString("entre 1 y 168")));
+                    .andExpect(jsonPath("$.detail", containsString("entre 0 y 168")));
         }
         mockMvc.perform(cambiar(ANTICIPACION, "{}", admin))
                 .andExpect(status().isBadRequest())

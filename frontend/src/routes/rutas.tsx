@@ -1,4 +1,5 @@
 import { Navigate, type RouteObject } from 'react-router-dom'
+import { AgendaPage } from '../features/agenda/AgendaPage'
 import { IngresarPage } from '../features/auth/IngresarPage'
 import { PanelPage } from '../features/auth/PanelPage'
 import { RutaProtegida } from '../features/auth/RutaProtegida'
@@ -24,6 +25,15 @@ export const rutas: RouteObject[] = [
     element: (
       <RutaProtegida>
         <PanelPage />
+      </RutaProtegida>
+    ),
+  },
+  {
+    // C-11: los tres roles internos; el profesional solo ve sus turnos (lo verifica el backend).
+    path: '/panel/agenda',
+    element: (
+      <RutaProtegida>
+        <AgendaPage />
       </RutaProtegida>
     ),
   },

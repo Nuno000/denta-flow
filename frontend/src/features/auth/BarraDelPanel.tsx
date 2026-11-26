@@ -17,6 +17,7 @@ interface Seccion {
  */
 const SECCIONES: Seccion[] = [
   { ruta: '/panel', nombre: 'Panel' },
+  { ruta: '/panel/agenda', nombre: 'Agenda' },
   { ruta: '/panel/recursos', nombre: 'Recursos', conSubrutas: true },
   { ruta: '/panel/usuarios', nombre: 'Usuarios', roles: ['administrador'] },
 ]

@@ -1,0 +1,20 @@
+Verificación final de C-11 agenda-interna-vistas (2026-11-26, rama feat/C-11-agenda-interna-vistas con origin/main af24203 mergeado: C-06, C-09, C-15)
+
+Backend (desde backend/):
+- ./mvnw verify            (perfil test, H2 MODE=MySQL): en verde. 807 tests según los .txt de surefire, el mismo
+                            método que la línea base (788 tras el merge, +19). Por XML: 834 casos, 0 fallas, 0 errores
+                            (incluye los 15 @Nested de ConsultaDeAgendaTest, que los .txt no cuentan).
+- ./mvnw verify -Pit-mysql (MySQL 8.0 local):            174 casos en verde, 0 fallas, 0 errores (antes del change: 168, +6)
+  Nuevos: ConsultaDeAgendaTest (15), LecturaDeAgendaH2Test (6), LecturaDeAgendaMySqlTest (6, @Tag mysql),
+  AgendaControllerTest (13, incluida la aserción de /v3/api-docs).
+
+Frontend (desde frontend/):
+- npm test      (Vitest): 167 tests en verde en 28 archivos (96 antes de C-11, sobre main eeb366c; C-11 suma 60 y el resto llega con main)
+- npm run lint  (oxlint --deny-warnings): sin advertencias
+- npm run build (tsc -b && vite build): correcto
+
+OpenSpec:
+- openspec validate c-11-agenda-interna-vistas --strict: válido
+
+Prueba visual con API simulada en el navegador: prueba-visual.md (390x844 y 1440x900).
+Prueba de punta a punta contra el backend real: punta-a-punta.md (api.ts sin cambios).

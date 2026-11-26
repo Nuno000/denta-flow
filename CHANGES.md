@@ -75,7 +75,7 @@ C-24 manual-publico         ← C-19
 | C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | sí | `[x]` |
 | C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | sí | `[x]` |
 | C-11 | agenda-interna-vistas | C-04, C-09 | 5 | Florencia | Bruno | MEDIO | L | no | `[x]` |
-| C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
+| C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | sí | `[x]` |
 | C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[x]` |
 | C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | no | `[ ]` |
 | C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[ ]` (parcial: US-024) |
@@ -425,7 +425,7 @@ Criterios del reparto:
 > C-14 y C-15 pueden ir en paralelo con C-10/C-11. Todo lo público requiere validación estricta de input y anti-abuso.
 
 ### [C-14] `email-transaccional-y-enlaces`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-26 (migración `V014_1__crear_notificacion.sql`, servicio transaccional y enlaces con token; archivado en `openspec/changes/archive/2026-11-26-c-14-email-transaccional-y-enlaces/`)
 - **Scope**:
   - Modelo Notificacion (turno_id, tipo recordatorio|confirmación|reintento, canal email, enviada_en, estado de envío); Migración 005.
   - Adaptador de email transaccional detrás de una interfaz (sin acoplar el dominio al proveedor); plantillas de confirmación de reserva.

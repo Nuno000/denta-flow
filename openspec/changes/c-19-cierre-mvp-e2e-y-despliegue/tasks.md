@@ -12,18 +12,18 @@
 
 ## 2. Bloque A — Perfil `prod` (spec `configuracion-entorno` modificada)
 
-- [ ] 2.1 RED: `PerfilProdTest` (`@SpringBootTest` con `prod` y H2 por propiedades de prueba): sin `APP_SEED_DEMO` no hay profesionales ni sillones; con `true` los hay; reiniciar el contexto no los duplica; no existe el bean del programador de recordatorios. GREEN: `application-prod.yml` (design D2) y, si hace falta, seed idempotente
-- [ ] 2.2 RED: `PerfilProdVariablesFaltantesTest`: sin `SPRING_DATASOURCE_URL` o sin `AUTH_SECRET` el contexto no arranca y el mensaje nombra la variable sin mostrar valores. GREEN: ajustar
+- [x] 2.1 RED: `PerfilProdTest` (`@SpringBootTest` con `prod` y H2 por propiedades de prueba): sin `APP_SEED_DEMO` no hay profesionales ni sillones; con `true` los hay; reiniciar el contexto no los duplica; no existe el bean del programador de recordatorios. GREEN: `application-prod.yml` (design D2) y, si hace falta, seed idempotente
+- [x] 2.2 RED: `PerfilProdVariablesFaltantesTest`: sin `SPRING_DATASOURCE_URL` o sin `AUTH_SECRET` el contexto no arranca y el mensaje nombra la variable sin mostrar valores. GREEN: ajustar
 - [ ] 2.3 Agregar a `.env.example` `SPRING_PROFILES_ACTIVE`, `APP_SEED_DEMO` y un ejemplo de URL de Aiven con `sslMode=REQUIRED` (sin host real)
 
 ## 3. Bloque A — Hosting (spec `despliegue-publico`)
 
-- [ ] 3.1 Agregar `backend/Dockerfile` multietapa y `backend/.dockerignore` (design D1, opción A aprobada). La excepción ya está registrada en `CLAUDE.md` y en DD-13. Verificar que ni el CI ni los scripts locales lo usan
+- [x] 3.1 Agregar `backend/Dockerfile` multietapa y `backend/.dockerignore` (design D1, opción A aprobada). La excepción ya está registrada en `CLAUDE.md` y en DD-13. Verificar que ni el CI ni los scripts locales lo usan
 - [ ] 3.2 (Equipo) Crear el servicio MySQL en Aiven, la base `dentaflow` y el usuario de la aplicación; anotar en `docs/despliegue.md` los límites del plan gratuito vistos en la consola. Verificar la conexión con `./mvnw verify -Pit-mysql` apuntando a Aiven (solo una vez, con las variables en la terminal, sin guardarlas)
 - [ ] 3.3 (Equipo) Crear el servicio web en Render desde el repo (raíz `backend/`, health check `/actuator/health`) y cargar las variables de `.env.example` con `SPRING_PROFILES_ACTIVE=prod`. Verificar que `/actuator/health` responde `UP` y que Flyway aplicó todas las migraciones
-- [ ] 3.4 RED: test de Vitest de `vercel.json` (las rutas de la app reescriben a `index.html`). GREEN: `frontend/vercel.json` (design D4). (Equipo) Crear el proyecto en Vercel con `VITE_API_BASE_URL`; poner su URL en `APP_BASE_URL` de Render
+- [x] 3.4 RED: test de Vitest de `vercel.json` (las rutas de la app reescriben a `index.html`). GREEN: `frontend/vercel.json` (design D4). (Equipo) Crear el proyecto en Vercel con `VITE_API_BASE_URL`; poner su URL en `APP_BASE_URL` de Render
 - [ ] 3.5 Verificar desde el navegador: ingreso del administrador en la URL pública, recarga en una ruta profunda sin 404, y que otra página de otro origen no recibe CORS. Guardar capturas en `evidencia/`
-- [ ] 3.6 RED: `apiClient.test.ts`: la primera llamada usa un timeout de 70 s y, mientras espera, el estado de carga muestra el mensaje de arranque en frío; al vencer, el mensaje de reintento. GREEN: cliente API y componente de carga (design D5)
+- [x] 3.6 RED: `apiClient.test.ts`: la primera llamada usa un timeout de 70 s y, mientras espera, el estado de carga muestra el mensaje de arranque en frío; al vencer, el mensaje de reintento. GREEN: cliente API y componente de carga (design D5)
 - [ ] 3.7 Buscar en `frontend/dist/` y en el repo (`git grep`) los valores secretos configurados; anotar en `evidencia/seguridad.md` que no aparecen
 
 ## 4. Bloque A — Plan B local (spec "Demo local equivalente como plan B")
@@ -32,9 +32,9 @@
 
 ## 5. Bloque A — Esqueleto E2E (spec "Flujos del corte verificados de punta a punta")
 
-- [ ] 5.1 Agregar `@playwright/test`, `frontend/playwright.config.ts` (design D6) y el script `npm run e2e`. Primera prueba: `panel-ingreso.spec.ts` (ingreso del administrador y menú según rol) en verde contra local
-- [ ] 5.2 Agregar `parametros.spec.ts` (el administrador edita `anticipacion-minima-horas` y lo ve guardado) en verde contra local
-- [ ] 5.3 Agregar el job `e2e` a `.github/workflows/ci.yml` con el MySQL del runner (design D6). Verificar en verde en el PR
+- [x] 5.1 Agregar `@playwright/test`, `frontend/playwright.config.ts` (design D6) y el script `npm run e2e`. Primera prueba: `panel-ingreso.spec.ts` (ingreso del administrador y menú según rol) en verde contra local
+- [ ] 5.2 ~~`parametros.spec.ts`~~: no hay pantalla de parámetros en `main` (C-07 es solo backend). En su lugar `panel-ingreso.spec.ts` cubre recursos de demo y la recarga de una ruta profunda. Queda pendiente si se agrega la pantalla
+- [x] 5.3 Agregar el job `e2e` a `.github/workflows/ci.yml` con el MySQL del runner (design D6). Verificar en verde en el PR
 
 ## 6. Bloque B — E2E del corte (requiere C-14..C-17)
 

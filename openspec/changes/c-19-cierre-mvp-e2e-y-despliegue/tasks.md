@@ -8,13 +8,13 @@
 
 ## 1. Línea base
 
-- [ ] 1.1 Correr `./mvnw verify`, `./mvnw verify -Pit-mysql`, `npm test` y `npm run build` y anotar los resultados en `evidencia/linea-base.txt`
+- [x] 1.1 Correr `./mvnw verify`, `./mvnw verify -Pit-mysql`, `npm test` y `npm run build` y anotar los resultados en `evidencia/linea-base.txt`
 
 ## 2. Bloque A — Perfil `prod` (spec `configuracion-entorno` modificada)
 
 - [x] 2.1 RED: `PerfilProdTest` (`@SpringBootTest` con `prod` y H2 por propiedades de prueba): sin `APP_SEED_DEMO` no hay profesionales ni sillones; con `true` los hay; reiniciar el contexto no los duplica; no existe el bean del programador de recordatorios. GREEN: `application-prod.yml` (design D2) y, si hace falta, seed idempotente
 - [x] 2.2 RED: `PerfilProdVariablesFaltantesTest`: sin `SPRING_DATASOURCE_URL` o sin `AUTH_SECRET` el contexto no arranca y el mensaje nombra la variable sin mostrar valores. GREEN: ajustar
-- [ ] 2.3 Agregar a `.env.example` `SPRING_PROFILES_ACTIVE`, `APP_SEED_DEMO` y un ejemplo de URL de Aiven con `sslMode=REQUIRED` (sin host real)
+- [x] 2.3 Agregar a `.env.example` `SPRING_PROFILES_ACTIVE`, `APP_SEED_DEMO` y un ejemplo de URL de Aiven con `sslMode=REQUIRED` (sin host real)
 
 ## 3. Bloque A — Hosting (spec `despliegue-publico`)
 
@@ -24,7 +24,7 @@
 - [x] 3.4 RED: test de Vitest de `vercel.json` (las rutas de la app reescriben a `index.html`). GREEN: `frontend/vercel.json` (design D4). (Equipo) Crear el proyecto en Vercel con `VITE_API_BASE_URL`; poner su URL en `APP_BASE_URL` de Render
 - [ ] 3.5 Verificar desde el navegador: ingreso del administrador en la URL pública, recarga en una ruta profunda sin 404, y que otra página de otro origen no recibe CORS. Guardar capturas en `evidencia/`
 - [x] 3.6 RED: `apiClient.test.ts`: la primera llamada usa un timeout de 70 s y, mientras espera, el estado de carga muestra el mensaje de arranque en frío; al vencer, el mensaje de reintento. GREEN: cliente API y componente de carga (design D5)
-- [ ] 3.7 Buscar en `frontend/dist/` y en el repo (`git grep`) los valores secretos configurados; anotar en `evidencia/seguridad.md` que no aparecen
+- [x] 3.7 Buscar en `frontend/dist/` y en el repo (`git grep`) los valores secretos configurados; anotar en `evidencia/seguridad.md` que no aparecen
 
 ## 4. Bloque A — Plan B local (spec "Demo local equivalente como plan B")
 

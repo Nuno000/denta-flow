@@ -1,0 +1,15 @@
+# Línea base de verificación — C-19 (tras merge de main 34f368e)
+
+- Fecha: 2026-11-26 01:59 (America/Argentina/Buenos_Aires)
+- Rama: `feat/C-19-cierre-mvp-e2e-y-despliegue` (con `origin/main` `34f368e` mergeado)
+- Entorno: Windows 11, Java 21, MySQL 8.4 nativo, Node 22.15.0
+
+## Resultados
+
+| Verificación | Comando | Resultado |
+|---|---|---|
+| Backend H2 | `cd backend && .\mvnw.cmd clean verify` | **677 tests**, 0 fallos, 0 errores, 0 omitidos (53.468 s) |
+| Backend MySQL 8 | `cd backend && .\mvnw.cmd verify -Pit-mysql` | **139 tests**, 0 fallos, 0 errores, 0 omitidos (01:48 min) |
+| Frontend unit/comp | `cd frontend && npm test` | **19 archivos, 107 tests** en verde (21.09 s) |
+| Frontend lint | `cd frontend && npm run lint` | 0 warnings, 0 errores (67 archivos) |
+| Frontend build | `cd frontend && npm run build` | OK (3.42 s, `dist/` generado) |

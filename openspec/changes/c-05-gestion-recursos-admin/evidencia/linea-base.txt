@@ -1,0 +1,7 @@
+Línea base de C-05 (2026-11-25, rama feat/C-05-gestion-recursos-admin sobre main cd862e1), antes de tocar código:
+
+- backend ./mvnw verify (perfil test, H2 MODE=MySQL): 337 tests en verde (0 fallas, 0 errores, 0 omitidos)
+- backend ./mvnw verify -Pit-mysql (MySQL 8.0 local): 51 tests en verde (0 fallas, 0 errores, 0 omitidos)
+- frontend npm test (Vitest): 52 tests en verde en 10 archivos
+
+Sin fallas previas.

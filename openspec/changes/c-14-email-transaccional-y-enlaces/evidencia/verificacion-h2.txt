@@ -1,0 +1,20 @@
+./mvnw -B verify (perfil test, H2 MODE=MySQL) — 2026-11-26, C-14 implementado
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.aplicacion.notificaciones.EnlacesDeTurnoTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.aplicacion.notificaciones.LogsDeNotificacionesTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.aplicacion.notificaciones.PlantillaConfirmacionReservaTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.aplicacion.notificaciones.PropiedadesEnlacesTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.aplicacion.notificaciones.ServicioDeEnlacesTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.aplicacion.notificaciones.ServicioDeNotificacionesTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.aplicacion.turnos.UnicaViaDeEscrituraDeTurnosTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.dominio.DominioSinFrameworksTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.dominio.notificaciones.NotificacionTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.dominio.notificaciones.PoliticaDeReintentoTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.dominio.notificaciones.SituacionDeEnlaceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.infraestructura.email.EnviadorDeEmailSimuladoTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.infraestructura.email.EnviadorDeEmailSmtpTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.infraestructura.email.PropiedadesEmailTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.infraestructura.persistencia.notificaciones.NotificacionRepositorioTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, -- in ar.dentaflow.infraestructura.persistencia.notificaciones.RestriccionesNotificacionH2Test
+[INFO] Tests run: 886, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+Línea base: 800. Nuevos: 86.

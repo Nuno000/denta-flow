@@ -1,0 +1,14 @@
+Línea base de C-14 (tarea 1.1), 2026-11-26, antes de tocar código.
+Rama feat/C-14-email-transaccional-y-enlaces rebasada sobre origin/main (af24203, incluye C-06), commit 09a3bb8.
+
+./mvnw -B verify (perfil test, H2 MODE=MySQL)
+  Tests run: 800, Failures: 0, Errors: 0, Skipped: 0
+  BUILD SUCCESS
+
+./mvnw -B verify -Pit-mysql (MySQL 8 local, @Tag("mysql"))
+  Corrido en un worktree temporal en 09a3bb8, porque la copia de trabajo ya tenía los tests en RED;
+  credenciales tomadas del .env local con -Dspring.config.import (no se copian acá).
+  Tests run: 168, Failures: 0, Errors: 0, Skipped: 0
+  BUILD SUCCESS
+
+Sin fallas previas.

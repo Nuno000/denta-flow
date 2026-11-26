@@ -129,6 +129,7 @@ public final class EscenarioDeAgendaJdbc {
             deTurnos.addAll(jdbc.queryForList("SELECT id FROM turno WHERE sillon_id = ?", Long.class, sillon));
         }
         deTurnos.forEach(id -> jdbc.update("DELETE FROM turno_historial WHERE turno_id = ?", id));
+        deTurnos.forEach(id -> jdbc.update("DELETE FROM notificacion WHERE turno_id = ?", id));
         deTurnos.forEach(id -> jdbc.update("DELETE FROM turno WHERE id = ?", id));
         profesionales.forEach(id -> jdbc.update("DELETE FROM profesional_prestacion WHERE profesional_id = ?", id));
         profesionales.forEach(id -> jdbc.update("DELETE FROM profesional WHERE id = ?", id));

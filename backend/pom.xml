@@ -43,6 +43,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <!-- C-14: email transaccional por SMTP genérico (design D4) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
         <!-- C-04: autenticación JWT Bearer (design D1) y autorización por rol -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

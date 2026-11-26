@@ -10,6 +10,13 @@ public interface SillonRepositorio {
 
     Optional<Sillon> buscarPorId(Long id);
 
+    /**
+     * Lee el sillón y bloquea su fila para escritura hasta el fin de la transacción
+     * ({@code SELECT ... FOR UPDATE}). Se toma siempre después del profesional (DD-09). Vacío si no
+     * existe.
+     */
+    Optional<Sillon> bloquearPorId(Long id);
+
     /** Todos, activos e inactivos, por id ascendente. */
     List<Sillon> listarTodos();
 

@@ -10,7 +10,7 @@
 - `<n>`: número correlativo dentro de ese change, desde 1.
 - `descripcion`: en minúsculas, con guiones bajos.
 
-Ejemplos: `V003_1__crear_recursos_consultorio.sql` (existe: profesionales, sillones, prestaciones y su relación), `V004_1__crear_usuarios.sql` (existe: catálogo `rol` y usuarios del personal), `V007_1__crear_parametros.sql` (existe: parámetros del consultorio con sus valores iniciales), `V008_1__crear_turno_historial.sql` (existe: historial solo-inserción de los cambios de turno), `V009_1__crear_turnos.sql`, `V009_2__indices_solapamiento.sql`.
+Ejemplos: `V003_1__crear_recursos_consultorio.sql` (existe: profesionales, sillones, prestaciones y su relación), `V006_1__crear_horarios_y_bloqueos.sql` (existe: horario de atención semanal por profesional y bloqueos de agenda por profesional, sillón o consultorio), `V004_1__crear_usuarios.sql` (existe: catálogo `rol` y usuarios del personal), `V007_1__crear_parametros.sql` (existe: parámetros del consultorio con sus valores iniciales), `V008_1__crear_turno_historial.sql` (existe: historial solo-inserción de los cambios de turno), `V009_1__crear_turnos.sql`, `V009_2__indices_solapamiento.sql`.
 
 > **Pendiente para C-09:** `turno_historial.turno_id` no tiene FK porque la tabla `turno` todavía no existía en C-08. La migración de C-09 que crea `turno` debe agregar `ALTER TABLE turno_historial ADD CONSTRAINT fk_turno_historial_turno FOREIGN KEY (turno_id) REFERENCES turno (id)`.
 

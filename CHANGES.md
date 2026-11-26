@@ -79,7 +79,7 @@ C-24 manual-publico         ← C-19
 | C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[x]` |
 | C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | no | `[ ]` |
 | C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[x]` |
-| C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | sí | `[ ]` |
+| C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | sí | `[x]` |
 | C-18 | recordatorios-programados | C-09, C-14 | 6 | Bruno | Florencia | ALTO | M | no | `[ ]` |
 | C-17 | confirmar-cancelar-reprogramar | C-07, C-14, C-16 | 7 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
 | C-22 | reintento-confirmacion [DIF] | C-18 | 7 | Bruno | Florencia | MEDIO | S | no | `[ ]` |
@@ -470,7 +470,7 @@ Criterios del reparto:
   - `knowledge-base/09_decisiones_y_supuestos.md` §DD-07, §SU-07
 
 ### [C-16] `reserva-online-publica`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-26, PR #29; archivado en `openspec/changes/archive/2026-11-26-c-16-reserva-online-publica/`). Specs sincronizadas: `reserva-online` (nueva) y `parametros-consultorio` (catálogo con `contacto-consultorio`)
 - **Scope**:
   - Flujo público mobile-first sin registro: elegir prestación (y profesional según PA-05) → ver solo huecos donde entra la duración completa → ingresar DNI, teléfono, email → aceptar aviso (US-010).
   - Creación de turno en una única transacción que revalida disponibilidad, asigna profesional y sillón, crea el turno con estado inicial parametrizable, registra historial y dispara el email de confirmación con enlaces.

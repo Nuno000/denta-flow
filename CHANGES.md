@@ -68,15 +68,15 @@ C-24 manual-publico         ← C-19
 | C-02 | scaffolding-proyecto | C-01 | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | BAJO | M | sí | `[x]` |
 | C-03 | modelo-recursos-consultorio | C-02 | 1 | Renzo | Florencia | CRITICO | M | sí | `[x]` |
 | C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | sí | `[x]` |
-| C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[ ]` |
+| C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[x]` |
 | C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | sí | `[x]` |
 | C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | sí | `[x]` |
 | C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | sí | `[x]` |
-| C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
+| C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | sí | `[x]` |
 | C-10 | motor-disponibilidad | C-06, C-09 | 5 | Renzo | Florencia | CRITICO | L | sí | `[ ]` |
 | C-11 | agenda-interna-vistas | C-04, C-09 | 5 | Florencia | Bruno | MEDIO | L | no | `[ ]` |
 | C-14 | email-transaccional-y-enlaces | C-02, C-09 | 5 | Jessica | Florencia | ALTO | M | sí | `[ ]` |
-| C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[ ]` |
+| C-15 | privacidad-ley-25326 | C-07, C-09 | 5 | Bruno | Florencia | ALTO | M | sí | `[x]` |
 | C-12 | carga-manual-sobreturno | C-10, C-11 | 6 | Renzo | Florencia | CRITICO | M | no | `[ ]` |
 | C-13 | asistencia-y-registro-cambios | C-08, C-11 | 6 | Florencia | Bruno | MEDIO | M | no | `[ ]` |
 | C-16 | reserva-online-publica | C-10, C-14, C-15 | 6 | Jessica | Florencia | ALTO | L | sí | `[ ]` |
@@ -232,7 +232,7 @@ Criterios del reparto:
   - `knowledge-base/06_funcionalidades.md` §US-003
 
 ### [C-05] `gestion-recursos-admin`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-26 (PR #15; H2 418/418, it-mysql 56/56, frontend 96 tests; evidencia en `openspec/changes/archive/2026-11-26-c-05-gestion-recursos-admin/evidencia/`)
 - **Scope**:
   - Endpoints/pantallas de administrador para alta, edición y desactivación de profesionales, sillones y prestaciones; asociación de prestaciones por profesional (US-001).
   - Validación de input en backend; solo rol administrador (lectura para recepción y profesional según matriz).
@@ -264,7 +264,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/disponibilidad/`, `backend/src/main/resources/db/migration/`
-- **Bloqueado por**: PA-11 (qué pasa con turnos existentes al bloquear; no codificar la resolución hasta decidir)
+- **Bloqueado por**: nada. PA-11 resuelta (DD-12): el bloqueo no cancela turnos existentes; avisa e impide reservas nuevas
 - **Leer antes**:
   - `knowledge-base/04_modelo_de_datos.md` §HorarioAtencion, §Bloqueo
   - `knowledge-base/05_reglas_de_negocio.md` §RN-TU-04, §RN-GL-01
@@ -315,7 +315,7 @@ Criterios del reparto:
 > Corazón del diferencial (DD-02). C-09 y C-10 son CRITICOS: ninguna regla de solapamiento puede vivir solo en la UI.
 
 ### [C-09] `modelo-turno-paciente`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-26 (H2 641/641, it-mysql 135/135; evidencia en `openspec/changes/archive/2026-11-26-c-09-modelo-turno-paciente/evidencia/`)
 - **Scope**:
   - Modelos: Paciente (nombre, apellido, DNI, teléfono, email, fecha de consentimiento), Turno (paciente, profesional, sillón, prestación, inicio, fin = inicio + duración, estado, origen online|recepción, `es_sobreturno`, creado_por, token de acceso del paciente).
   - Migración `V009_1__...` (Flyway, MySQL 8 + H2 `MODE=MySQL`); índices (profesional_id, estado, inicio, fin), (sillon_id, estado, inicio, fin), (paciente_id), (estado, inicio).
@@ -332,7 +332,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: L
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/turnos/`, `backend/src/main/java/ar/dentaflow/dominio/pacientes/`, `backend/src/main/resources/db/migration/`
-- **Bloqueado por**: PA-13 (email obligatorio del paciente), SU-03 (DNI como clave). PA-10 y PA-06 resueltas: nace `pendiente`; sillón asignado por el sistema después del profesional
+- **Bloqueado por**: nada. PA-13 y SU-03 resueltas (DD-12): email obligatorio, DNI obligatorio y único. PA-10 y PA-06 resueltas: nace `pendiente`; sillón asignado por el sistema después del profesional
 - **Leer antes**:
   - `knowledge-base/04_modelo_de_datos.md` §Turno, §Paciente
   - `knowledge-base/05_reglas_de_negocio.md` §RN-TU-01..07, §RN-GL-02
@@ -440,7 +440,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/infraestructura/email/`, `backend/src/main/java/ar/dentaflow/dominio/notificaciones/`, `backend/src/main/resources/db/migration/`
-- **Bloqueado por**: PA-13 (email obligatorio)
+- **Bloqueado por**: nada. PA-13 resuelta (DD-12); SMTP estándar por `.env` (Brevo o Gmail App Password), simulado en tests
 - **Leer antes**:
   - `knowledge-base/04_modelo_de_datos.md` §Notificacion
   - `knowledge-base/05_reglas_de_negocio.md` §RN-NO-01, §RN-NO-02
@@ -448,12 +448,12 @@ Criterios del reparto:
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad, §Variables de entorno
 
 ### [C-15] `privacidad-ley-25326`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-26, PR #16; archivado en `openspec/changes/archive/2026-11-26-c-15-privacidad-ley-25326/`). La revisión del componente a 390 px y con teclado pasa a C-16
 - **Scope**:
   - Aviso de privacidad (texto editable desde parámetros) visible en la reserva, con aceptación obligatoria; registro de la fecha de consentimiento en Paciente (US-040).
   - Minimización de datos: solo DNI, nombre, teléfono, email; sin campos clínicos (RN-PR-03).
   - Acceso a datos personales restringido por rol; transporte solo por HTTPS; no registrar datos personales en logs.
-  - Política de retención y baja pendiente: dejar el punto de extensión documentado, sin implementarlo.
+  - Anonimización/baja de los datos personales del paciente por endpoint protegido; retención de 5 años (PA-12, DD-12).
   - Tests: reserva sin aceptación rechazada, fecha de consentimiento guardada, recurso protegido por rol.
 - **Dependencias**: `C-09, C-07`
 - **Governance**: ALTO (datos personales, Ley 25.326)
@@ -462,7 +462,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `backend/src/main/java/ar/dentaflow/dominio/pacientes/`, `frontend/src/features/reserva/`, `backend/src/main/java/ar/dentaflow/infraestructura/seguridad/`
-- **Bloqueado por**: PA-12 (retención y baja de datos), revisión legal del texto del aviso
+- **Bloqueado por**: revisión legal del texto del aviso (el texto es editable en parámetros). PA-12 resuelta (DD-12): aceptación obligatoria con instante, endpoint de anonimización/baja, retención 5 años
 - **Leer antes**:
   - `knowledge-base/06_funcionalidades.md` §US-040
   - `knowledge-base/05_reglas_de_negocio.md` §RN-PR-01..03
@@ -484,7 +484,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: L
 - **Zona**: `frontend/src/features/reserva/`, `backend/src/main/java/ar/dentaflow/aplicacion/turnos/`, `backend/src/main/java/ar/dentaflow/presentacion/` (rutas públicas)
-- **Bloqueado por**: PA-13 (email obligatorio). PA-05, PA-06 y PA-10 resueltas (ver C-09 y C-10)
+- **Bloqueado por**: nada. PA-13 resuelta (DD-12). PA-05, PA-06 y PA-10 resueltas (ver C-09 y C-10)
 - **Leer antes**:
   - `knowledge-base/07_flujos_principales.md` §Flujo 1
   - `knowledge-base/06_funcionalidades.md` §US-010
@@ -507,7 +507,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `frontend/src/features/reserva/`, `backend/src/main/java/ar/dentaflow/aplicacion/turnos/`
-- **Bloqueado por**: PA-04 (anticipación mínima por defecto, se usa el parámetro de C-07)
+- **Bloqueado por**: nada. PA-04 resuelta (DD-12): 24 h por defecto, ajustable a 0 h para la demo (requiere ampliar el rango de C-07, hoy 1..168)
 - **Leer antes**:
   - `knowledge-base/07_flujos_principales.md` §Flujo 2, §Flujo 3
   - `knowledge-base/06_funcionalidades.md` §US-011, §US-012
@@ -555,7 +555,7 @@ Criterios del reparto:
 - **Revisor (aprueba el PR)**: Florencia
 - **Tamaño estimado**: M
 - **Zona**: `frontend/` (Playwright), `.github/workflows/`, configuración de despliegue, documentación
-- **Bloqueado por**: PA-14 (hosting de MySQL, se decide en este change). PA-01 resuelta (DD-10)
+- **Bloqueado por**: nada. PA-14 resuelta (DD-12): Aiven MySQL gratuito; plan B demo local completa. PA-01 resuelta (DD-10)
 - **Leer antes**:
   - `knowledge-base/07_flujos_principales.md`
   - `knowledge-base/01_vision_y_objetivos.md`

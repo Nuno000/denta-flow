@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ErrorApi, apiClient } from '../../lib/apiClient'
+import { apiClient } from '../../lib/apiClient'
 import type { Rol, UsuarioSesion } from '../auth/sesion'
 
 /** Usuario tal como lo devuelve la gestión de usuarios (mismos datos que la sesión). */
@@ -89,21 +89,4 @@ export function useBlanquearContrasena() {
   return useMutacionDeUsuarios(({ id, contrasena }: { id: number; contrasena: string }) =>
     apiClient.put<void>(`/api/usuarios/${id}/contrasena`, { contrasena }),
   )
-}
-
-interface CuerpoProblema {
-  detail?: string
-  errores?: Record<string, string>
-}
-
-/** Traduce un error de la API a mensajes por campo y uno general, para mostrarlos en el formulario. */
-export function leerErrorDeApi(error: unknown): { campos: Record<string, string>; general: string } {
-  if (error instanceof ErrorApi && typeof error.cuerpo === 'object' && error.cuerpo !== null) {
-    const cuerpo = error.cuerpo as CuerpoProblema
-    return {
-      campos: cuerpo.errores ?? {},
-      general: cuerpo.detail ?? 'No se pudo completar la operación',
-    }
-  }
-  return { campos: {}, general: 'No pudimos conectar con el servidor. Probá de nuevo.' }
 }

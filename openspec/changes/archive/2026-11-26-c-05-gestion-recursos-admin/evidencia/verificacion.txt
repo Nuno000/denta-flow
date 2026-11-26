@@ -1,0 +1,15 @@
+Verificación final de C-05 gestion-recursos-admin (2026-11-25, rama feat/C-05-gestion-recursos-admin)
+
+Backend (desde backend/):
+- ./mvnw verify            (perfil test, H2 MODE=MySQL): 418 tests en verde, 0 fallas, 0 errores, 0 omitidos  (línea base: 337, +81)
+- ./mvnw verify -Pit-mysql (MySQL 8.0 local):            56 tests en verde, 0 fallas, 0 errores, 0 omitidos   (línea base: 51, +5)
+
+Frontend (desde frontend/):
+- npm run lint  (oxlint --deny-warnings): sin advertencias
+- npm test      (Vitest): 96 tests en verde en 15 archivos  (línea base: 52, +44)
+- npm run build (tsc -b && vite build): correcto
+
+OpenSpec:
+- openspec validate c-05-gestion-recursos-admin --strict: válido
+
+Prueba visual automatizada en 390x844 y 1440x900: ver prueba-visual.md y capturas/.

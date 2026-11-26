@@ -15,6 +15,9 @@ public interface PrestacionRepositorioJpa extends Repository<Prestacion, Long>, 
 
     Prestacion save(Prestacion prestacion);
 
+    /** Guarda y escribe en la base enseguida, así una violación de unicidad aparece en el mismo llamado. */
+    Prestacion saveAndFlush(Prestacion prestacion);
+
     Optional<Prestacion> findById(Long id);
 
     @Query("select p from Prestacion p order by p.nombre")
@@ -25,7 +28,7 @@ public interface PrestacionRepositorioJpa extends Repository<Prestacion, Long>, 
 
     @Override
     default Prestacion guardar(Prestacion prestacion) {
-        return save(prestacion);
+        return saveAndFlush(prestacion);
     }
 
     @Override

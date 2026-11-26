@@ -7,6 +7,8 @@ interface Seccion {
   nombre: string
   /** Roles que ven la sección; sin indicar, todos los roles internos. */
   roles?: Rol[]
+  /** Si la sección tiene sub-rutas (pestañas), queda marcada como actual en todas ellas. */
+  conSubrutas?: boolean
 }
 
 /**
@@ -15,6 +17,7 @@ interface Seccion {
  */
 const SECCIONES: Seccion[] = [
   { ruta: '/panel', nombre: 'Panel' },
+  { ruta: '/panel/recursos', nombre: 'Recursos', conSubrutas: true },
   { ruta: '/panel/usuarios', nombre: 'Usuarios', roles: ['administrador'] },
 ]
 
@@ -43,7 +46,7 @@ export function BarraDelPanel() {
           </Link>
           <nav aria-label="Secciones del panel" className="flex flex-wrap gap-1">
             {secciones.map((seccion) => (
-              <NavLink key={seccion.ruta} to={seccion.ruta} end className={clasesDeEnlace}>
+              <NavLink key={seccion.ruta} to={seccion.ruta} end={seccion.conSubrutas !== true} className={clasesDeEnlace}>
                 {seccion.nombre}
               </NavLink>
             ))}

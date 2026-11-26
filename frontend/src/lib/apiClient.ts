@@ -23,6 +23,12 @@ export interface OpcionesApi extends RequestInit {
   autenticar?: boolean
 }
 
+/**
+ * Espera máxima de un pedido. La API del plan gratuito de Render se suspende sin tráfico y la primera
+ * respuesta puede tardar cerca de un minuto (C-19, design D5): pasado este tiempo el pedido se corta.
+ */
+export const TIEMPO_MAXIMO_PEDIDO_MS = 70_000
+
 let obtenerToken: () => string | null = () => null
 const suscriptoresNoAutorizado = new Set<() => void>()
 
@@ -64,7 +70,11 @@ async function solicitar<T>(ruta: string, opciones: OpcionesApi = {}): Promise<T
     cabeceras.set('Authorization', `Bearer ${token}`)
   }
 
-  const respuesta = await fetch(`${urlBase()}${ruta}`, { ...init, headers: cabeceras })
+  const respuesta = await fetch(`${urlBase()}${ruta}`, {
+    ...init,
+    headers: cabeceras,
+    signal: init.signal ?? AbortSignal.timeout(TIEMPO_MAXIMO_PEDIDO_MS),
+  })
   const cuerpo = await leerCuerpo(respuesta)
 
   if (!respuesta.ok) {

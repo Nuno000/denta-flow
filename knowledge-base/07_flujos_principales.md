@@ -97,4 +97,4 @@ Paciente -> Reserva pública -> Backend (disponibilidad) -> BD (turno + auditor�
 
 **Pasos**: alta de profesionales, sillones, prestaciones (con duración) -> horarios por profesional -> bloqueos -> usuarios y roles -> anticipación mínima.
 
-**Casos de error**: bloqueo que afecta turnos ya existentes -> el sistema avisa y requiere decidir cómo resolverlos (PA-11).
+**Casos de error**: bloqueo que afecta turnos ya existentes -> el sistema avisa cuántos turnos hay en la franja, no los cancela e impide reservas nuevas en ella (PA-11, DD-12).

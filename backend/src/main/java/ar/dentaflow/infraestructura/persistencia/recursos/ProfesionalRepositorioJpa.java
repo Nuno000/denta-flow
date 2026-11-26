@@ -15,6 +15,9 @@ public interface ProfesionalRepositorioJpa extends Repository<Profesional, Long>
 
     Profesional save(Profesional profesional);
 
+    /** Guarda y escribe en la base enseguida, así una violación de unicidad aparece en el mismo llamado. */
+    Profesional saveAndFlush(Profesional profesional);
+
     Optional<Profesional> findById(Long id);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -38,7 +41,7 @@ public interface ProfesionalRepositorioJpa extends Repository<Profesional, Long>
 
     @Override
     default Profesional guardar(Profesional profesional) {
-        return save(profesional);
+        return saveAndFlush(profesional);
     }
 
     @Override

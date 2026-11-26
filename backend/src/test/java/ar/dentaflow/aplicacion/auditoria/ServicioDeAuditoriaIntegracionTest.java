@@ -6,9 +6,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import ar.dentaflow.dominio.auditoria.AccionDeTurno;
 import ar.dentaflow.dominio.auditoria.Actor;
 import ar.dentaflow.dominio.comun.ValidacionDeDominioException;
+import ar.dentaflow.escenarios.EscenarioDeAgendaJdbc;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,12 +39,19 @@ class ServicioDeAuditoriaIntegracionTest {
     @Autowired
     private JdbcTemplate jdbc;
 
-    /** Un turno propio por caso: no depende de que la tabla esté vacía. */
-    private final long turno = ThreadLocalRandom.current().nextLong(10_000_000, 90_000_000);
+    /** Un turno real propio por caso (FK desde C-09): no depende de que la tabla esté vacía. */
+    private long turno;
+    private EscenarioDeAgendaJdbc escenario;
+
+    @BeforeEach
+    void crearTurno() {
+        escenario = new EscenarioDeAgendaJdbc(jdbc);
+        turno = escenario.turnoValido();
+    }
 
     @AfterEach
     void limpiar() {
-        jdbc.update("DELETE FROM turno_historial WHERE turno_id = ?", turno);
+        escenario.limpiar();
     }
 
     private long registros() {
@@ -103,5 +111,20 @@ class ServicioDeAuditoriaIntegracionTest {
         })).isInstanceOf(ValidacionDeDominioException.class).hasMessageContaining("4000");
 
         assertThat(registros()).isZero();
+    }
+
+    @Test
+    void registrarUnCambioDeUnTurnoInexistenteRevierteTodo() {
+        long inexistente = 9999L;
+        jdbc.update("DELETE FROM turno_historial WHERE turno_id = ?", inexistente);
+
+        assertThatThrownBy(() -> transaccion.executeWithoutResult(estado -> {
+            auditoria.registrarCambio(turno, AccionDeTurno.CREACION, Actor.sistema(), null, CONFIRMADO);
+            auditoria.registrarCambio(inexistente, AccionDeTurno.CREACION, Actor.sistema(), null, CONFIRMADO);
+        })).isInstanceOf(DataIntegrityViolationException.class);
+
+        assertThat(registros()).isZero();
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM turno_historial WHERE turno_id = ?", Long.class,
+                inexistente)).isZero();
     }
 }

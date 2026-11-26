@@ -1,6 +1,7 @@
 import { screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { renderizarEn, sesionDe, simularApi } from '../../test/apiSimulada'
+import { apiDeRecursos } from '../../test/datosRecursos'
 import { ADMIN, apiDeUsuarios } from '../../test/datosUsuarios'
 
 describe('BarraDelPanel (spec "Menú del panel según el rol")', () => {
@@ -9,11 +10,16 @@ describe('BarraDelPanel (spec "Menú del panel según el rol")', () => {
     vi.unstubAllGlobals()
   })
 
-  it('un administrador en usuarios ve Panel y Usuarios, con Usuarios como página actual', async () => {
+  it('un administrador en usuarios ve Panel, Recursos y Usuarios, con Usuarios como página actual', async () => {
     simularApi(apiDeUsuarios())
     renderizarEn('/panel/usuarios', { ...sesionDe('administrador'), usuario: ADMIN })
 
     const menu = await screen.findByRole('navigation', { name: 'Secciones del panel' })
+    expect(within(menu).getAllByRole('link').map((enlace) => enlace.textContent)).toEqual([
+      'Panel',
+      'Recursos',
+      'Usuarios',
+    ])
     const panel = within(menu).getByRole('link', { name: 'Panel' })
     const usuarios = within(menu).getByRole('link', { name: 'Usuarios' })
     expect(panel).toHaveAttribute('href', '/panel')
@@ -22,13 +28,24 @@ describe('BarraDelPanel (spec "Menú del panel según el rol")', () => {
     expect(usuarios).toHaveAttribute('aria-current', 'page')
   })
 
-  it('recepción en el panel ve solo Panel, marcado como página actual', async () => {
+  it('recepción en el panel ve solo Panel y Recursos, con Panel como página actual', async () => {
     simularApi({ 'GET /api/auth/yo': { status: 200, cuerpo: sesionDe('recepcion').usuario } })
     renderizarEn('/panel', sesionDe('recepcion'))
 
     const menu = await screen.findByRole('navigation', { name: 'Secciones del panel' })
-    expect(within(menu).getAllByRole('link')).toHaveLength(1)
+    expect(within(menu).getAllByRole('link').map((enlace) => enlace.textContent)).toEqual(['Panel', 'Recursos'])
     expect(within(menu).getByRole('link', { name: 'Panel' })).toHaveAttribute('aria-current', 'page')
+    expect(within(menu).getByRole('link', { name: 'Recursos' })).not.toHaveAttribute('aria-current')
+  })
+
+  it('un profesional en la pestaña Sillones tiene Recursos como página actual (C-05)', async () => {
+    simularApi(apiDeRecursos(sesionDe('profesional').usuario))
+    renderizarEn('/panel/recursos/sillones', sesionDe('profesional'))
+
+    const menu = await screen.findByRole('navigation', { name: 'Secciones del panel' })
+    expect(within(menu).getAllByRole('link').map((enlace) => enlace.textContent)).toEqual(['Panel', 'Recursos'])
+    expect(within(menu).getByRole('link', { name: 'Recursos' })).toHaveAttribute('aria-current', 'page')
+    expect(within(menu).getByRole('link', { name: 'Recursos' })).toHaveAttribute('href', '/panel/recursos')
   })
 
   it('en el panel no queda un segundo acceso a Usuarios fuera del menú', async () => {

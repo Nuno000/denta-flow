@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { BarraDelPanel } from '../auth/BarraDelPanel'
 import { useSesion } from '../auth/contextoSesion'
 import {
-  leerErrorDeApi,
   useActivar,
   useDesactivar,
   useProfesionalesDisponibles,
@@ -10,8 +9,10 @@ import {
   useUsuarios,
   type UsuarioGestionado,
 } from './api'
-import { CLASES_BOTON_PRIMARIO, CLASES_BOTON_SECUNDARIO } from './estilosFormulario'
-import { Dialogo } from './Dialogo'
+import { leerErrorDeApi } from '../../lib/erroresApi'
+import { Celda } from '../../components/tabla/Celda'
+import { CLASES_ACCION, CLASES_BOTON_PRIMARIO, CLASES_BOTON_SECUNDARIO } from '../../components/formulario/estilos'
+import { Dialogo } from '../../components/formulario/Dialogo'
 import { FormularioBlanqueo } from './FormularioBlanqueo'
 import { FormularioCambioRol } from './FormularioCambioRol'
 import { FormularioUsuario } from './FormularioUsuario'
@@ -21,22 +22,6 @@ type DialogoAbierto =
   | { tipo: 'rol'; usuario: UsuarioGestionado }
   | { tipo: 'desactivar'; usuario: UsuarioGestionado }
   | { tipo: 'blanqueo'; usuario: UsuarioGestionado }
-
-const CLASES_ACCION =
-  'rounded-md border border-slate-400 px-2 py-1 text-sm font-medium text-slate-900 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700'
-
-/** Celda que en el celular muestra su encabezado antes del valor (la tabla se apila como tarjetas). */
-function Celda({ etiqueta, children }: { etiqueta: string; children: React.ReactNode }) {
-  return (
-    <td
-      role="cell"
-      data-etiqueta={etiqueta}
-      className="flex gap-2 px-1 py-0.5 before:min-w-28 before:font-medium before:text-slate-700 before:content-[attr(data-etiqueta)] md:table-cell md:px-3 md:py-2 md:before:content-none"
-    >
-      {children}
-    </td>
-  )
-}
 
 /**
  * ABM simple de usuarios para el administrador (US-003, design D13). Una sola tabla semántica que en el

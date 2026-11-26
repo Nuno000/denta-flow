@@ -8,7 +8,7 @@
 
 | Verificación | Resultado |
 |---|---|
-| `./mvnw verify` (H2 `MODE=MySQL`) | 442 tests, 0 fallas, 0 errores |
+| `./mvnw verify` (H2 `MODE=MySQL`) | En verde. El conteo anotado (442) estaba inflado; el real de `main` es 409 (ver nota) |
 
 `./mvnw verify -Pit-mysql` no se corrió: el bloque A no toca la base ni migraciones; se corre en el bloque B.
 
@@ -16,10 +16,12 @@
 
 | Verificación | Resultado |
 |---|---|
-| `./mvnw verify` | 449 tests (442 + 7 nuevos), 0 fallas, 0 errores |
+| `./mvnw clean verify` | 416 tests (409 + 7 nuevos), 0 fallas, 0 errores |
 | `npm test` | 17 archivos, 103 tests en verde |
 | `npm run lint` | sin advertencias |
 | `npm run build` | OK |
+
+> **Nota (corrección del 2026-11-26):** las primeras corridas fueron `./mvnw verify` sin `clean` después de cambiar de rama, y `target/` arrastraba clases y reportes de otras ramas. Con `./mvnw clean verify` en esta rama: 416 tests, todos en verde. Los resultados (verde) no cambian; solo los conteos.
 
 ## Ciclo TDD
 

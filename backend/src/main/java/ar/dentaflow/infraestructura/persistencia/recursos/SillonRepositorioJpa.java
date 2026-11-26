@@ -12,6 +12,9 @@ public interface SillonRepositorioJpa extends Repository<Sillon, Long>, SillonRe
 
     Sillon save(Sillon sillon);
 
+    /** Guarda y escribe en la base enseguida, así una violación de unicidad aparece en el mismo llamado. */
+    Sillon saveAndFlush(Sillon sillon);
+
     Optional<Sillon> findById(Long id);
 
     @Query("select s from Sillon s order by s.id")
@@ -22,7 +25,7 @@ public interface SillonRepositorioJpa extends Repository<Sillon, Long>, SillonRe
 
     @Override
     default Sillon guardar(Sillon sillon) {
-        return save(sillon);
+        return saveAndFlush(sillon);
     }
 
     @Override

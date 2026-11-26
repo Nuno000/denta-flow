@@ -2,9 +2,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { leerErrorDeApi, useBlanquearContrasena, type UsuarioGestionado } from './api'
-import { Campo } from './Campo'
-import { CLASES_BOTON_PRIMARIO, CLASES_BOTON_SECUNDARIO, CLASES_CONTROL, ariaDeError } from './estilosFormulario'
+import { useBlanquearContrasena, type UsuarioGestionado } from './api'
+import { leerErrorDeApi } from '../../lib/erroresApi'
+import { Campo } from '../../components/formulario/Campo'
+import { CLASES_BOTON_PRIMARIO, CLASES_BOTON_SECUNDARIO, CLASES_CONTROL, ariaDeError } from '../../components/formulario/estilos'
 
 const esquema = z
   .object({

@@ -47,6 +47,21 @@ public class Profesional {
         return new Profesional(nombre, apellido, matricula, email);
     }
 
+    /**
+     * Reemplaza los datos personales con la misma validación del alta. Es todo o nada: si un dato es
+     * inválido no cambia ninguno. No toca el estado ni las prestaciones.
+     */
+    public void actualizarDatos(String nombre, String apellido, String matricula, String email) {
+        String nombreValido = ValidacionesDeTexto.obligatorio(nombre, "nombre del profesional", NOMBRE_MAXIMO);
+        String apellidoValido = ValidacionesDeTexto.obligatorio(apellido, "apellido del profesional", APELLIDO_MAXIMO);
+        String matriculaValida = ValidacionesDeTexto.opcional(matricula, "matrícula", MATRICULA_MAXIMO);
+        String emailValido = validarEmail(email);
+        this.nombre = nombreValido;
+        this.apellido = apellidoValido;
+        this.matricula = matriculaValida;
+        this.email = emailValido;
+    }
+
     /** Habilita una prestación activa y ya guardada; repetirla no la duplica. */
     public void habilitarPrestacion(Prestacion prestacion) {
         if (prestacion == null || prestacion.getId() == null) {

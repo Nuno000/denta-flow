@@ -1,7 +1,11 @@
-import type { RouteObject } from 'react-router-dom'
+import { Navigate, type RouteObject } from 'react-router-dom'
 import { IngresarPage } from '../features/auth/IngresarPage'
 import { PanelPage } from '../features/auth/PanelPage'
 import { RutaProtegida } from '../features/auth/RutaProtegida'
+import { PrestacionesTab } from '../features/recursos/PrestacionesTab'
+import { ProfesionalesTab } from '../features/recursos/ProfesionalesTab'
+import { RecursosPage } from '../features/recursos/RecursosPage'
+import { SillonesTab } from '../features/recursos/SillonesTab'
 import { UsuariosPage } from '../features/usuarios/UsuariosPage'
 import { InicioPage } from './InicioPage'
 
@@ -22,6 +26,21 @@ export const rutas: RouteObject[] = [
         <PanelPage />
       </RutaProtegida>
     ),
+  },
+  {
+    // C-05: lectura para los tres roles internos; las acciones de edición son solo del administrador.
+    path: '/panel/recursos',
+    element: (
+      <RutaProtegida>
+        <RecursosPage />
+      </RutaProtegida>
+    ),
+    children: [
+      { index: true, element: <Navigate to="profesionales" replace /> },
+      { path: 'profesionales', element: <ProfesionalesTab /> },
+      { path: 'sillones', element: <SillonesTab /> },
+      { path: 'prestaciones', element: <PrestacionesTab /> },
+    ],
   },
   {
     path: '/panel/usuarios',

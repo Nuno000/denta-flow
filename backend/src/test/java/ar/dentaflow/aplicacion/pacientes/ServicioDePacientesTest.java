@@ -52,11 +52,11 @@ class ServicioDePacientesTest {
     void unDniNuevoCreaAlPacienteConLaFechaDelReloj() {
         when(pacientes.buscarPorDni("30123456")).thenReturn(Optional.empty());
 
-        Paciente creado = servicio.registrarDesdeReservaOnline(datos("30.123.456", "Ana", "ana@example.com", null));
+        Paciente creado = servicio.registrarDesdeReservaOnline(datos("30.123.456", "Ana", "ana@example.com", AHORA));
 
         assertThat(creado.getDni()).isEqualTo("30123456");
         assertThat(creado.getCreadoEn()).isEqualTo(AHORA);
-        assertThat(creado.getConsentimientoPrivacidadEn()).isNull();
+        assertThat(creado.getConsentimientoPrivacidadEn()).isEqualTo(AHORA);
         verify(pacientes).guardar(creado);
     }
 
@@ -75,10 +75,12 @@ class ServicioDePacientesTest {
         Paciente actual = existente();
         when(pacientes.buscarPorDni("30123456")).thenReturn(Optional.of(actual));
 
-        Paciente devuelto = servicio.registrarDesdeReservaOnline(datos("30-123-456", "Otra", "otra@example.com", null));
+        Paciente devuelto = servicio.registrarDesdeReservaOnline(datos("30-123-456", "Otra", "otra@example.com", AHORA));
 
         assertThat(devuelto).isSameAs(actual);
-        verify(pacientes, never()).guardar(any());
+        // Sin alta nueva: solo se guarda la aceptación del aviso de esta reserva (C-15).
+        assertThat(actual.getConsentimientoPrivacidadEn()).isEqualTo(AHORA);
+        verify(pacientes).guardar(actual);
     }
 
     @Test
@@ -86,7 +88,7 @@ class ServicioDePacientesTest {
         Paciente actual = existente();
         when(pacientes.buscarPorDni("30123456")).thenReturn(Optional.of(actual));
 
-        servicio.registrarDesdeReservaOnline(datos("30123456", "Intruso", "intruso@example.com", null));
+        servicio.registrarDesdeReservaOnline(datos("30123456", "Intruso", "intruso@example.com", AHORA));
 
         assertThat(actual.getNombre()).isEqualTo("Ana");
         assertThat(actual.getApellido()).isEqualTo("Original");
@@ -147,6 +149,18 @@ class ServicioDePacientesTest {
         assertThat(creado.getConsentimientoPrivacidadEn()).isEqualTo(consentimiento);
     }
 
+    /** Spec privacidad-datos-personales (C-15), "Registro online sin aceptación". */
+    @Test
+    void desdeLaReservaOnlineSinConsentimientoSeRechazaSinTocarLaBase() {
+        assertThatThrownBy(() -> servicio.registrarDesdeReservaOnline(
+                datos("30123456", "Ana", "ana@example.com", null)))
+                .isInstanceOf(ValidacionDeDominioException.class)
+                .hasMessage(ServicioDePacientes.AVISO_NO_ACEPTADO);
+
+        verify(pacientes, never()).buscarPorDni(any());
+        verify(pacientes, never()).guardar(any());
+    }
+
     @Test
     void unDniInvalidoSeRechazaSinConsultarLaBase() {
         assertThatThrownBy(() -> servicio.registrarDesdeReservaOnline(datos("123", "Ana", "ana@example.com", null)))
@@ -160,9 +174,11 @@ class ServicioDePacientesTest {
     void siFallaElAltaPorDniDuplicadoReleeYDevuelveAlGanador() {
         Paciente ganador = existente();
         when(pacientes.buscarPorDni("30123456")).thenReturn(Optional.empty()).thenReturn(Optional.of(ganador));
-        when(pacientes.guardar(any())).thenThrow(new DataIntegrityViolationException("uk_paciente_dni"));
+        // El reintento relee al ganador y le registra la aceptación de esta reserva (C-15): ese guardado funciona.
+        when(pacientes.guardar(any())).thenThrow(new DataIntegrityViolationException("uk_paciente_dni"))
+                .thenAnswer(invocacion -> invocacion.getArgument(0));
 
-        Paciente devuelto = servicio.registrarDesdeReservaOnline(datos("30123456", "Ana", "ana@example.com", null));
+        Paciente devuelto = servicio.registrarDesdeReservaOnline(datos("30123456", "Ana", "ana@example.com", AHORA));
 
         assertThat(devuelto).isSameAs(ganador);
         verify(pacientes, times(2)).buscarPorDni("30123456");
@@ -174,7 +190,7 @@ class ServicioDePacientesTest {
         when(pacientes.guardar(any())).thenThrow(new DataIntegrityViolationException("uk_paciente_dni"));
 
         assertThatThrownBy(() -> servicio.registrarDesdeReservaOnline(
-                datos("30123456", "Ana", "ana@example.com", null)))
+                datos("30123456", "Ana", "ana@example.com", AHORA)))
                 .isInstanceOf(DataIntegrityViolationException.class);
 
         verify(pacientes, times(2)).guardar(any());

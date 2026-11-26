@@ -48,6 +48,16 @@ public interface TurnoRepositorioJpa extends Repository<Turno, Long>, TurnoRepos
     long contarSolapadosDeSillon(@Param("sillonId") Long sillonId, @Param("estados") List<EstadoTurno> estados,
             @Param("inicio") Instant inicio, @Param("fin") Instant fin, @Param("excluir") Long excluir);
 
+    @Query("select count(t) from Turno t where t.pacienteId = :pacienteId and t.estado in :estados "
+            + "and t.inicio > :ahora")
+    long contarFuturosDelPaciente(@Param("pacienteId") Long pacienteId,
+            @Param("estados") List<EstadoTurno> estados, @Param("ahora") Instant ahora);
+
+    @Override
+    default boolean hayTurnosActivosFuturosDelPaciente(Long pacienteId, Instant ahora) {
+        return contarFuturosDelPaciente(pacienteId, List.of(EstadoTurno.PENDIENTE, EstadoTurno.CONFIRMADO), ahora) > 0;
+    }
+
     @Override
     default Turno guardar(Turno turno) {
         return save(turno);

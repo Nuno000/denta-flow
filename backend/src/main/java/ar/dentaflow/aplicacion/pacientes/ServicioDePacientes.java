@@ -1,5 +1,6 @@
 package ar.dentaflow.aplicacion.pacientes;
 
+import ar.dentaflow.dominio.comun.ValidacionDeDominioException;
 import ar.dentaflow.dominio.pacientes.Dni;
 import ar.dentaflow.dominio.pacientes.Paciente;
 import ar.dentaflow.dominio.pacientes.PacienteRepositorio;
@@ -28,6 +29,9 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Service
 public class ServicioDePacientes {
 
+    /** La reserva online exige aceptar el aviso de privacidad (C-15, US-040, RN-PR-01). */
+    public static final String AVISO_NO_ACEPTADO = "Tenés que aceptar el aviso de privacidad para reservar";
+
     private final PacienteRepositorio pacientes;
     private final Clock reloj;
     private final TransactionTemplate transaccionNueva;
@@ -40,8 +44,15 @@ public class ServicioDePacientes {
         this.transaccionNueva.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
     }
 
-    /** Reserva online: crea al paciente si el DNI es nuevo; si existe lo devuelve sin cambiar su contacto. */
+    /**
+     * Reserva online: crea al paciente si el DNI es nuevo; si existe lo devuelve sin cambiar su contacto. Exige el
+     * instante de aceptación del aviso de privacidad (C-15): sin él se rechaza sin crear ni modificar al paciente.
+     */
     public Paciente registrarDesdeReservaOnline(DatosPaciente datos) {
+        Dni.normalizar(datos.dni());
+        if (datos.consentimientoEn() == null) {
+            throw new ValidacionDeDominioException(AVISO_NO_ACEPTADO);
+        }
         return registrar(datos, false);
     }
 

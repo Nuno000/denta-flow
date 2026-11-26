@@ -35,6 +35,8 @@ class ServicioDePacientesIntegracionTest {
 
     /** DNI que el repositorio decorado "roba" en la próxima búsqueda; nulo si no hay carrera simulada. */
     private static final AtomicReference<String> DNI_A_ROBAR = new AtomicReference<>();
+    /** Instante en que el paciente aceptó el aviso de privacidad (C-15: la reserva online lo exige). */
+    private static final Instant ACEPTACION = Instant.parse("2026-12-01T12:00:00Z");
 
     @TestConfiguration
     static class CarreraSimulada {
@@ -51,6 +53,11 @@ class ServicioDePacientesIntegracionTest {
                 @Override
                 public Optional<Paciente> buscarPorId(Long id) {
                     return real.buscarPorId(id);
+                }
+
+                @Override
+                public Optional<Paciente> buscarPorIdParaActualizar(Long id) {
+                    return real.buscarPorIdParaActualizar(id);
                 }
 
                 @Override
@@ -109,7 +116,7 @@ class ServicioDePacientesIntegracionTest {
         DNI_A_ROBAR.set(dni);
 
         Paciente devuelto = servicio.registrarDesdeReservaOnline(
-                new DatosPaciente(dni, "Ana", "Ejemplo", "1155550000", "ana@example.com", null));
+                new DatosPaciente(dni, "Ana", "Ejemplo", "1155550000", "ana@example.com", ACEPTACION));
 
         assertThat(DNI_A_ROBAR.get()).as("la carrera ocurrió").isNull();
         assertThat(devuelto.getId()).isNotNull();
@@ -135,7 +142,7 @@ class ServicioDePacientesIntegracionTest {
     @Test
     void sinCarreraElAltaDejaUnaFilaYUnaSegundaLlamadaLaReutiliza() {
         dni = new EscenarioDeAgendaJdbc(jdbc).dniNuevo();
-        DatosPaciente datos = new DatosPaciente(dni, "Ana", "Ejemplo", "1155550000", "ana@example.com", null);
+        DatosPaciente datos = new DatosPaciente(dni, "Ana", "Ejemplo", "1155550000", "ana@example.com", ACEPTACION);
 
         Long primero = servicio.registrarDesdeReservaOnline(datos).getId();
         Long segundo = servicio.registrarDesdeReservaOnline(datos).getId();

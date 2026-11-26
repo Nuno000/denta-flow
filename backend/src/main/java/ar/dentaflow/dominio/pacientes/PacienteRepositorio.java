@@ -9,6 +9,9 @@ public interface PacienteRepositorio {
 
     Optional<Paciente> buscarPorId(Long id);
 
+    /** Igual que {@link #buscarPorId} pero bloquea la fila del paciente hasta el fin de la transacción (C-15). */
+    Optional<Paciente> buscarPorIdParaActualizar(Long id);
+
     /** Busca por DNI ya normalizado (ver {@link Dni#normalizar}). */
     Optional<Paciente> buscarPorDni(String dniNormalizado);
 }

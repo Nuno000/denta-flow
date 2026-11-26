@@ -68,7 +68,7 @@ C-24 manual-publico         ← C-19
 | C-02 | scaffolding-proyecto | C-01 | 0 | Florencia (+ Bruno: GitHub/CI) | Bruno | BAJO | M | sí | `[x]` |
 | C-03 | modelo-recursos-consultorio | C-02 | 1 | Renzo | Florencia | CRITICO | M | sí | `[x]` |
 | C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | sí | `[x]` |
-| C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[ ]` |
+| C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[x]` |
 | C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | sí | `[ ]` |
 | C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | sí | `[x]` |
 | C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | sí | `[x]` |
@@ -232,7 +232,7 @@ Criterios del reparto:
   - `knowledge-base/06_funcionalidades.md` §US-003
 
 ### [C-05] `gestion-recursos-admin`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-26 (PR #15; H2 418/418, it-mysql 56/56, frontend 96 tests; evidencia en `openspec/changes/archive/2026-11-26-c-05-gestion-recursos-admin/evidencia/`)
 - **Scope**:
   - Endpoints/pantallas de administrador para alta, edición y desactivación de profesionales, sillones y prestaciones; asociación de prestaciones por profesional (US-001).
   - Validación de input en backend; solo rol administrador (lectura para recepción y profesional según matriz).

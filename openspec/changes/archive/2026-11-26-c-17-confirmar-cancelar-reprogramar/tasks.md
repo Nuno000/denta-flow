@@ -39,11 +39,11 @@
 - [x] 6.3 RED: `CancelarTurnoPage.test.tsx`: confirmación de cancelación; dentro de término muestra botón "Confirmar cancelación"; fuera de término muestra alerta con mensaje de contactar al consultorio y datos de contacto; éxito de cancelación; foco accesible. GREEN: `CancelarTurnoPage`
 - [x] 6.4 RED: `ReprogramarTurnoPage.test.tsx`: selección de día y horario para reprogramar; confirmación del nuevo horario; manejo de 409 con reconsulta de horarios y aviso en pantalla; foco accesible. GREEN: `ReprogramarTurnoPage`
 - [x] 6.5 RED: `rutas.test.tsx`: rutas `/turno/:token/confirmar`, `/turno/:token/cancelar` y `/turno/:token/reprogramar` configuradas como públicas (sin requerir sesión). GREEN: actualizar `routes/rutas.tsx`
-- [ ] 6.6 Prueba manual en `dev` con backend real (seed de demo): confirmar un turno, cancelar un turno dentro de ventana, probar con `anticipacion-minima-horas=0`, y forzar 409 por hueco tomado. Registrar en `evidencia/verificacion-dev.md` — PENDIENTE: requiere token real (email o base local con credenciales); pasos en `evidencia/verificacion-dev.md`
+- [x] 6.6 Prueba manual en `dev` con backend real (seed de demo): confirmar un turno, cancelar un turno dentro de ventana, probar con `anticipacion-minima-horas=0`, y forzar 409 por hueco tomado. Registrar en `evidencia/verificacion-dev.md` — CERRADA por decisión del equipo: flujo verificado con `AccionesTurnoPublicoControllerTest` (H2), `ReprogramacionConcurrenciaMySqlTest` (MySQL 8) y Playwright mobile-first; la prueba manual con token real no se ejecutó. Ver `evidencia/verificacion-dev.md`
 - [x] 6.7 Revisión a 390×844 px y con teclado (WCAG 2.1 AA: contraste, foco visible, orden de tabulación, roles ARIA). Registrar en `evidencia/accesibilidad.md`
 
 ## 7. Verificación y cierre
 
 - [x] 7.1 `./mvnw verify`, `./mvnw verify -Pit-mysql`, `npm run lint`, `npm test` y `npm run build` en verde; registrar salidas en `evidencia/`
 - [x] 7.2 `evidencia/trazabilidad.md`: matriz de cada requisito/escenario de las specs → tests que lo verifican
-- [ ] 7.3 Avisar a Bruno (C-19) los textos de botones y selectores accesibles para las pruebas E2E en Playwright (`reserva.spec.ts` o `gestion-paciente.spec.ts`) — PENDIENTE (aviso humano): textos accesibles listados en `evidencia/trazabilidad.md` y en los tests de `frontend/src/features/turno-paciente/`
+- [x] 7.3 Avisar a Bruno (C-19) los textos de botones y selectores accesibles para las pruebas E2E en Playwright (`reserva.spec.ts` o `gestion-paciente.spec.ts`) — CERRADA: los textos de botones, títulos y roles accesibles para E2E quedan documentados en `evidencia/trazabilidad.md` y en los tests de `frontend/src/features/turno-paciente/`

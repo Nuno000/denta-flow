@@ -1,0 +1,7 @@
+Línea base de C-11 (2026-11-26, rama feat/C-11-agenda-interna-vistas sobre main eeb366c), antes de tocar código:
+
+- frontend npm test (Vitest): 96 tests en verde en 15 archivos
+- frontend npm run lint (oxlint --deny-warnings): sin advertencias
+- frontend npm run build (tsc -b && vite build): correcto
+
+Sin fallas previas. El backend no se toca en los grupos 1 a 5; su línea base se toma en la tarea 6.1.

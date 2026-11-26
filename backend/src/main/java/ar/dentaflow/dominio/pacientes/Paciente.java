@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 
 /**
  * Persona que reserva turnos. Se identifica por DNI (único) y tiene nombre, apellido, teléfono y email
- * obligatorios (PA-13). No se borra (retención: PA-12). Los datos personales no se imprimen en
- * {@code toString}.
+ * obligatorios (PA-13). No se borra (retención: PA-12): la baja lo anonimiza (C-15) y conserva sus turnos. Los
+ * datos personales no se imprimen en {@code toString}.
  */
 public class Paciente {
 
@@ -28,6 +28,8 @@ public class Paciente {
     private String telefono;
     private String email;
     private Instant consentimientoPrivacidadEn;
+    private Instant anonimizadoEn;
+    private Long anonimizadoPor;
     private Instant creadoEn;
 
     protected Paciente() {
@@ -50,6 +52,9 @@ public class Paciente {
 
     /** Reemplaza nombre, apellido, teléfono y email con las mismas validaciones del alta; si falla no cambia nada. */
     public void actualizarContacto(String nombre, String apellido, String telefono, String email) {
+        if (estaAnonimizado()) {
+            throw new ValidacionDeDominioException("El paciente fue dado de baja y sus datos se anonimizaron");
+        }
         asignarContacto(nombre, apellido, telefono, email);
     }
 
@@ -59,6 +64,42 @@ public class Paciente {
             throw new ValidacionDeDominioException("La fecha del consentimiento es obligatoria");
         }
         this.consentimientoPrivacidadEn = instante;
+    }
+
+    /**
+     * Baja por anonimización (C-15, PA-12): borra el DNI y reemplaza nombre, apellido, teléfono y email por valores
+     * que no identifican a la persona ni reciben emails ({@code .invalid}, RFC 2606). Conserva el consentimiento y
+     * la fecha de alta, y registra quién y cuándo. Es idempotente: si ya está anonimizado no cambia nada.
+     */
+    public void anonimizar(long usuarioId, Instant instante) {
+        if (estaAnonimizado()) {
+            return;
+        }
+        if (id == null) {
+            throw new ValidacionDeDominioException("Solo se puede anonimizar un paciente guardado");
+        }
+        if (usuarioId <= 0) {
+            throw new ValidacionDeDominioException("El usuario que anonimiza es obligatorio");
+        }
+        if (instante == null) {
+            throw new ValidacionDeDominioException("La fecha de la anonimización es obligatoria");
+        }
+        this.dni = null;
+        this.nombre = "Paciente";
+        this.apellido = "Anonimizado";
+        this.telefono = "00000000";
+        this.email = "anonimizado-" + id + "@dentaflow.invalid";
+        this.anonimizadoEn = instante;
+        this.anonimizadoPor = usuarioId;
+    }
+
+    public boolean estaAnonimizado() {
+        return anonimizadoEn != null;
+    }
+
+    /** Un paciente anonimizado no recibe recordatorios ni ningún otro email (C-14, C-18). */
+    public boolean puedeRecibirEmails() {
+        return !estaAnonimizado();
     }
 
     private void asignarContacto(String nombre, String apellido, String telefono, String email) {
@@ -119,6 +160,14 @@ public class Paciente {
 
     public Instant getConsentimientoPrivacidadEn() {
         return consentimientoPrivacidadEn;
+    }
+
+    public Instant getAnonimizadoEn() {
+        return anonimizadoEn;
+    }
+
+    public Long getAnonimizadoPor() {
+        return anonimizadoPor;
     }
 
     public Instant getCreadoEn() {

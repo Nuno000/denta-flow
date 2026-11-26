@@ -1,0 +1,26 @@
+# Perfil de despliegue (C-19, design D2): Render con SPRING_PROFILES_ACTIVE=prod.
+# Todo llega por variables de entorno. Sin default en la base: si falta una variable, el arranque falla
+# nombrándola (sin mostrar valores). En Aiven la URL lleva sslMode=REQUIRED (spec "Conexión cifrada").
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      # Los planes gratuitos limitan conexiones y memoria.
+      maximum-pool-size: 5
+  jpa:
+    show-sql: false
+
+server:
+  # Render asigna el puerto en PORT.
+  port: ${PORT:8080}
+  error:
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
+
+app:
+  seed:
+    # Datos de demostración ficticios solo si se piden (idempotente: no duplica al reiniciar).
+    demo: ${APP_SEED_DEMO:false}

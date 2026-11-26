@@ -82,5 +82,5 @@ Usuario     N---1 Rol ; Usuario 0..1---1 Profesional
 
 - Un usuario administrador inicial.
 - Roles: administrador, recepción, profesional.
-- Parámetros de configuración: anticipación mínima de cancelación/reprogramación (valor por defecto **pendiente**, PA-04), textos del aviso de privacidad.
+- Parámetros de configuración: anticipación mínima de cancelación/reprogramación (24 h por defecto, ajustable a 0 h para la demo; PA-04, DD-12), textos del aviso de privacidad.
 - Datos de ejemplo para desarrollo/demo: 2-3 profesionales, 2-3 sillones, 4-5 prestaciones con duraciones distintas, horarios de atención.

@@ -22,7 +22,7 @@ Cada regla tiene un código único `RN-{DOMINIO}-{NN}`. Las reglas RN-TU, RN-DI,
 ## Dominio: Cancelación y reprogramación (RN-CA)
 
 - **RN-CA-01**: El paciente puede cancelar o reprogramar solo hasta una anticipación mínima antes del turno.
-- **RN-CA-02**: La anticipación mínima la configura cada consultorio. El valor por defecto es una **pregunta abierta** (PA-04).
+- **RN-CA-02**: La anticipación mínima la configura cada consultorio. El valor por defecto es 24 h, ajustable a 0 h para la demo (PA-04, DD-12).
 - **RN-CA-03**: Dentro de la ventana de anticipación mínima, la cancelación/reprogramación queda a cargo de la recepción (supuesto SU-06).
 - **RN-CA-04** (diferenciador): Al liberarse un turno por cancelación, se ofrece automáticamente a la lista de espera compatible (prestación y profesional).
 

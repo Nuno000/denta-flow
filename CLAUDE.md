@@ -97,7 +97,7 @@ Son contrato; romperlas es un defecto.
 
 - NUNCA cambiar el esquema fuera de Flyway ni editar una migración ya mergeada → crear una migración nueva `V0NN_<n>__descripcion.sql` en `backend/src/main/resources/db/migration/`.
 - NUNCA escribir turnos por fuera del servicio transaccional de C-09 ni confiar solo en la UI para evitar solapamientos → `SELECT ... FOR UPDATE` sobre el profesional y después sobre el sillón (siempre en ese orden), verificación leyendo el último estado confirmado, y test de concurrencia `@Tag("mysql")` en el perfil `it-mysql` (DD-09).
-- NUNCA usar Docker, `docker-compose` ni Testcontainers, ni mocks de la base en tests de persistencia → H2 en memoria `MODE=MySQL;DATABASE_TO_LOWER=TRUE` (perfil `test`); la concurrencia solo cuenta como verificada contra MySQL 8 real (perfil `it-mysql`).
+- NUNCA usar Docker, `docker-compose` ni Testcontainers, ni mocks de la base en tests de persistencia → H2 en memoria `MODE=MySQL;DATABASE_TO_LOWER=TRUE` (perfil `test`); la concurrencia solo cuenta como verificada contra MySQL 8 real (perfil `it-mysql`). Única excepción (DD-13): `backend/Dockerfile`, que solo construye Render en sus servidores para desplegar la API; nunca se usa en local, tests ni CI.
 - NUNCA usar sintaxis exclusiva de un motor en las migraciones → SQL válido en MySQL 8 y en H2 `MODE=MySQL` (`BIGINT AUTO_INCREMENT`, `DATETIME(6)`, `VARCHAR` + `CHECK`), con versión `V0NN_<n>__descripcion.sql` por change.
 - NUNCA usar `LocalDateTime` ni la hora del servidor para turnos → `DATETIME(6)` guardado en UTC y mapeado a `Instant` (u `OffsetDateTime`), interpretado en `America/Argentina/Buenos_Aires`.
 

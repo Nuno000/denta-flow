@@ -73,7 +73,7 @@ denta-flow/
 - CORS: solo el origen del frontend (`APP_BASE_URL`), con el header `Authorization` y sin credenciales de navegador.
 - Acceso del paciente: enlaces con token no adivinable por turno (supuesto SU-03); sin cuenta.
 - Validación de input: en el backend para todo dato público (DNI, teléfono, email, fechas).
-- Protección de datos personales (Ley 25.326): minimización, aviso de privacidad, consentimiento registrado, acceso restringido por rol, transporte cifrado (HTTPS). Política de retención de datos: pendiente (PA-12).
+- Protección de datos personales (Ley 25.326): minimización, aviso de privacidad, consentimiento registrado, acceso restringido por rol, transporte cifrado (HTTPS). Retención de 5 años y anonimización/baja por endpoint protegido (PA-12, DD-12).
 - Anti-abuso en la reserva pública (rate limiting / captcha): a evaluar.
 - Secrets management: variables de entorno, nunca en el repositorio.
 

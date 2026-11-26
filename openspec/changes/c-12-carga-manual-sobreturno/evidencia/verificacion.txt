@@ -1,0 +1,18 @@
+Verificación final de C-12 carga-manual-sobreturno (2026-11-26, rama feat/C-12-carga-manual-sobreturno, base a319abe)
+
+Capturas con `active-stack evidence-capture` (árbol c7e8bd7b..., antes de agregar este archivo):
+
+Backend (desde backend/):
+- ./mvnw verify (perfil test, H2 MODE=MySQL): 1039 casos en verde, 0 fallas, 0 errores (línea base 985, +54: 8 SugeridorDeAlternativasTest, 8 CargaManualDeTurnosTest, 28 CargaManualControllerTest, 10 PacienteRecepcionControllerTest). Corrida fae529787d84...
+- ./mvnw verify -Pit-mysql (MySQL 8.4 local): 212 casos en verde, 0 fallas (línea base 207, +5 CargaManualSimultaneaMySqlTest). Corrida fcde6a3fb709... (árbol f8bf8899..., sin cambios de código posteriores).
+
+Frontend (desde frontend/):
+- npm test: 249 tests en verde en 31 archivos (línea base 178 en 29, +71). Corrida 22f3a7ad2c3e...
+- npm run lint (oxlint --deny-warnings): 0 advertencias. Corrida 4bbe3c24f580...
+- npx tsc -b: sin errores. Corrida 9131ae7a3011...
+- npm run build: correcto. Corrida c3a272fd8127...
+
+OpenSpec: openspec validate c-12-carga-manual-sobreturno --strict: válido.
+
+Pendiente: tarea 7.2 (punta a punta contra el backend real). Prueba visual: evidencia/prueba-visual.md.
+Nota: dos intentos previos de captura fallaron por usar rutas relativas (cwd de la captura es la raíz) y uno fue rechazado porque el árbol cambió durante la captura; se repitieron.

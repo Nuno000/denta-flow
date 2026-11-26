@@ -1,0 +1,7 @@
+Línea base de C-12 (2026-11-26, rama feat/C-12-carga-manual-sobreturno sobre main a319abe), antes de tocar código:
+
+- backend ./mvnw verify (perfil test, H2 MODE=MySQL): 985 casos en verde, 0 fallas, 0 errores (total de surefire, incluye @Nested)
+- backend ./mvnw verify -Pit-mysql (MySQL 8.4 local): 207 casos en verde, 0 fallas
+- frontend npm test (Vitest): 178 tests en verde en 29 archivos
+
+Sin fallas previas.

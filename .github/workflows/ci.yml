@@ -27,6 +27,23 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
+      # El wrapper descarga Maven de Maven Central y a veces el runner no llega ("wget: Failed to fetch",
+      # intermitente): se cachea la distribución (setup-java solo cachea ~/.m2/repository) y se reintenta.
+      - name: Cachear la distribución de Maven del wrapper
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/wrapper
+          key: maven-wrapper-${{ hashFiles('backend/.mvn/wrapper/maven-wrapper.properties') }}
+      - name: Preparar Maven (con reintentos)
+        working-directory: backend
+        run: |
+          chmod +x mvnw
+          for intento in 1 2 3 4 5; do
+            ./mvnw -B -q --version && exit 0
+            echo "No se pudo descargar Maven (intento $intento de 5); reintento en $((intento * 10)) s"
+            sleep $((intento * 10))
+          done
+          exit 1
       - name: Pruebas sobre H2 (perfil test)
         run: |
           chmod +x mvnw
@@ -49,6 +66,23 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
+      # El wrapper descarga Maven de Maven Central y a veces el runner no llega ("wget: Failed to fetch",
+      # intermitente): se cachea la distribución (setup-java solo cachea ~/.m2/repository) y se reintenta.
+      - name: Cachear la distribución de Maven del wrapper
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/wrapper
+          key: maven-wrapper-${{ hashFiles('backend/.mvn/wrapper/maven-wrapper.properties') }}
+      - name: Preparar Maven (con reintentos)
+        working-directory: backend
+        run: |
+          chmod +x mvnw
+          for intento in 1 2 3 4 5; do
+            ./mvnw -B -q --version && exit 0
+            echo "No se pudo descargar Maven (intento $intento de 5); reintento en $((intento * 10)) s"
+            sleep $((intento * 10))
+          done
+          exit 1
       # MySQL preinstalado en el runner (usuario root/root), sin contenedores (DD-09).
       - name: Levantar MySQL del runner
         run: |
@@ -102,6 +136,23 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
+      # El wrapper descarga Maven de Maven Central y a veces el runner no llega ("wget: Failed to fetch",
+      # intermitente): se cachea la distribución (setup-java solo cachea ~/.m2/repository) y se reintenta.
+      - name: Cachear la distribución de Maven del wrapper
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/wrapper
+          key: maven-wrapper-${{ hashFiles('backend/.mvn/wrapper/maven-wrapper.properties') }}
+      - name: Preparar Maven (con reintentos)
+        working-directory: backend
+        run: |
+          chmod +x mvnw
+          for intento in 1 2 3 4 5; do
+            ./mvnw -B -q --version && exit 0
+            echo "No se pudo descargar Maven (intento $intento de 5); reintento en $((intento * 10)) s"
+            sleep $((intento * 10))
+          done
+          exit 1
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

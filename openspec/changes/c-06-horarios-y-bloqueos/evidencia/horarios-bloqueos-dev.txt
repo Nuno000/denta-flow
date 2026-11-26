@@ -1,0 +1,31 @@
+Verificacion manual en dev (MySQL 8.4.9 local, perfil dev), 2026-11-26 02:24
+1. Backend arrancado con perfil dev (Flyway aplico V006_1; SeedRecursosDemo sembro horarios L-V 09:00-13:00 y 14:00-18:00 para los 3 profesionales demo).
+2. Swagger UI / OpenAPI accesibles: GET /swagger-ui/index.html -> HTTP 200; /v3/api-docs incluye etiquetas "Horarios" y "Bloqueos".
+3. Login como administrador (POST /api/auth/login) -> rol=administrador, token Bearer obtenido.
+4. Alta de horario valido (POST /api/profesionales/101/horarios, {"dia":"SABADO","inicio":"09:00","fin":"12:00"}):
+   HTTP 201 -> {"id":162,"profesionalId":101,"dia":"SABADO","inicio":"09:00","fin":"12:00"}
+5. Intento de horario superpuesto (POST /api/profesionales/101/horarios, {"dia":"SABADO","inicio":"11:00","fin":"13:00"}):
+   HTTP 409 -> {"type":"about:blank","title":"Conflicto","status":409,"detail":"El rango se superpone con el horario existente del sábado de 09:00 a 12:00","instance":"/api/profesionales/101/horarios"}
+6. Alta de bloqueo de consultorio el 25/12 (POST /api/bloqueos, {"ambito":"CONSULTORIO","inicio":"2026-12-25T00:00:00-03:00","fin":"2026-12-26T00:00:00-03:00","motivo":"FERIADO","detalle":"Navidad"}):
+   HTTP 201 -> {"bloqueo":{"id":17,"ambito":"CONSULTORIO","profesionalId":null,"sillonId":null,"inicio":"2026-12-25T00:00:00-03:00","fin":"2026-12-26T00:00:00-03:00","motivo":"FERIADO","detalle":"Navidad","modificadoPor":83,"modificadoEn":"2026-11-26T05:24:08.056574Z"},"turnosAfectados":[]}
+
+7. SELECT * FROM horario_atencion; (31 filas: 30 del seed L-V 09:00-13:00 y 14:00-18:00 + id 162 SABADO 09:00-12:00):
++-----+----------------+------------+-------------+----------+
+| id  | profesional_id | dia_semana | hora_inicio | hora_fin |
++-----+----------------+------------+-------------+----------+
+| 132 |            103 |          1 | 09:00:00    | 13:00:00 |
+| 133 |            103 |          1 | 14:00:00    | 18:00:00 |
+... (profesionales 103, 101 y 102, dias 1..5, 09:00:00-13:00:00 y 14:00:00-18:00:00)
+| 160 |            102 |          5 | 09:00:00    | 13:00:00 |
+| 161 |            102 |          5 | 14:00:00    | 18:00:00 |
+| 162 |            101 |          6 | 09:00:00    | 12:00:00 |
++-----+----------------+------------+-------------+----------+
+
+8. SELECT * FROM bloqueo;
++----+-------------+----------------+-----------+----------------------------+----------------------------+---------+---------+----------------+----------------------------+
+| id | ambito      | profesional_id | sillon_id | inicio                     | fin                        | motivo  | detalle | modificado_por | modificado_en              |
++----+-------------+----------------+-----------+----------------------------+----------------------------+---------+---------+----------------+----------------------------+
+| 17 | CONSULTORIO |           NULL |      NULL | 2026-12-25 03:00:00.000000 | 2026-12-26 03:00:00.000000 | FERIADO | Navidad |             83 | 2026-11-26 05:24:08.056574 |
++----+-------------+----------------+-----------+----------------------------+----------------------------+---------+---------+----------------+----------------------------+
+
+Nota: en la corrida inicial de 10.3 se detecto que hibernate.jdbc.time_zone=UTC desplazaba LocalTime +3h al guardar TIME en MySQL (09:00 quedaba como 12:00:00). Se corrigio con ConversorHoraLocal antes de registrar esta evidencia.

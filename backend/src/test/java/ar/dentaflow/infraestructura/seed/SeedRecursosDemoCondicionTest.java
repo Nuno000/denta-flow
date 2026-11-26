@@ -3,6 +3,7 @@ package ar.dentaflow.infraestructura.seed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+import ar.dentaflow.dominio.disponibilidad.HorarioAtencionRepositorio;
 import ar.dentaflow.dominio.recursos.PrestacionRepositorio;
 import ar.dentaflow.dominio.recursos.ProfesionalRepositorio;
 import ar.dentaflow.dominio.recursos.SillonRepositorio;
@@ -16,6 +17,7 @@ class SeedRecursosDemoCondicionTest {
             .withBean(PrestacionRepositorio.class, () -> mock(PrestacionRepositorio.class))
             .withBean(SillonRepositorio.class, () -> mock(SillonRepositorio.class))
             .withBean(ProfesionalRepositorio.class, () -> mock(ProfesionalRepositorio.class))
+            .withBean(HorarioAtencionRepositorio.class, () -> mock(HorarioAtencionRepositorio.class))
             .withUserConfiguration(SeedRecursosDemo.class);
 
     @Test

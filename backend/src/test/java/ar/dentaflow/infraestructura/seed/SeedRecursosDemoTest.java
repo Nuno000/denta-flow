@@ -2,6 +2,8 @@ package ar.dentaflow.infraestructura.seed;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import ar.dentaflow.dominio.disponibilidad.HorarioAtencion;
+import ar.dentaflow.dominio.disponibilidad.HorarioAtencionRepositorio;
 import ar.dentaflow.dominio.recursos.Prestacion;
 import ar.dentaflow.dominio.recursos.PrestacionRepositorio;
 import ar.dentaflow.dominio.recursos.Profesional;
@@ -9,6 +11,9 @@ import ar.dentaflow.dominio.recursos.ProfesionalRepositorio;
 import ar.dentaflow.dominio.recursos.Sillon;
 import ar.dentaflow.dominio.recursos.SillonRepositorio;
 import jakarta.persistence.EntityManager;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +54,9 @@ class SeedRecursosDemoTest {
     private PrestacionRepositorio prestaciones;
 
     @Autowired
+    private HorarioAtencionRepositorio horarios;
+
+    @Autowired
     private JdbcTemplate jdbc;
 
     @Autowired
@@ -63,9 +71,12 @@ class SeedRecursosDemoTest {
         assertThat(filas("profesional")).isEqualTo(3);
         assertThat(filas("sillon")).isEqualTo(2);
         assertThat(filas("prestacion")).isEqualTo(5);
+        assertThat(filas("horario_atencion")).isEqualTo(30);
     }
 
     private void vaciarTablas() {
+        jdbc.update("DELETE FROM bloqueo");
+        jdbc.update("DELETE FROM horario_atencion");
         jdbc.update("DELETE FROM profesional_prestacion");
         jdbc.update("DELETE FROM profesional");
         jdbc.update("DELETE FROM sillon");
@@ -134,6 +145,51 @@ class SeedRecursosDemoTest {
             assertThat(filas("profesional")).isEqualTo(3);
             assertThat(filas("sillon")).isEqualTo(2);
             assertThat(filas("prestacion")).isEqualTo(5);
+            assertThat(filas("horario_atencion")).isEqualTo(30);
+        }
+
+        @Test
+        void cadaProfesionalDemoAtiendeDeLunesAViernesMananaYTarde() {
+            seed.run(null);
+            em.flush();
+            em.clear();
+
+            List<String> esperado = new ArrayList<>();
+            for (DayOfWeek dia : List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
+                    DayOfWeek.THURSDAY, DayOfWeek.FRIDAY)) {
+                esperado.add(dia + " 09:00-13:00");
+                esperado.add(dia + " 14:00-18:00");
+            }
+            assertThat(profesionales.listarTodos()).hasSize(3).allSatisfy(profesional ->
+                    assertThat(horarios.listarDelProfesional(profesional.getId()))
+                            .extracting(SeedRecursosDemoTest::rango)
+                            .containsExactlyElementsOf(esperado));
+        }
+
+        @Test
+        void completaLosHorariosDeProfesionalesDemoSembradosAntesDeC06() {
+            seed.run(null);
+            em.flush();
+            jdbc.update("DELETE FROM horario_atencion");
+            em.clear();
+
+            seed.run(null);
+            em.flush();
+
+            assertThat(filas("horario_atencion")).isEqualTo(30);
+        }
+
+        @Test
+        void noAgregaHorariosAProfesionalesQueNoSonDeDemostracion() {
+            Profesional propio = profesionales.guardar(
+                    Profesional.nuevo("Ana", "Propia", null, "ana.propia@example.com"));
+            em.flush();
+
+            seed.run(null);
+            em.flush();
+
+            assertThat(horarios.listarDelProfesional(propio.getId())).isEmpty();
+            assertThat(filas("horario_atencion")).isZero();
         }
 
         @Test
@@ -149,5 +205,13 @@ class SeedRecursosDemoTest {
             assertThat(filas("prestacion")).isZero();
             assertThat(sillones.listarTodos()).extracting(Sillon::getNombre).containsExactly("Sillón propio");
         }
+    }
+
+    private static String rango(HorarioAtencion horario) {
+        return horario.getDia() + " " + hora(horario.getInicio()) + "-" + hora(horario.getFin());
+    }
+
+    private static String hora(LocalTime hora) {
+        return String.format("%02d:%02d", hora.getHour(), hora.getMinute());
     }
 }

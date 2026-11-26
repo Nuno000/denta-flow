@@ -69,7 +69,7 @@ C-24 manual-publico         ← C-19
 | C-03 | modelo-recursos-consultorio | C-02 | 1 | Renzo | Florencia | CRITICO | M | sí | `[x]` |
 | C-04 | auth-usuarios-roles | C-03 | 2 | Bruno | Florencia | CRITICO | L | sí | `[x]` |
 | C-05 | gestion-recursos-admin | C-03, C-04 | 3 | Florencia | Bruno | BAJO | M | no | `[x]` |
-| C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | sí | `[ ]` |
+| C-06 | horarios-y-bloqueos | C-03, C-04 | 3 | Jessica | Florencia | MEDIO | M | sí | `[x]` |
 | C-07 | parametros-consultorio | C-04 | 3 | Renzo | Florencia | BAJO | S | sí | `[x]` |
 | C-08 | auditoria-cambios | C-04 | 3 | Bruno | Florencia | CRITICO | M | sí | `[x]` |
 | C-09 | modelo-turno-paciente | C-03, C-08 | 4 | Renzo | Florencia | CRITICO | L | sí | `[x]` |
@@ -250,7 +250,7 @@ Criterios del reparto:
   - `knowledge-base/07_flujos_principales.md` §Flujo 7
 
 ### [C-06] `horarios-y-bloqueos`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-26 (migración `V006_1__crear_horarios_y_bloqueos.sql`, H2 460/460, MySQL 80/80, verificación dev; evidencia en `openspec/changes/c-06-horarios-y-bloqueos/evidencia/`)
 - **Scope**:
   - Modelos: HorarioAtencion (profesional, día de semana, hora_inicio, hora_fin; sin rangos superpuestos por profesional y día), Bloqueo (ámbito profesional | sillón | consultorio, inicio, fin, motivo).
   - Migración 002; alta/edición de horarios y bloqueos por el administrador (US-002).

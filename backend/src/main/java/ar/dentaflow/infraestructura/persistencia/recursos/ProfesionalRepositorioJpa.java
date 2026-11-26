@@ -3,7 +3,9 @@ package ar.dentaflow.infraestructura.persistencia.recursos;
 import ar.dentaflow.dominio.recursos.Profesional;
 import ar.dentaflow.dominio.recursos.ProfesionalRepositorio;
 import java.util.List;
+import jakarta.persistence.LockModeType;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +19,15 @@ public interface ProfesionalRepositorioJpa extends Repository<Profesional, Long>
     Profesional saveAndFlush(Profesional profesional);
 
     Optional<Profesional> findById(Long id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select p from Profesional p where p.id = :id")
+    Optional<Profesional> findParaActualizar(@Param("id") Long id);
+
+    @Override
+    default Optional<Profesional> bloquearPorId(Long id) {
+        return findParaActualizar(id);
+    }
 
     @Query("select p from Profesional p order by p.apellido, p.nombre, p.id")
     List<Profesional> findTodosOrdenados();

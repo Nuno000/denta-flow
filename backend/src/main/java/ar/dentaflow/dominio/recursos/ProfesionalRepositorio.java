@@ -10,6 +10,13 @@ public interface ProfesionalRepositorio {
 
     Optional<Profesional> buscarPorId(Long id);
 
+    /**
+     * Lee el profesional y bloquea su fila para escritura hasta el fin de la transacción
+     * ({@code SELECT ... FOR UPDATE}). Orden fijo para evitar interbloqueos: primero el profesional y
+     * después el sillón (DD-09). Vacío si no existe.
+     */
+    Optional<Profesional> bloquearPorId(Long id);
+
     /** Todos, activos e inactivos, ordenados por apellido y nombre. */
     List<Profesional> listarTodos();
 

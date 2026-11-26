@@ -101,6 +101,32 @@ export function useRegistrarAsistencia() {
   })
 }
 
+// --- Registro de cambios por turno (C-13, US-025, solo administrador)
+
+export type TipoActorHistorial = 'usuario' | 'paciente' | 'sistema'
+
+export type AccionHistorial = 'creacion' | 'confirmacion' | 'cancelacion' | 'reprogramacion' | 'cambio_estado'
+
+export interface CambioDeTurno {
+  id: number
+  /** Instante en UTC (ISO-8601). */
+  ocurridoEn: string
+  actorTipo: TipoActorHistorial
+  actorEmail: string | null
+  accion: AccionHistorial
+  valorAnterior: Record<string, string>
+  valorNuevo: Record<string, string>
+}
+
+/** Consulta el historial de cambios de un turno (solo administrador, solo lectura). */
+export function useHistorialDeTurno(turnoId: number | null) {
+  return useQuery({
+    queryKey: ['turno-historial', turnoId],
+    queryFn: () => apiClient.get<CambioDeTurno[]>(`/api/turnos/${turnoId}/historial`),
+    enabled: turnoId !== null,
+  })
+}
+
 // --- Carga manual de turnos y sobreturnos (C-12, US-021, US-022)
 
 /** Datos de contacto del paciente tal como se envían y se reciben. */

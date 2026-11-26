@@ -1,7 +1,11 @@
+import { useContext, useState } from 'react'
+import { CLASES_ACCION } from '../../components/formulario/estilos'
+import { ContextoSesion } from '../auth/contextoSesion'
 import { AccionesDeAsistencia } from './AccionesDeAsistencia'
 import type { TurnoDeAgenda } from './api'
 import { EtiquetaDeEstado, EtiquetaDeSobreturno } from './EtiquetaDeEstado'
 import { horaEnConsultorio } from './fechas'
+import { HistorialDeTurnoDialogo } from './HistorialDeTurnoDialogo'
 
 interface TarjetaDeTurnoProps {
   turno: TurnoDeAgenda
@@ -11,6 +15,9 @@ interface TarjetaDeTurnoProps {
 
 /** Un turno de la agenda: horario en hora del consultorio, paciente, prestación, profesional, sillón y estado. */
 export function TarjetaDeTurno({ turno, compacta = false }: TarjetaDeTurnoProps) {
+  const sesion = useContext(ContextoSesion)
+  const esAdministrador = sesion?.usuario?.rol === 'administrador'
+  const [viendoHistorial, setViendoHistorial] = useState(false)
   const cancelado = turno.estado === 'cancelado'
   const claseRotulo = compacta ? 'sr-only' : 'font-medium'
   return (
@@ -42,6 +49,14 @@ export function TarjetaDeTurno({ turno, compacta = false }: TarjetaDeTurnoProps)
         <dd>{turno.sillon.nombre}</dd>
       </dl>
       <AccionesDeAsistencia turno={turno} />
+      {esAdministrador && (
+        <div className="pt-1">
+          <button type="button" onClick={() => setViendoHistorial(true)} className={CLASES_ACCION}>
+            Ver historial
+          </button>
+        </div>
+      )}
+      {viendoHistorial && <HistorialDeTurnoDialogo turno={turno} alCerrar={() => setViendoHistorial(false)} />}
     </li>
   )
 }

@@ -3,6 +3,7 @@ package ar.dentaflow.aplicacion.pacientes;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import ar.dentaflow.dominio.pacientes.Paciente;
+import java.time.Instant;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,7 +46,8 @@ class AltaSimultaneaPacienteMySqlTest {
     void dosAltasDelMismoDniDevuelvenAlMismoPacienteYQuedaUnaFila() throws Exception {
         dni = Long.toString(ThreadLocalRandom.current().nextLong(10_000_000L, 100_000_000L));
         jdbc.update("DELETE FROM paciente WHERE dni = ?", dni);
-        DatosPaciente datos = new DatosPaciente(dni, "Ana", "Ejemplo", "1155550000", "simultaneo@example.com", null);
+        DatosPaciente datos = new DatosPaciente(dni, "Ana", "Ejemplo", "1155550000", "simultaneo@example.com",
+                Instant.parse("2026-12-01T12:00:00Z"));
         CountDownLatch salida = new CountDownLatch(1);
         ExecutorService hilos = Executors.newFixedThreadPool(2);
         try {

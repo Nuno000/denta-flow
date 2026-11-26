@@ -20,7 +20,7 @@ public class Prestacion {
     }
 
     private Prestacion(String nombre, Integer duracionMinutos) {
-        this.nombre = ValidacionesDeTexto.obligatorio(nombre, "nombre de la prestación", NOMBRE_MAXIMO);
+        this.nombre = validarNombre(nombre);
         this.duracionMinutos = validarDuracion(duracionMinutos);
         this.activa = true;
     }
@@ -35,8 +35,28 @@ public class Prestacion {
         this.duracionMinutos = validarDuracion(duracionMinutos);
     }
 
+    /** Cambia el nombre con la misma validación del alta; si es inválido no cambia nada. */
+    public void renombrar(String nombre) {
+        this.nombre = validarNombre(nombre);
+    }
+
+    /**
+     * Cambia nombre y duración a la vez. Es todo o nada: si uno es inválido no cambia ninguno. No afecta a
+     * los turnos ya creados ni al estado.
+     */
+    public void actualizar(String nombre, Integer duracionMinutos) {
+        String nombreValido = validarNombre(nombre);
+        Integer duracionValida = validarDuracion(duracionMinutos);
+        this.nombre = nombreValido;
+        this.duracionMinutos = duracionValida;
+    }
+
     public void desactivar() {
         this.activa = false;
+    }
+
+    private static String validarNombre(String nombre) {
+        return ValidacionesDeTexto.obligatorio(nombre, "nombre de la prestación", NOMBRE_MAXIMO);
     }
 
     public void activar() {

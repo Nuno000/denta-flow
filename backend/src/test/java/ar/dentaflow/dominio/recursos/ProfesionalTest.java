@@ -179,4 +179,49 @@ class ProfesionalTest {
         assertThat(a).isEqualTo(mismoId).hasSameHashCodeAs(mismoId).isNotEqualTo(otroId);
         assertThat(sinId).isEqualTo(sinId).isNotEqualTo(laura());
     }
+
+    // --- C-05 gestion-recursos — "Edición de recursos"
+
+    @Test
+    void actualizarDatosCambiaTodosLosDatosYPasaElEmailAMinusculas() {
+        Profesional laura = laura();
+
+        laura.actualizarDatos(" Laura Inés ", "Ejemplo Nuevo", "MP-0002", "Laura.Nueva@Example.com");
+
+        assertThat(laura.getNombre()).isEqualTo("Laura Inés");
+        assertThat(laura.getApellido()).isEqualTo("Ejemplo Nuevo");
+        assertThat(laura.getMatricula()).isEqualTo("MP-0002");
+        assertThat(laura.getEmail()).isEqualTo("laura.nueva@example.com");
+    }
+
+    @Test
+    void actualizarDatosConMatriculaVaciaLaDejaNulaYConservaEstadoYPrestaciones() {
+        Profesional laura = laura();
+        laura.habilitarPrestacion(prestacionActiva(5L));
+        laura.desactivar();
+
+        laura.actualizarDatos("Laura", "Ejemplo", "  ", "laura.ejemplo@example.com");
+
+        assertThat(laura.getMatricula()).isNull();
+        assertThat(laura.isActivo()).isFalse();
+        assertThat(laura.prestacionIds()).containsExactly(5L);
+    }
+
+    @Test
+    void actualizarDatosInvalidosNoCambiaNingunCampo() {
+        Profesional laura = laura();
+        String nombreLargo = "N".repeat(Profesional.NOMBRE_MAXIMO + 1);
+
+        assertThatThrownBy(() -> laura.actualizarDatos("Otra", " ", "MP-9", "otra@example.com"))
+                .isInstanceOf(ValidacionDeDominioException.class).hasMessageContaining("apellido");
+        assertThatThrownBy(() -> laura.actualizarDatos("Otra", "Persona", "MP-9", "mal-formado"))
+                .isInstanceOf(ValidacionDeDominioException.class).hasMessageContaining("email");
+        assertThatThrownBy(() -> laura.actualizarDatos(nombreLargo, "Persona", "MP-9", "otra@example.com"))
+                .isInstanceOf(ValidacionDeDominioException.class).hasMessageContaining("nombre");
+
+        assertThat(laura.getNombre()).isEqualTo("Laura");
+        assertThat(laura.getApellido()).isEqualTo("Ejemplo");
+        assertThat(laura.getMatricula()).isEqualTo("MP-0001");
+        assertThat(laura.getEmail()).isEqualTo("laura.ejemplo@example.com");
+    }
 }

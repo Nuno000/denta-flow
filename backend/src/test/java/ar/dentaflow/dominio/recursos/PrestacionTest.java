@@ -118,4 +118,51 @@ class PrestacionTest {
 
         assertThat(a).isEqualTo(a).isNotEqualTo(b);
     }
+
+    // --- C-05 gestion-recursos — "Edición de recursos"
+
+    @Test
+    void renombrarCambiaElNombreRecortado() {
+        Prestacion limpieza = Prestacion.nueva("Limpieza", 40);
+
+        limpieza.renombrar("  Limpieza profunda ");
+
+        assertThat(limpieza.getNombre()).isEqualTo("Limpieza profunda");
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", "   "})
+    void renombrarEnBlancoSeRechazaYNoCambia(String vacio) {
+        Prestacion limpieza = Prestacion.nueva("Limpieza", 40);
+
+        assertThatThrownBy(() -> limpieza.renombrar(vacio))
+                .isInstanceOf(ValidacionDeDominioException.class).hasMessageContaining("nombre");
+        assertThat(limpieza.getNombre()).isEqualTo("Limpieza");
+    }
+
+    @Test
+    void actualizarCambiaNombreYDuracionSinTocarElEstado() {
+        Prestacion limpieza = Prestacion.nueva("Limpieza", 40);
+        limpieza.desactivar();
+
+        limpieza.actualizar("Limpieza simple", 45);
+
+        assertThat(limpieza.getNombre()).isEqualTo("Limpieza simple");
+        assertThat(limpieza.getDuracionMinutos()).isEqualTo(45);
+        assertThat(limpieza.isActiva()).isFalse();
+    }
+
+    @Test
+    void actualizarEsTodoONada() {
+        Prestacion limpieza = Prestacion.nueva("Limpieza", 40);
+
+        assertThatThrownBy(() -> limpieza.actualizar("Otro nombre", 0))
+                .isInstanceOf(ValidacionDeDominioException.class).hasMessageContaining("duración");
+        assertThatThrownBy(() -> limpieza.actualizar(" ", 50))
+                .isInstanceOf(ValidacionDeDominioException.class).hasMessageContaining("nombre");
+
+        assertThat(limpieza.getNombre()).isEqualTo("Limpieza");
+        assertThat(limpieza.getDuracionMinutos()).isEqualTo(40);
+    }
 }

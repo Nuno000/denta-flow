@@ -34,12 +34,12 @@ class ClaveParametroTest {
     }
 
     @Test
-    void laAnticipacionEsUnEnteroDeHorasEntreUnoYCientoSesentaYOcho() {
+    void laAnticipacionEsUnEnteroDeHorasEntreCeroYCientoSesentaYOcho() {
         ClaveParametro clave = ClaveParametro.ANTICIPACION_MINIMA_HORAS;
 
         assertThat(clave.tipo()).isEqualTo(TipoParametro.ENTERO);
         assertThat(clave.unidad()).isEqualTo("horas");
-        assertThat(clave.minimo()).isEqualTo(1);
+        assertThat(clave.minimo()).isEqualTo(0);
         assertThat(clave.maximo()).isEqualTo(168);
         assertThat(clave.longitudMaxima()).isNull();
         assertThat(clave.descripcion()).isNotBlank();

@@ -1,0 +1,10 @@
+Verificación it-mysql C-17 — 2026-11-26 12:44 — MySQL 8 nativo, perfil it-mysql
+Comando: ./mvnw -B verify -Pit-mysql (log completo en it-mysql.log)
+
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.271 s -- in ar.dentaflow.presentacion.publico.ReprogramacionConcurrenciaMySqlTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.091 s -- in ar.dentaflow.presentacion.publico.ReservaPublicaConcurrenciaMySqlTest
+[INFO] Tests run: 222, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  02:00 min
+
+Nota: la primera corrida falló 5/5 en el COUNT final del test (0 en vez de 1) por comparar con Timestamp en la zona de la JVM, cuando Hibernate guarda 'inicio' en UTC. Las aserciones de estado (un 200/201 y un 409) ya pasaban. Se corrigió el test para comparar con LocalDateTime UTC.

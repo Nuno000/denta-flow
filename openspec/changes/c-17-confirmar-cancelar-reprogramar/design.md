@@ -92,3 +92,7 @@ Toda operación pública comienza resolviendo el token mediante `ServicioDeEnlac
 | Q3 | Mensaje ante cancelación fuera de término | A) Mensaje estático genérico.<br>B) Mensaje con el dato dinámico del parámetro `contacto-consultorio`. | **Opción B**: Reutiliza `contacto-consultorio` (C-16) para que el consultorio defina cómo comunicarse. |
 | Q4 | Elección de profesional al reprogramar | A) Mantener siempre el profesional original.<br>B) Permitir cambiar a cualquier profesional que realice la prestación. | **Opción A (Recomendada para MVP)**: El paciente reprograma fecha/hora con el profesional que lo atiende; si requiere cambio de profesional, se canaliza por recepción. |
 | Q5 | Límite anti-abuso en acciones públicas | A) Sin límite.<br>B) Límite por IP en memoria compartido con el limitador de reservas (5 req/10 min). | **Opción B**: Protege los endpoints públicos de escaneos y ataques de denegación. |
+
+## Notas de implementación
+
+- **Q5 (2026-11-26):** el límite por IP compartido con la reserva (5 pedidos cada 10 min → 429) se aplica solo a las acciones `POST` (`confirmar`, `cancelar`, `reprogramar`). Las lecturas (`GET` del turno y de huecos) no lo consumen, igual que `GET /api/publico/huecos` de C-16. Si lo consumieran, el paciente agotaría el cupo al recorrer días para reprogramar. Tests: `AccionesTurnoPublicoControllerTest.rateLimiterPorIpResponde429AlExcederLimiteEnAcciones` y `consultasDeLecturaNoConsumenElLimiteDeAcciones`.

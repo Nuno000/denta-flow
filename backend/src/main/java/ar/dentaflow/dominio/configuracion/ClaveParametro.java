@@ -13,7 +13,7 @@ public enum ClaveParametro {
 
     ANTICIPACION_MINIMA_HORAS("anticipacion-minima-horas",
             "Anticipación mínima, en horas, para reservar, reprogramar o cancelar un turno",
-            TipoParametro.ENTERO, "horas", 1, 168, null, "anticipación mínima"),
+            TipoParametro.ENTERO, "horas", 0, 168, null, "anticipación mínima"),
     AVISO_PRIVACIDAD_TEXTO("aviso-privacidad-texto",
             "Texto del aviso de privacidad que se muestra al paciente (Ley 25.326)",
             TipoParametro.TEXTO, null, null, null, 4000, "texto del aviso de privacidad"),

@@ -140,6 +140,14 @@ class ServicioDeParametrosTest {
     }
 
     @Test
+    void laAnticipacionMinimaCeroEsUnaDuracionCero() {
+        when(repositorio.buscar(ClaveParametro.ANTICIPACION_MINIMA_HORAS))
+                .thenReturn(Optional.of(fila(ClaveParametro.ANTICIPACION_MINIMA_HORAS, "0")));
+
+        assertThat(servicio.anticipacionMinima()).isEqualTo(Duration.ZERO);
+    }
+
+    @Test
     void elAvisoDePrivacidadDevuelveTextoYLeyendaAunqueSeanProvisorios() {
         when(repositorio.buscar(ClaveParametro.AVISO_PRIVACIDAD_TEXTO))
                 .thenReturn(Optional.of(fila(ClaveParametro.AVISO_PRIVACIDAD_TEXTO, "el texto")));

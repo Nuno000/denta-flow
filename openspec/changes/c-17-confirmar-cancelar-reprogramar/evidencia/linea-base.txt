@@ -1,0 +1,22 @@
+Línea base de verificación previa a C-17
+Fecha: 2026-11-26 11:26
+Rama: feat/C-17-confirmar-cancelar-reprogramar (sincronizada con origin/main incluyendo C-16 y C-12)
+
+1. Backend H2 (mvn verify):
+   - Tests run: 1066, Failures: 0, Errors: 0, Skipped: 0
+   - BUILD SUCCESS (tiempo: 06:35 min)
+
+2. Backend MySQL 8 nativo (mvn verify -Pit-mysql):
+   - Tests run: 217, Failures: 0, Errors: 0, Skipped: 0
+   - BUILD SUCCESS (tiempo: 02:26 min)
+
+3. Frontend lint (oxlint --deny-warnings):
+   - Found 0 warnings and 0 errors (109 files, 117 rules)
+
+4. Frontend tests (vitest run):
+   - Test Files: 34 passed (34)
+   - Tests: 284 passed (284)
+   - Duration: 54.24s
+
+5. Frontend build (tsc -b && vite build):
+   - Build exitoso (dist/ generado correctamente)

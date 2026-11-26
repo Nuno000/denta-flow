@@ -1,0 +1,19 @@
+Verificación final C-17 — 2026-11-26 12:44
+Backend H2 (./mvnw -B verify):
+[INFO] Tests run: 1095, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  04:56 min
+Backend MySQL 8 (./mvnw -B verify -Pit-mysql):
+[INFO] Tests run: 222, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  02:00 min
+Frontend lint:
+EXIT=0
+Frontend test:
+ Test Files  38 passed (38)
+      Tests  310 passed (310)
+EXIT=0
+Frontend build:
+✓ built in 985ms
+EXIT=0
+OpenSpec: Change 'c-17-confirmar-cancelar-reprogramar' is valid

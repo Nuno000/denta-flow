@@ -23,7 +23,12 @@ public enum ClaveParametro {
     /** C-16: se muestra en la reserva pública cuando no hay huecos o el horario ya no está disponible. */
     CONTACTO_CONSULTORIO("contacto-consultorio",
             "Contacto del consultorio que ve el paciente cuando no puede reservar online",
-            TipoParametro.TEXTO, null, null, null, 300, "contacto del consultorio");
+            TipoParametro.TEXTO, null, null, null, 300, "contacto del consultorio"),
+    /** C-21: mensaje de WhatsApp prellenado que recepción abre desde la agenda (design D3). */
+    WHATSAPP_PLANTILLA("whatsapp-plantilla",
+            "Plantilla del mensaje de WhatsApp para recordar o confirmar un turno; admite {nombre}, {fecha}, {hora}, "
+                    + "{prestacion}, {profesional} y {enlace}",
+            TipoParametro.TEXTO, null, null, null, 1000, "plantilla del mensaje de WhatsApp");
 
     private final String codigo;
     private final String descripcion;

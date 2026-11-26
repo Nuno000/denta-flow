@@ -1,0 +1,15 @@
+Línea base de C-21 — 2026-11-26, rama feat/C-21-whatsapp-prellenado recién creada desde main (87b779a)
+
+Backend (./mvnw -B verify):
+[INFO] Tests run: 1103, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  05:19 min
+EXIT=0
+
+Frontend:
+> oxlint --deny-warnings
+
+LINT_EXIT=0
+ Test Files  39 passed (39)
+      Tests  317 passed (317)
+✓ built in 701ms

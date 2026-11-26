@@ -74,6 +74,12 @@ public class ServicioDeParametros implements ParametrosDelConsultorio {
         return fila(ClaveParametro.CONTACTO_CONSULTORIO).valor();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public String plantillaWhatsapp() {
+        return fila(ClaveParametro.WHATSAPP_PLANTILLA).valor();
+    }
+
     private Parametro fila(ClaveParametro clave) {
         return parametros.buscar(clave)
                 .orElseThrow(() -> new IllegalStateException("Falta el parámetro " + clave.codigo() + " en la base"));

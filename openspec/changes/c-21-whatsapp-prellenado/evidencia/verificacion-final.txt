@@ -1,0 +1,20 @@
+Verificación final C-21 — 2026-11-26 14:06
+Backend H2 (./mvnw -B verify):
+[INFO] Tests run: 1152, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  05:48 min
+EXIT=0
+Backend MySQL 8 (./mvnw -B verify -Pit-mysql):
+[INFO] Tests run: 222, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  01:41 min
+EXIT=0
+Frontend lint:
+LINT_EXIT=0
+Frontend test:
+ Test Files  41 passed (41)
+      Tests  328 passed (328)
+Frontend build:
+✓ built in 726ms
+BUILD_EXIT=0
+OpenSpec: Change 'c-21-whatsapp-prellenado' is valid

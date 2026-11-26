@@ -105,6 +105,7 @@ class ServicioDeParametrosTest {
     @Test
     void listarDevuelveLasFilasEnElOrdenDelCatalogoAunqueElRepositorioLasDevuelvaEnOtro() {
         when(repositorio.listarTodos()).thenReturn(List.of(
+                fila(ClaveParametro.WHATSAPP_PLANTILLA, "w"),
                 fila(ClaveParametro.CONTACTO_CONSULTORIO, "c"),
                 fila(ClaveParametro.AVISO_PRIVACIDAD_LEYENDA, "l"),
                 fila(ClaveParametro.ANTICIPACION_MINIMA_HORAS, "24"),
@@ -112,7 +113,8 @@ class ServicioDeParametrosTest {
 
         assertThat(servicio.listar()).extracting(Parametro::clave).containsExactly(
                 ClaveParametro.ANTICIPACION_MINIMA_HORAS, ClaveParametro.AVISO_PRIVACIDAD_TEXTO,
-                ClaveParametro.AVISO_PRIVACIDAD_LEYENDA, ClaveParametro.CONTACTO_CONSULTORIO);
+                ClaveParametro.AVISO_PRIVACIDAD_LEYENDA, ClaveParametro.CONTACTO_CONSULTORIO,
+                ClaveParametro.WHATSAPP_PLANTILLA);
     }
 
     @Test
@@ -121,6 +123,14 @@ class ServicioDeParametrosTest {
                 .thenReturn(Optional.of(fila(ClaveParametro.CONTACTO_CONSULTORIO, "Llamanos al 0261 555-0000")));
 
         assertThat(servicio.contactoConsultorio()).isEqualTo("Llamanos al 0261 555-0000");
+    }
+
+    @Test
+    void laPlantillaDeWhatsappSeLeeAunqueSeaProvisoria() {
+        when(repositorio.buscar(ClaveParametro.WHATSAPP_PLANTILLA))
+                .thenReturn(Optional.of(fila(ClaveParametro.WHATSAPP_PLANTILLA, "Hola {nombre}")));
+
+        assertThat(servicio.plantillaWhatsapp()).isEqualTo("Hola {nombre}");
     }
 
     @Test

@@ -13,6 +13,8 @@ import { SillonesTab } from '../features/recursos/SillonesTab'
 import { CancelarTurnoPage } from '../features/turno-paciente/CancelarTurnoPage'
 import { ConfirmarTurnoPage } from '../features/turno-paciente/ConfirmarTurnoPage'
 import { ReprogramarTurnoPage } from '../features/turno-paciente/ReprogramarTurnoPage'
+import { AceptarOfertaPage } from '../features/lista-espera/AceptarOfertaPage'
+import { ListaEsperaPage } from '../features/lista-espera/ListaEsperaPage'
 import { UsuariosPage } from '../features/usuarios/UsuariosPage'
 import { InicioPage } from './InicioPage'
 
@@ -31,6 +33,7 @@ export const rutas: RouteObject[] = [
   { path: '/turno/:token/confirmar', element: <ConfirmarTurnoPage /> },
   { path: '/turno/:token/cancelar', element: <CancelarTurnoPage /> },
   { path: '/turno/:token/reprogramar', element: <ReprogramarTurnoPage /> },
+  { path: '/lista-espera/aceptar', element: <AceptarOfertaPage /> },
   {
     path: '/ingresar',
     element: <IngresarPage />,
@@ -84,6 +87,14 @@ export const rutas: RouteObject[] = [
       { path: 'sillones', element: <SillonesTab /> },
       { path: 'prestaciones', element: <PrestacionesTab /> },
     ],
+  },
+  {
+    path: '/panel/lista-espera',
+    element: (
+      <RutaProtegida roles={['administrador', 'recepcion']}>
+        <ListaEsperaPage />
+      </RutaProtegida>
+    ),
   },
   {
     path: '/panel/usuarios',

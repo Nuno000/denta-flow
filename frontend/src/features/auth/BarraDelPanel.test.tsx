@@ -19,6 +19,7 @@ describe('BarraDelPanel (spec "Menú del panel según el rol")', () => {
     expect(within(menu).getAllByRole('link').map((enlace) => enlace.textContent)).toEqual([
       'Panel',
       'Agenda',
+      'Lista de espera',
       'Ausentismo',
       'Recursos',
       'Usuarios',
@@ -39,6 +40,7 @@ describe('BarraDelPanel (spec "Menú del panel según el rol")', () => {
     expect(within(menu).getAllByRole('link').map((enlace) => enlace.textContent)).toEqual([
       'Panel',
       'Agenda',
+      'Lista de espera',
       'Ausentismo',
       'Recursos',
     ])

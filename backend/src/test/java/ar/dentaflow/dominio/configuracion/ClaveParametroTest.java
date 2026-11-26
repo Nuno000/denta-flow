@@ -19,7 +19,8 @@ class ClaveParametroTest {
             "aviso-privacidad-texto, AVISO_PRIVACIDAD_TEXTO",
             "aviso-privacidad-leyenda, AVISO_PRIVACIDAD_LEYENDA",
             "contacto-consultorio, CONTACTO_CONSULTORIO",
-            "whatsapp-plantilla, WHATSAPP_PLANTILLA"})
+            "whatsapp-plantilla, WHATSAPP_PLANTILLA",
+            "lista-espera-plazo-oferta-horas, LISTA_ESPERA_PLAZO_OFERTA_HORAS"})
     void desdeCodigoDevuelveLaClaveDelCatalogo(String codigo, ClaveParametro esperada) {
         assertThat(ClaveParametro.desdeCodigo(codigo)).isEqualTo(esperada);
         assertThat(esperada.codigo()).isEqualTo(codigo);
@@ -42,6 +43,18 @@ class ClaveParametroTest {
         assertThat(clave.unidad()).isEqualTo("horas");
         assertThat(clave.minimo()).isEqualTo(0);
         assertThat(clave.maximo()).isEqualTo(168);
+        assertThat(clave.longitudMaxima()).isNull();
+        assertThat(clave.descripcion()).isNotBlank();
+    }
+
+    @Test
+    void elPlazoDeOfertaDeListaDeEsperaEsUnEnteroEntreUnoYSetentaYDos() {
+        ClaveParametro clave = ClaveParametro.LISTA_ESPERA_PLAZO_OFERTA_HORAS;
+
+        assertThat(clave.tipo()).isEqualTo(TipoParametro.ENTERO);
+        assertThat(clave.unidad()).isEqualTo("horas");
+        assertThat(clave.minimo()).isEqualTo(1);
+        assertThat(clave.maximo()).isEqualTo(72);
         assertThat(clave.longitudMaxima()).isNull();
         assertThat(clave.descripcion()).isNotBlank();
     }

@@ -28,7 +28,11 @@ public enum ClaveParametro {
     WHATSAPP_PLANTILLA("whatsapp-plantilla",
             "Plantilla del mensaje de WhatsApp para recordar o confirmar un turno; admite {nombre}, {fecha}, {hora}, "
                     + "{prestacion}, {profesional} y {enlace}",
-            TipoParametro.TEXTO, null, null, null, 1000, "plantilla del mensaje de WhatsApp");
+            TipoParametro.TEXTO, null, null, null, 1000, "plantilla del mensaje de WhatsApp"),
+    /** C-20: plazo de vigencia en horas para aceptar una oferta de lista de espera. */
+    LISTA_ESPERA_PLAZO_OFERTA_HORAS("lista-espera-plazo-oferta-horas",
+            "Plazo en horas durante el cual una oferta de lista de espera permanece vigente para ser aceptada",
+            TipoParametro.ENTERO, "horas", 1, 72, null, "plazo de oferta de lista de espera");
 
     private final String codigo;
     private final String descripcion;

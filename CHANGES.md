@@ -85,7 +85,7 @@ C-24 manual-publico         ← C-19
 | C-22 | reintento-confirmacion [DIF] | C-18 | 7 | Bruno | Florencia | MEDIO | S | no | `[ ]` |
 | C-23 | panel-ausentismo [DIF] | C-13 | 7 | Florencia | Bruno | BAJO | M | no | `[x]` |
 | C-19 | cierre-mvp-e2e-y-despliegue | C-12, C-13, C-17, C-18 (en el corte 26/11: solo C-17 y los demás changes del corte) | 8 | Bruno (E2E de cada flujo: su autor) | Florencia | MEDIO | M | sí | `[ ]` |
-| C-20 | lista-de-espera [DIF] | C-10, C-17 | 8 | Renzo | Florencia | MEDIO | M | no | `[ ]` |
+| C-20 | lista-de-espera [DIF] | C-10, C-17 | 8 | Renzo | Florencia | MEDIO | M | no | `[x]` |
 | C-21 | whatsapp-prellenado [DIF] | C-11 | 8 | Jessica | Florencia | BAJO | S | no | `[x]` |
 | C-24 | manual-publico [DIF] | C-19 | 9 | Jessica | Florencia | BAJO | S | no | `[ ]` |
 
@@ -574,7 +574,7 @@ Criterios del reparto:
 > Marcados [DIF] en la KB. Se evalúan contra PA-01; si el plazo es corto, quedan fuera sin afectar el MVP. Pueden ir en paralelo entre sí.
 
 ### [C-20] `lista-de-espera`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado el 2026-11-26 (rama `feat/C-20-lista-de-espera`; H2 1167/1167, `it-mysql` `AceptacionListaEsperaConcurrenciaMySqlTest` 1/1, frontend 43/43 archivos / 331 tests + `npm run build`)
 - **Scope**:
   - Modelo ListaEspera (paciente, prestación, profesional opcional, rango deseado, estado activa|ofrecida|atendida|vencida); Migración 006; alta del paciente en la lista y gestión por recepción/administrador.
   - Al cancelarse un turno, buscar pacientes compatibles y notificar la oferta por email; el primero que acepta obtiene el turno vía verificación transaccional (C-10/C-09).

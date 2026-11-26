@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mapeo JPA de lista_espera (C-20). Las clases de dominio no llevan anotaciones de frameworks. -->
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
+                 version="3.0">
+    <access>FIELD</access>
+
+    <entity class="ar.dentaflow.dominio.listaespera.ListaEspera" name="ListaEspera">
+        <table name="lista_espera"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="pacienteId">
+                <column name="paciente_id" nullable="false" updatable="false"/>
+            </basic>
+            <basic name="prestacionId">
+                <column name="prestacion_id" nullable="false" updatable="false"/>
+            </basic>
+            <basic name="profesionalId">
+                <column name="profesional_id"/>
+            </basic>
+            <basic name="fechaDesde">
+                <column name="fecha_desde" nullable="false"/>
+            </basic>
+            <basic name="fechaHasta">
+                <column name="fecha_hasta" nullable="false"/>
+            </basic>
+            <basic name="horaDesde">
+                <column name="hora_desde"/>
+            </basic>
+            <basic name="horaHasta">
+                <column name="hora_hasta"/>
+            </basic>
+            <basic name="estado">
+                <column name="estado" nullable="false" length="20"/>
+                <convert converter="ar.dentaflow.infraestructura.persistencia.listaespera.ConversorEstadoListaEspera"/>
+            </basic>
+            <basic name="turnoOrigenId">
+                <column name="turno_origen_id"/>
+            </basic>
+            <basic name="profesionalOfrecidoId">
+                <column name="profesional_ofrecido_id"/>
+            </basic>
+            <basic name="inicioOfrecido">
+                <column name="inicio_ofrecido"/>
+            </basic>
+            <basic name="tokenAceptacion">
+                <column name="token_aceptacion" length="64"/>
+            </basic>
+            <basic name="ofrecidaEn">
+                <column name="ofrecida_en"/>
+            </basic>
+            <basic name="ofrecidaHasta">
+                <column name="ofrecida_hasta"/>
+            </basic>
+            <basic name="turnoCreadoId">
+                <column name="turno_creado_id"/>
+            </basic>
+            <basic name="creadoPorUsuarioId">
+                <column name="creado_por_usuario_id" nullable="false" updatable="false"/>
+            </basic>
+            <basic name="creadoEn">
+                <column name="creado_en" nullable="false" updatable="false"/>
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>

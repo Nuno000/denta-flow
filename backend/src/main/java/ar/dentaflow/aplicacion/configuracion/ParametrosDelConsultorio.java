@@ -16,4 +16,7 @@ public interface ParametrosDelConsultorio {
 
     /** Contacto del consultorio para la reserva pública (C-16), aunque siga siendo provisorio. */
     String contactoConsultorio();
+
+    /** Plantilla del mensaje de WhatsApp prellenado (C-21), aunque siga siendo provisoria. */
+    String plantillaWhatsapp();
 }

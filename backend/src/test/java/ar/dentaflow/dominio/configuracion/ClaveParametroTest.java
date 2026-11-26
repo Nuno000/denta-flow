@@ -18,7 +18,8 @@ class ClaveParametroTest {
             "anticipacion-minima-horas, ANTICIPACION_MINIMA_HORAS",
             "aviso-privacidad-texto, AVISO_PRIVACIDAD_TEXTO",
             "aviso-privacidad-leyenda, AVISO_PRIVACIDAD_LEYENDA",
-            "contacto-consultorio, CONTACTO_CONSULTORIO"})
+            "contacto-consultorio, CONTACTO_CONSULTORIO",
+            "whatsapp-plantilla, WHATSAPP_PLANTILLA"})
     void desdeCodigoDevuelveLaClaveDelCatalogo(String codigo, ClaveParametro esperada) {
         assertThat(ClaveParametro.desdeCodigo(codigo)).isEqualTo(esperada);
         assertThat(esperada.codigo()).isEqualTo(codigo);
@@ -54,7 +55,7 @@ class ClaveParametroTest {
         assertThat(ClaveParametro.CONTACTO_CONSULTORIO.longitudMaxima()).isEqualTo(300);
         for (ClaveParametro clave : new ClaveParametro[] {
                 ClaveParametro.AVISO_PRIVACIDAD_TEXTO, ClaveParametro.AVISO_PRIVACIDAD_LEYENDA,
-                ClaveParametro.CONTACTO_CONSULTORIO}) {
+                ClaveParametro.CONTACTO_CONSULTORIO, ClaveParametro.WHATSAPP_PLANTILLA}) {
             assertThat(clave.unidad()).isNull();
             assertThat(clave.minimo()).isNull();
             assertThat(clave.maximo()).isNull();

@@ -85,10 +85,13 @@ class ParametrosControllerTest {
     }
 
     @Test
-    void elAdministradorListaLosCuatroParametrosEnElOrdenDelCatalogo() throws Exception {
+    void elAdministradorListaLosCincoParametrosEnElOrdenDelCatalogo() throws Exception {
         mockMvc.perform(get("/api/parametros").header("Authorization", admin))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(4))
+                .andExpect(jsonPath("$.length()").value(5))
+                .andExpect(jsonPath("$[4].clave").value("whatsapp-plantilla"))
+                .andExpect(jsonPath("$[4].longitudMaxima").value(1000))
+                .andExpect(jsonPath("$[4].provisorio").value(true))
                 .andExpect(jsonPath("$[3].clave").value("contacto-consultorio"))
                 .andExpect(jsonPath("$[3].tipo").value("texto"))
                 .andExpect(jsonPath("$[3].longitudMaxima").value(300))
@@ -190,6 +193,23 @@ class ParametrosControllerTest {
                         admin))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.valor").value("Llamanos al 0261 555-0000 de lunes a viernes de 9 a 18"))
+                .andExpect(jsonPath("$.provisorio").value(false));
+    }
+
+    @Test
+    void laPlantillaDeWhatsappEsObligatoriaYAcotada() throws Exception {
+        String plantilla = "/api/parametros/whatsapp-plantilla";
+        for (String invalido : new String[] {"", "   ", "x".repeat(1001)}) {
+            mockMvc.perform(cambiar(plantilla, "{\"valor\":\"" + invalido + "\"}", admin))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith("application/problem+json"));
+        }
+        mockMvc.perform(get(plantilla).header("Authorization", admin))
+                .andExpect(jsonPath("$.provisorio").value(true));
+
+        mockMvc.perform(cambiar(plantilla, "{\"valor\":\"Hola {nombre}, tu turno es el {fecha} a las {hora}\"}", admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.valor").value("Hola {nombre}, tu turno es el {fecha} a las {hora}"))
                 .andExpect(jsonPath("$.provisorio").value(false));
     }
 

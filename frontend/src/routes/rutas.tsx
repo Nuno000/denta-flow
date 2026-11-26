@@ -1,6 +1,7 @@
 import { Navigate, type RouteObject } from 'react-router-dom'
 import { AgendaPage } from '../features/agenda/AgendaPage'
 import { CargaDeTurnoPage } from '../features/agenda/CargaDeTurnoPage'
+import { AusentismoPage } from '../features/ausentismo/AusentismoPage'
 import { IngresarPage } from '../features/auth/IngresarPage'
 import { PanelPage } from '../features/auth/PanelPage'
 import { RutaProtegida } from '../features/auth/RutaProtegida'
@@ -60,6 +61,15 @@ export const rutas: RouteObject[] = [
     element: (
       <RutaProtegida roles={['administrador', 'recepcion']}>
         <CargaDeTurnoPage />
+      </RutaProtegida>
+    ),
+  },
+  {
+    // C-23: indicadores de ausentismo; los tres roles internos (el profesional solo ve los suyos en el backend).
+    path: '/panel/ausentismo',
+    element: (
+      <RutaProtegida>
+        <AusentismoPage />
       </RutaProtegida>
     ),
   },

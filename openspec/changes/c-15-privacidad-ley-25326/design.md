@@ -77,8 +77,8 @@ SQL válido en MySQL 8 y H2 `MODE=MySQL`. Sigue la numeración por change (DD-09
 
 ### D9. Frontend
 - `features/reserva/AvisoPrivacidad.tsx`: recibe `register`/`control` de React Hook Form; muestra el texto en un bloque desplegable (`<details>`) y una casilla con la leyenda, `aria-describedby` al error y foco al error al enviar.
-- `features/reserva/avisoPrivacidadEsquema.ts`: `aceptaAvisoPrivacidad: z.literal(true, { errorMap: () => ({ message: 'Tenés que aceptar el aviso de privacidad para reservar' }) })`.
-- `features/reserva/useAvisoPrivacidad.ts`: `useQuery` sobre `apiClient.get('/api/publico/aviso-privacidad')`; estados de carga y error con reintento.
+- `features/reserva/avisoPrivacidadApi.ts` (esquema y hook juntos; `avisoPrivacidad.ts` choca con `AvisoPrivacidad.tsx` en Windows): `aceptaAvisoPrivacidad: z.literal(true, { errorMap: () => ({ message: 'Tenés que aceptar el aviso de privacidad para reservar' }) })`.
+- `useAvisoPrivacidad` (en el mismo archivo): `useQuery` sobre `apiClient.get('/api/publico/aviso-privacidad')`; estados de carga y error con reintento.
 
 ## Risks / Trade-offs
 

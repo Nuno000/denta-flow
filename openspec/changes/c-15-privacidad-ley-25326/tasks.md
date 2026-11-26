@@ -8,24 +8,25 @@
 
 ## 1. Línea base
 
-- [ ] 1.1 Correr `./mvnw verify`, `./mvnw verify -Pit-mysql`, `npm test` y `npm run build` antes de tocar código y anotar los resultados en `evidencia/linea-base.txt`. Si algo falla, frenar y reportarlo como falla previa
+- [x] 1.1 Correr `./mvnw verify`, `./mvnw verify -Pit-mysql`, `npm test` y `npm run build` antes de tocar código y anotar los resultados en `evidencia/linea-base.txt`. Si algo falla, frenar y reportarlo como falla previa
 
 ## 2. Bloque A — Aviso público (spec "Aviso de privacidad público")
 
-- [ ] 2.1 RED: `AvisoPrivacidadControllerTest` (`@WebMvcTest`): sin token, `GET /api/publico/aviso-privacidad` → 200 con solo `texto` y `leyenda` y `Cache-Control: no-cache`; el cuerpo no tiene `provisorio`, autor ni fecha. GREEN: `AvisoPrivacidadDto` y controller sobre la lectura tipada de C-07 (design D5)
-- [ ] 2.2 RED: `AvisoPrivacidadIntegracionTest` (`@SpringBootTest`): el administrador guarda un texto nuevo por `PUT /api/parametros/aviso-privacidad-texto` y el `GET` público devuelve el nuevo. GREEN: ajustar si hiciera falta
+- [x] 2.1 RED: `AvisoPrivacidadControllerTest` (`@WebMvcTest`): sin token, `GET /api/publico/aviso-privacidad` → 200 con solo `texto` y `leyenda` y `Cache-Control: no-cache`; el cuerpo no tiene `provisorio`, autor ni fecha. GREEN: `AvisoPrivacidadDto` y controller sobre la lectura tipada de C-07 (design D5)
+- [x] 2.2 RED: `AvisoPrivacidadIntegracionTest` (`@SpringBootTest`): el administrador guarda un texto nuevo por `PUT /api/parametros/aviso-privacidad-texto` y el `GET` público devuelve el nuevo. GREEN: ajustar si hiciera falta
 
 ## 3. Bloque A — Logs, errores y HTTPS (spec "Sin datos personales en logs ni en errores", "Transporte cifrado en el despliegue")
 
-- [ ] 3.1 RED: `ErroresSinDatosDelInputTest`: un 400 de Bean Validation con un campo inválido `30111222` no contiene ese valor en el cuerpo. GREEN: quitar `rejectedValue` del `GlobalExceptionHandler` si aparece (design D7)
-- [ ] 3.2 RED: `HstsDetrasDelProxyTest` (MockMvc): con `X-Forwarded-Proto: https` la respuesta trae `Strict-Transport-Security`; sin él, no. GREEN: `server.forward-headers-strategy: framework` y HSTS en la configuración de seguridad (design D8)
-- [ ] 3.3 Confirmar `spring.jpa.show-sql=false` en todos los perfiles y anotarlo en `evidencia/`
+- [x] 3.1 RED: `ErroresSinDatosDelInputTest`: un 400 de Bean Validation con un campo inválido `30111222` no contiene ese valor en el cuerpo. GREEN: quitar `rejectedValue` del `GlobalExceptionHandler` si aparece (design D7)
+- [x] 3.2 RED: `HstsDetrasDelProxyTest` (MockMvc): con `X-Forwarded-Proto: https` la respuesta trae `Strict-Transport-Security`; sin él, no. GREEN: `server.forward-headers-strategy: framework` y HSTS en la configuración de seguridad (design D8)
+- [x] 3.3 Confirmar `spring.jpa.show-sql=false` en todos los perfiles y anotarlo en `evidencia/`
+- [x] 3.4 RED: `SinValoresDeLaBaseEnLogsTest`: una violación de clave única no deja el valor repetido en el log. GREEN: `org.hibernate.engine.jdbc.spi.SqlExceptionHelper` en `OFF` (hallazgo del ensayo, ver `evidencia/bloque-a.md`)
 
 ## 4. Bloque A — Frontend (spec "Aceptación obligatoria del aviso al reservar" — UI)
 
-- [ ] 4.1 RED: `avisoPrivacidadEsquema.test.ts`: `true` válido; `false` y ausente inválidos con el mensaje en español. GREEN: esquema Zod (design D9)
-- [ ] 4.2 RED: `useAvisoPrivacidad.test.tsx`: con el cliente API simulado devuelve `texto` y `leyenda`; ante error expone el estado de error. GREEN: hook con TanStack Query sobre `lib/apiClient.ts`
-- [ ] 4.3 RED: `AvisoPrivacidad.test.tsx` (Testing Library): muestra la leyenda como etiqueta de la casilla; el texto se despliega; al enviar sin marcar muestra el error asociado con `aria-describedby` y mueve el foco; marcada, el formulario de prueba envía `aceptaAvisoPrivacidad: true`. GREEN: componente `AvisoPrivacidad.tsx`
+- [x] 4.1 RED: `avisoPrivacidadApi.test.ts`: `true` válido; `false` y ausente inválidos con el mensaje en español. GREEN: esquema Zod (design D9)
+- [x] 4.2 RED: `AvisoPrivacidad.test.tsx` (hook `useAvisoPrivacidad` en `avisoPrivacidadApi.ts`): con el cliente API simulado devuelve `texto` y `leyenda`; ante error expone el estado de error. GREEN: hook con TanStack Query sobre `lib/apiClient.ts`
+- [x] 4.3 RED: `AvisoPrivacidad.test.tsx` (Testing Library): muestra la leyenda como etiqueta de la casilla; el texto se despliega; al enviar sin marcar muestra el error asociado con `aria-describedby` y mueve el foco; marcada, el formulario de prueba envía `aceptaAvisoPrivacidad: true`. GREEN: componente `AvisoPrivacidad.tsx`
 - [ ] 4.4 Revisar el componente a 390 px de ancho y con teclado (orden de foco, contraste); anotar el resultado en `evidencia/accesibilidad.md`
 
 ## 5. Bloque B — Esquema (requiere C-09) (spec "Datos mínimos del paciente")

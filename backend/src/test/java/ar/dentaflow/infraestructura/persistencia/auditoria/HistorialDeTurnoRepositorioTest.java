@@ -10,18 +10,20 @@ import ar.dentaflow.dominio.auditoria.HistorialDeTurnoRepositorio;
 import ar.dentaflow.dominio.usuarios.Rol;
 import ar.dentaflow.dominio.usuarios.Usuario;
 import ar.dentaflow.dominio.usuarios.UsuarioRepositorio;
+import ar.dentaflow.escenarios.EscenarioDeAgendaJdbc;
 import jakarta.persistence.EntityManager;
 import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 /** Spec auditoria-turnos — persistencia del historial (design D3 y D4). */
@@ -41,8 +43,19 @@ class HistorialDeTurnoRepositorioTest {
     @Autowired
     private EntityManager em;
 
-    /** Un turno distinto por prueba, porque la base del perfil test se comparte entre clases. */
-    private final long turno = ThreadLocalRandom.current().nextLong(1_000_000, 9_000_000);
+    @Autowired
+    private JdbcTemplate jdbc;
+
+    /** Turnos reales (FK desde C-09), propios de cada prueba: la base del perfil test se comparte entre clases. */
+    private long turno;
+    private long otroTurno;
+
+    @BeforeEach
+    void crearTurnos() {
+        EscenarioDeAgendaJdbc escenario = new EscenarioDeAgendaJdbc(jdbc);
+        turno = escenario.turnoValido();
+        otroTurno = escenario.turnoValido();
+    }
 
     private void sincronizar() {
         em.flush();
@@ -88,7 +101,7 @@ class HistorialDeTurnoRepositorioTest {
     void devuelveElHistorialDeUnTurnoEnOrdenCronologicoYSinOtrosTurnos() {
         historial.agregar(cambio(turno, DOCE.plusSeconds(30 * 60), AccionDeTurno.CANCELACION));
         historial.agregar(cambio(turno, DOCE, AccionDeTurno.CREACION));
-        historial.agregar(cambio(turno + 1, DOCE.plusSeconds(60), AccionDeTurno.CONFIRMACION));
+        historial.agregar(cambio(otroTurno, DOCE.plusSeconds(60), AccionDeTurno.CONFIRMACION));
         historial.agregar(cambio(turno, DOCE.plusSeconds(5 * 60), AccionDeTurno.CONFIRMACION));
         sincronizar();
 

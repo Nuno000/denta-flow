@@ -1,0 +1,5 @@
+Linea base C-09 (rama feat/C-09-modelo-turno-paciente, antes de tocar codigo)
+Comando: cd backend && ./mvnw -B clean verify  (H2, perfil test; JDK 25 en el entorno, release 21)
+[INFO] Tests run: 337, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+it-mysql: no ejecutado por el agente (la password de MySQL esta solo en la terminal de Renzo). Pendiente: .\mvnw.cmd verify -Pit-mysql y SELECT COUNT(*) FROM turno_historial = 0.

@@ -3,11 +3,13 @@ package ar.dentaflow.infraestructura.persistencia.auditoria;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import ar.dentaflow.escenarios.EscenarioDeAgendaJdbc;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Locale;
 import java.util.UUID;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -29,6 +31,14 @@ abstract class RestriccionesHistorialBase {
     @Autowired
     protected JdbcTemplate jdbc;
 
+    /** Turno real: desde C-09 {@code turno_id} tiene FK ({@code fk_turno_historial_turno}). */
+    private long turno;
+
+    @BeforeEach
+    void crearTurno() {
+        turno = new EscenarioDeAgendaJdbc(jdbc).turnoValido();
+    }
+
     private long insertarUsuario() {
         String email = "auditoria-" + UUID.randomUUID().toString().substring(0, 8) + "@example.com";
         jdbc.update("INSERT INTO usuario (email, credencial_hash, rol) VALUES (?, '$2a$10$hashDePrueba', 'recepcion')",
@@ -37,9 +47,14 @@ abstract class RestriccionesHistorialBase {
     }
 
     private void insertar(String actorTipo, Long usuarioId, String accion, String anterior, String nuevo) {
+        insertarParaTurno(turno, actorTipo, usuarioId, accion, anterior, nuevo);
+    }
+
+    private void insertarParaTurno(long turnoId, String actorTipo, Long usuarioId, String accion, String anterior,
+            String nuevo) {
         jdbc.update("INSERT INTO turno_historial (turno_id, actor_tipo, usuario_id, ocurrido_en, accion, "
                 + "valor_anterior, valor_nuevo) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                42L, actorTipo, usuarioId, AHORA, accion, anterior, nuevo);
+                turnoId, actorTipo, usuarioId, AHORA, accion, anterior, nuevo);
     }
 
     @Test
@@ -55,11 +70,17 @@ abstract class RestriccionesHistorialBase {
     }
 
     @Test
-    void elTurnoNoNecesitaExistirPorqueLaFkLaAgregaC09() {
+    void rechazaUnTurnoInexistente() {
+        assertRechazadoPor("fk_turno_historial_turno",
+                () -> insertarParaTurno(999_999_999L, "sistema", null, "creacion", null, NUEVO));
+    }
+
+    @Test
+    void aceptaUnTurnoExistente() {
         insertar("sistema", null, "creacion", null, NUEVO);
 
-        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM turno_historial WHERE turno_id = 42", Long.class))
-                .isPositive();
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM turno_historial WHERE turno_id = ?", Long.class, turno))
+                .isEqualTo(1L);
     }
 
     @Test

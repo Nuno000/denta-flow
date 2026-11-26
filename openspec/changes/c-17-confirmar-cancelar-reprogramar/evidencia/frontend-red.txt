@@ -1,0 +1,25 @@
+      >
+        errorElement
+      </code>
+       prop on your route.
+    </p>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/features/turno-paciente/ReprogramarTurnoPage.test.tsx:106:25
+    104|     renderizarEn('/turno/tok-1/reprogramar')
+    105|
+    106|     expect(await screen.findByRole('alert')).toHaveTextContent('El pla…
+       |                         ^
+    107|     expect(await screen.findByText('Llamanos al 0261 555-0000')).toBeI…
+    108|     expect(screen.queryByRole('group', { name: 'Días' })).not.toBeInTh…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/20]⎯
+
+
+ Test Files  5 failed (5)
+      Tests  19 failed | 13 passed (32)
+   Start at  12:35:19
+   Duration  23.51s (environment 39%, tests 24%, setup 18%, import 13%, transform 6%)
+

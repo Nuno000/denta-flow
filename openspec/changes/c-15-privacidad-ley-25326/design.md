@@ -24,13 +24,17 @@
 
 ## Decisions
 
-### D1. Qué espera C-15 de C-09 (acordar con Renzo)
+### D1. Qué espera C-15 de C-09 (revisado contra C-09 mergeado, 2026-11-26)
+C-09 entregó `dni VARCHAR(8) NOT NULL UNIQUE` con `ck_paciente_dni_largo` (7 u 8 caracteres), `consentimiento_privacidad_en` y `Paciente.registrarConsentimiento`. El paciente se registra en **su propia transacción, antes que el turno** (`ServicioDePacientes`), con el consentimiento en `DatosPaciente.consentimientoEn`. Por eso cambian D2, D3 y D4 (decisión de Bruno del 2026-11-26: DNI nulo al anonimizar). Lo que sigue es el contrato original, superado:
 - Tabla `paciente` con `dni VARCHAR(20) NOT NULL UNIQUE`, `email VARCHAR(254) NOT NULL`, `telefono`, `nombre`, `apellido` NOT NULL, y `consentimiento_privacidad_en DATETIME(6) NULL`.
 - Deduplicación por DNI dentro de la transacción de reserva.
 - Si C-09 no crea `consentimiento_privacidad_en`, la agrega `V015_1`. El largo de 20 en `dni` alcanza para el sustituto `ANON-<id>` (D4).
 
 ### D2. Migración `V015_1__privacidad_paciente.sql`
 ```sql
+ALTER TABLE paciente MODIFY dni VARCHAR(8) NULL;
+ALTER TABLE paciente ADD CONSTRAINT ck_paciente_dni_o_anonimizado
+  CHECK (dni IS NOT NULL OR anonimizado_en IS NOT NULL);
 ALTER TABLE paciente ADD COLUMN anonimizado_en DATETIME(6) NULL;
 ALTER TABLE paciente ADD COLUMN anonimizado_por BIGINT NULL;
 ALTER TABLE paciente ADD CONSTRAINT fk_paciente_anonimizado_por
@@ -42,6 +46,7 @@ ALTER TABLE paciente ADD CONSTRAINT ck_paciente_anonimizado
 SQL válido en MySQL 8 y H2 `MODE=MySQL`. Sigue la numeración por change (DD-09) y debe mergearse después de C-09 (`V009_1`). Si una base de desarrollo ya tiene aplicada una migración de número mayor (por ejemplo `V016_1`), Flyway rechaza `V015_1` por fuera de orden: en ese caso se recrea la base local, y el PR lo avisa.
 
 ### D3. Consentimiento en el dominio (Java puro)
+**Revisado (2026-11-26):** el consentimiento se registra con el paciente, no en la transacción del turno. `ServicioDePacientes.registrarDesdeReservaOnline` rechaza (`ValidacionDeDominioException`, sin crear ni modificar) un `DatosPaciente` sin `consentimientoEn`; C-16 pasa ahí el instante del `Clock` cuando `aceptaAvisoPrivacidad` es verdadero. `RegistroDeConsentimiento` con `MANDATORY` queda descartado. Texto original, superado:
 - `Paciente.registrarConsentimiento(Instant ahora)`: guarda el instante; rechaza `null`.
 - `ConsentimientoPrivacidad.exigir(boolean aceptado)`: lanza `ValidacionDeDominioException` con código `aviso-privacidad-no-aceptado` si es falso.
 - `aplicacion.pacientes.RegistroDeConsentimiento.registrar(Paciente, boolean aceptado)` con `@Transactional(propagation = MANDATORY)`: exige la transacción de la reserva de C-16, toma la hora del `Clock` (C-04, `RelojConfig`). Si la reserva falla, el instante se revierte con ella.
@@ -50,8 +55,8 @@ SQL válido en MySQL 8 y H2 `MODE=MySQL`. Sigue la numeración por change (DD-09
 ### D4. Anonimización
 - `Paciente.anonimizar(long usuarioId, Instant ahora)` en el dominio: si ya está anonimizado no hace nada (idempotente); si no, reemplaza:
   - `nombre` → `Paciente`, `apellido` → `anonimizado`
-  - `dni` → `ANON-<id>` (mantiene NOT NULL y UNIQUE; libera el DNI original)
-  - `telefono` → `0000000000`
+  - `dni` → `NULL` (permitido solo con `anonimizado_en`; MySQL y H2 admiten varios `NULL` en un `UNIQUE`; libera el DNI original). Revisado el 2026-11-26: el `ANON-<id>` original no entra en `VARCHAR(8)` ni en el formato de C-09
+  - `telefono` → `00000000`
   - `email` → `anonimizado-<id>@dentaflow.invalid` (RFC 2606: nunca entregable)
   - `consentimiento_privacidad_en` se conserva (prueba del consentimiento dado).
 - `aplicacion.pacientes.ServicioDeAnonimizacion.anonimizar(id, usuarioActual)` (`@Transactional`): bloquea la fila del paciente (`PESSIMISTIC_WRITE`) para que una reserva simultánea con el mismo DNI no cree un turno nuevo en medio; consulta si hay turnos con estado `pendiente|confirmado` e `inicio > ahora` (puerto de lectura de C-09); si hay, lanza `ConflictoDeNegocioException` → 409.

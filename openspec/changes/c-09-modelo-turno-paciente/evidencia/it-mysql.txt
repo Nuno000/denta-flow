@@ -1,0 +1,16 @@
+.\mvnw.cmd verify -Pit-mysql (MySQL 8 local, perfil it-mysql), 2026-11-26 00:46 — corrido por Renzo
+Tests run: 130, Failures: 0, Errors: 0, Skipped: 0
+Previo: turno_historial sin filas huerfanas, V009_1 y V009_2 aplicadas sin error.
+
+Nuevos de C-09 (78):
+  CreacionSimultaneaTurnosMySqlTest   50/50 (@RepeatedTest(10) x casos a-e: mismo profesional, mismo sillon,
+                                             recursos distintos, operaciones cruzadas sin interbloqueo, reprogramacion vs creacion)
+  AltaSimultaneaPacienteMySqlTest     10/10 (mismo DNI en paralelo -> una sola fila, uk_paciente_dni)
+  RestriccionesTurnoMySqlTest         10/10
+  RestriccionesPacienteMySqlTest       5/5
+  IndicesTurnoMySqlTest                3/3  (information_schema.statistics)
+Adaptado por la FK nueva (C-08, Q12):
+  RestriccionesHistorialMySqlTest      9/9  (incluye fk_turno_historial_turno)
+Existentes sin regresiones (43):
+  ConexionMySqlTest 1/1, IdaYVueltaUtcMySqlTest 2/2, RestriccionesRecursosMySqlTest 13/13,
+  RestriccionesUsuarioMySqlTest 9/9, RestriccionesParametrosMySqlTest 8/8, EdicionSimultaneaParametrosMySqlTest 10/10

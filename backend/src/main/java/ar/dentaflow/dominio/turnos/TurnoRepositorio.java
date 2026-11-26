@@ -1,6 +1,8 @@
 package ar.dentaflow.dominio.turnos;
 
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -30,4 +32,15 @@ public interface TurnoRepositorio {
 
     /** Ídem {@link #haySolapamientoDeProfesional} para el sillón. */
     boolean haySolapamientoDeSillon(Long sillonId, Instant inicio, Instant fin, Long excluirTurnoId);
+
+    /**
+     * Ocupaciones activas (no canceladas, no sobreturno) de los profesionales dados en
+     * {@code [desde, hasta)}. {@code excluirTurnoId} puede ser nulo.
+     */
+    List<OcupacionDeRecurso> listarOcupacionesDeProfesionales(Collection<Long> ids, Instant desde, Instant hasta,
+            Long excluirTurnoId);
+
+    /** Ídem {@link #listarOcupacionesDeProfesionales} para sillones. */
+    List<OcupacionDeRecurso> listarOcupacionesDeSillones(Collection<Long> ids, Instant desde, Instant hasta,
+            Long excluirTurnoId);
 }

@@ -84,6 +84,7 @@ class ServicioDeTurnosIntegracionTest {
         sillon = escenario.sillon();
         prestacion = escenario.prestacion(30);
         escenario.habilitar(profesional, prestacion);
+        escenario.atiendeTodaLaSemana(profesional);
         usuario = escenario.usuario();
         recepcion = Actor.usuario(usuario);
     }
@@ -156,6 +157,7 @@ class ServicioDeTurnosIntegracionTest {
         servicio.crear(online(profesional, sillon, DOCE));
         long otroProfesional = escenario.profesional();
         escenario.habilitar(otroProfesional, prestacion);
+        escenario.atiendeTodaLaSemana(otroProfesional);
 
         assertThatThrownBy(() -> servicio.crear(online(otroProfesional, sillon, DOCE)))
                 .isInstanceOfSatisfying(TurnoSolapadoException.class,
@@ -198,6 +200,7 @@ class ServicioDeTurnosIntegracionTest {
         long otroProfesional = escenario.profesional();
         long otroSillon = escenario.sillon();
         escenario.habilitar(otroProfesional, prestacion);
+        escenario.atiendeTodaLaSemana(otroProfesional);
         servicio.crear(online(otroProfesional, otroSillon, DOCE));
     }
 

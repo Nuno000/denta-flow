@@ -98,6 +98,7 @@ class ServicioDeNotificacionesTest {
         long sillon = escenario.sillon();
         long prestacion = escenario.prestacion(30);
         escenario.habilitar(profesional, prestacion);
+        escenario.atiendeTodaLaSemana(profesional);
         turno = turnos.crear(new SolicitudDeTurno(paciente, profesional, sillon, prestacion, INICIO,
                 OrigenTurno.ONLINE, false, Actor.paciente())).turno().getId();
         enviador.simulado.limpiar();

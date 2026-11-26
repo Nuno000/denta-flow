@@ -1,11 +1,13 @@
 package ar.dentaflow.infraestructura.persistencia.turnos;
 
 import ar.dentaflow.dominio.turnos.EstadoTurno;
+import ar.dentaflow.dominio.turnos.OcupacionDeRecurso;
 import ar.dentaflow.dominio.turnos.Turno;
 import ar.dentaflow.dominio.turnos.TurnoRepositorio;
 import jakarta.persistence.LockModeType;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -47,6 +49,20 @@ public interface TurnoRepositorioJpa extends Repository<Turno, Long>, TurnoRepos
             + "and t.esSobreturno = false and t.inicio < :fin and t.fin > :inicio and t.id <> :excluir")
     long contarSolapadosDeSillon(@Param("sillonId") Long sillonId, @Param("estados") List<EstadoTurno> estados,
             @Param("inicio") Instant inicio, @Param("fin") Instant fin, @Param("excluir") Long excluir);
+
+    @Query("select new ar.dentaflow.dominio.turnos.OcupacionDeRecurso(t.profesionalId, t.inicio, t.fin) "
+            + "from Turno t where t.profesionalId in :ids and t.estado in :estados "
+            + "and t.esSobreturno = false and t.inicio < :hasta and t.fin > :desde and t.id <> :excluir")
+    List<OcupacionDeRecurso> buscarOcupacionesDeProfesionales(@Param("ids") Collection<Long> ids,
+            @Param("estados") List<EstadoTurno> estados, @Param("desde") Instant desde,
+            @Param("hasta") Instant hasta, @Param("excluir") Long excluir);
+
+    @Query("select new ar.dentaflow.dominio.turnos.OcupacionDeRecurso(t.sillonId, t.inicio, t.fin) "
+            + "from Turno t where t.sillonId in :ids and t.estado in :estados "
+            + "and t.esSobreturno = false and t.inicio < :hasta and t.fin > :desde and t.id <> :excluir")
+    List<OcupacionDeRecurso> buscarOcupacionesDeSillones(@Param("ids") Collection<Long> ids,
+            @Param("estados") List<EstadoTurno> estados, @Param("desde") Instant desde,
+            @Param("hasta") Instant hasta, @Param("excluir") Long excluir);
 
     @Query("select count(t) from Turno t where t.pacienteId = :pacienteId and t.estado in :estados "
             + "and t.inicio > :ahora")
@@ -90,6 +106,24 @@ public interface TurnoRepositorioJpa extends Repository<Turno, Long>, TurnoRepos
     @Override
     default boolean haySolapamientoDeSillon(Long sillonId, Instant inicio, Instant fin, Long excluirTurnoId) {
         return contarSolapadosDeSillon(sillonId, estadosActivos(), inicio, fin, excluir(excluirTurnoId)) > 0;
+    }
+
+    @Override
+    default List<OcupacionDeRecurso> listarOcupacionesDeProfesionales(Collection<Long> ids, Instant desde,
+            Instant hasta, Long excluirTurnoId) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return buscarOcupacionesDeProfesionales(ids, estadosActivos(), desde, hasta, excluir(excluirTurnoId));
+    }
+
+    @Override
+    default List<OcupacionDeRecurso> listarOcupacionesDeSillones(Collection<Long> ids, Instant desde, Instant hasta,
+            Long excluirTurnoId) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return buscarOcupacionesDeSillones(ids, estadosActivos(), desde, hasta, excluir(excluirTurnoId));
     }
 
     private static Long excluir(Long excluirTurnoId) {

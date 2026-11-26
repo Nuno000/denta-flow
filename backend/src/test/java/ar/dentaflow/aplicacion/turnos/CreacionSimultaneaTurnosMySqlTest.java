@@ -63,6 +63,7 @@ class CreacionSimultaneaTurnosMySqlTest {
     private long profesional() {
         long id = escenario.profesional();
         escenario.habilitar(id, prestacion);
+        escenario.atiendeTodaLaSemana(id);
         return id;
     }
 

@@ -69,6 +69,7 @@ class LogsDeNotificacionesTest {
         long sillon = escenario.sillon();
         long prestacion = escenario.prestacion(30);
         escenario.habilitar(profesional, prestacion);
+        escenario.atiendeTodaLaSemana(profesional);
         turno = turnos.crear(new SolicitudDeTurno(paciente, profesional, sillon, prestacion,
                 Instant.parse("2026-12-02T13:00:00Z"), OrigenTurno.ONLINE, false, Actor.paciente())).turno().getId();
         token = jdbc.queryForObject("SELECT token_acceso FROM turno WHERE id = ?", String.class, turno);

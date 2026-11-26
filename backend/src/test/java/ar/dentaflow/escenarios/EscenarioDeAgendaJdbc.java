@@ -66,6 +66,14 @@ public final class EscenarioDeAgendaJdbc {
                 profesionalId, prestacionId);
     }
 
+    /** Agrega horario 00:00–23:59 los 7 días de la semana al profesional dado. */
+    public void atiendeTodaLaSemana(long profesionalId) {
+        for (int dia = 1; dia <= 7; dia++) {
+            jdbc.update("INSERT INTO horario_atencion (profesional_id, dia_semana, hora_inicio, hora_fin) "
+                    + "VALUES (?, ?, '00:00:00', '23:59:00')", profesionalId, dia);
+        }
+    }
+
     /** DNI ficticio de 8 dígitos que no existe todavía en la base. */
     public String dniNuevo() {
         while (true) {
@@ -131,6 +139,9 @@ public final class EscenarioDeAgendaJdbc {
         deTurnos.forEach(id -> jdbc.update("DELETE FROM turno_historial WHERE turno_id = ?", id));
         deTurnos.forEach(id -> jdbc.update("DELETE FROM notificacion WHERE turno_id = ?", id));
         deTurnos.forEach(id -> jdbc.update("DELETE FROM turno WHERE id = ?", id));
+        profesionales.forEach(id -> jdbc.update("DELETE FROM bloqueo WHERE profesional_id = ?", id));
+        sillones.forEach(id -> jdbc.update("DELETE FROM bloqueo WHERE sillon_id = ?", id));
+        profesionales.forEach(id -> jdbc.update("DELETE FROM horario_atencion WHERE profesional_id = ?", id));
         profesionales.forEach(id -> jdbc.update("DELETE FROM profesional_prestacion WHERE profesional_id = ?", id));
         profesionales.forEach(id -> jdbc.update("DELETE FROM profesional WHERE id = ?", id));
         sillones.forEach(id -> jdbc.update("DELETE FROM sillon WHERE id = ?", id));

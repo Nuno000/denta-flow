@@ -1,0 +1,5 @@
+# Verificación MySQL (`-Pit-mysql`) — C-10 `motor-disponibilidad`
+
+Fecha: 2026-11-26  
+Comando ejecutado por Renzo en entorno local con MySQL 8: `.\mvnw.cmd verify -Pit-mysql`  
+Resultado: Todo en verde (incluye `ReservaSimultaneaDeHuecosMySqlTest` y `CreacionSimultaneaTurnosMySqlTest`).
